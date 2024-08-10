@@ -1,0 +1,6 @@
+{
+    "cmake.useCMakePresets": "always",
+    "C_Cpp.autoAddFileAssociations": false,
+    "files.associations": {
+    }
+}
