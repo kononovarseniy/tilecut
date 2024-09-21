@@ -7,7 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
-include(CTest)
+find_package(GTest REQUIRED)
+include(GoogleTest)
+enable_testing()
 
 function(target_enable_warnings TARGET_NAME)
     target_compile_options(${TARGET_NAME} PRIVATE
@@ -17,3 +19,4 @@ function(target_enable_warnings TARGET_NAME)
 endfunction()
 
 add_subdirectory(kononovarseniy/common)
+add_subdirectory(src/exact)
