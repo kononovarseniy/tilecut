@@ -1,4 +1,7 @@
 [requires]
+boost/1.86.0
+gtest/1.15.0
+mpfr/4.2.1
 
 [generators]
 CMakeDeps

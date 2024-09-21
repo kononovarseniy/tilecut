@@ -32,6 +32,13 @@ MaxEmptyLinesToKeep: 1
 
 IncludeBlocks: Regroup
 IncludeCategories:
+  # gtest includes
+  - Regex: '<gtest/.+>'
+    Priority: 0
+    SortPriority: 1
+  - Regex: '<gmock/.+>'
+    Priority: 0
+    SortPriority: 2
   # Graphics API includes
   - Regex: "<vulkan/.+>"
     Priority: 1
@@ -41,18 +48,21 @@ IncludeCategories:
     Priority: 1
     SortPriority: 2
     CaseSensitive: True
+  # mpfr includes
+  - Regex: '<mpfr\.h>'
+    Priority: 8
   # pugixml includes
   - Regex: '<pugixml\.hpp>'
-    Priority: 8
+    Priority: 9
   # spirv_cross includes
   - Regex: '<spirv_cross/.+>'
-    Priority: 9
+    Priority: 10
   # stb_image includes
   - Regex: '<stb_image\.h>'
-    Priority: 10
+    Priority: 11
   # tiny_gltf includes
   - Regex: '<tiny_gltf\.h>'
-    Priority: 11
+    Priority: 12
   # stl includes
   - Regex: "<[[:alnum:]_.]+>"
     Priority: 3
