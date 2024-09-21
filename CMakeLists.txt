@@ -17,3 +17,4 @@ function(target_enable_warnings TARGET_NAME)
 endfunction()
 
 add_subdirectory(kononovarseniy/common)
+add_subdirectory(src/tilecut)
