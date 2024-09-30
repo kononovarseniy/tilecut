@@ -1,8 +1,8 @@
 add_library(TilecutExact
-    include/exact/line_intersects_cell.hpp
+    include/exact/grid.hpp
 
     src/expansion.hpp
-    src/line_intersects_cell.cpp
+    src/grid.cpp
 )
 
 target_include_directories(TilecutExact PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

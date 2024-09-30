@@ -1,8 +1,11 @@
+#include "exact/grid.hpp"
+
+#include <cmath>
 #include <span>
 
 #include <common/cast.hpp>
 #include <common/fixed.hpp>
-#include <exact/line_intersects_cell.hpp>
+#include <exact/grid.hpp>
 
 #include "expansion.hpp"
 
@@ -120,6 +123,108 @@ bool line_intersects_cell(
         return false;
     }
     return true;
+}
+
+s64 column_containing_position(const f64 x, const f64 size) noexcept
+{
+    AR_PRE(std::abs(x) <= g_max_regular_grid_input_coordinate);
+    const auto quotient = x / size;
+    const auto candidate = std::floor(quotient);
+    if (candidate == quotient)
+    {
+        // The quotient may have been rounded towards infinity,
+        // so the result needs to be checked exactly.
+        std::array<f64, 3> difference;
+        grow_expansion(two_product(candidate, size).span(), -x, span(difference));
+        const auto sign = expansion_approx(const_span(difference));
+        // candidate * size > x
+        if (sign > 0.0)
+        {
+            return exact_cast_float<s64>(candidate) - 1;
+        }
+    }
+    return exact_cast_float<s64>(candidate);
+}
+
+s64 column_border_intersecion(
+    const f64 a_x,
+    const f64 a_y,
+    const f64 b_x,
+    const f64 b_y,
+    const f64 size,
+    const s64 c_x) noexcept
+{
+    constexpr double min_reliable_fractional_part = 0.25; // TODO: correct value
+    constexpr double max_reliable_fractional_part = 0.75; // TODO: correct value
+    // The fused operation is probably not required here, but it makes error analysis easier.
+    const auto t_numerator = std::fma(c_x, size, -a_x);
+    const auto t_denominator = b_x - a_x;
+    const auto t = t_numerator / t_denominator;
+    const auto delta = b_y - a_y;
+    const auto lerp_delta = delta * t;
+    const auto lerp = a_y + lerp_delta;
+    const auto intersection = lerp / size;
+
+    /// Checks if a value can be the result of rounding a quotient towards negative infinity.
+    const auto check_value = [&a_x, &a_y, &b_x, &b_y, &size, &c_x](const f64 value)
+    {
+        /// a_y * b_x - a_x * b_y
+        std::array<f64, 4> numerator_1;
+        expansion_diff(two_product(a_y, b_x).span(), two_product(a_x, b_y).span(), span(numerator_1));
+        /// size * (b_y - a_y)
+        std::array<f64, 4> size_dy;
+        scale_expansion(two_diff(b_y, a_y).span(), size, span(size_dy));
+        /// c_x * size * (b_y - a_y)
+        std::array<f64, 8> numerator_2;
+        scale_expansion(const_span(size_dy), exact_cast_int<f64>(c_x), span(numerator_2));
+
+        std::array<f64, 12> numerator;
+        // TODO: fast_expansion_sum
+        expansion_sum(const_span(numerator_1), const_span(numerator_2), span(numerator));
+
+        /// size * (b_x - a_x)
+        std::array<f64, 4> denominator;
+        scale_expansion(two_diff(b_x, a_x).span(), size, span(denominator));
+
+        /// value * denominator
+        std::array<f64, 8> product;
+        scale_expansion(const_span(denominator), value, span(product));
+        /// value * denominator - numerator
+        std::array<f64, 20> difference;
+        // TODO: fast_expansion_diff
+        expansion_diff(const_span(product), const_span(numerator), span(difference));
+
+        return expansion_approx(const_span(difference)) <= 0.0;
+    };
+
+    // Computation of 1.0 - fractional_part may be inexact,
+    // so we can't avoid branching based on the sign of the value using std::floor.
+    f64 integral_part;
+    const auto fractional_part = std::abs(std::modf(intersection, &integral_part));
+    s64 truncated = exact_cast_float<s64>(integral_part);
+
+    if (intersection >= 0.0)
+    {
+        if (fractional_part < min_reliable_fractional_part && !check_value(integral_part))
+        {
+            return truncated - 1;
+        }
+        if (fractional_part > max_reliable_fractional_part && check_value(integral_part + 1.0))
+        {
+            return truncated + 1;
+        }
+        return truncated;
+    }
+
+    if (-fractional_part > max_reliable_fractional_part && !check_value(integral_part))
+    {
+        return truncated - 2;
+    }
+    if (-fractional_part < min_reliable_fractional_part && check_value(integral_part + 1.0))
+    {
+        return truncated;
+    }
+    return truncated - 1;
 }
 
 } // namespace r7
