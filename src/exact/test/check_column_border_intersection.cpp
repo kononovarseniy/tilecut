@@ -28,16 +28,15 @@ bool check_column_border_intersecion(
     AR_ASSERT(0 == mpfr_set_d(abs_denom, b_x, MPFR_RNDN));
     AR_ASSERT(0 == mpfr_sub_d(abs_denom, abs_denom, a_x, MPFR_RNDN));
     AR_ASSERT(0 == mpfr_mul_d(abs_denom, abs_denom, size, MPFR_RNDN));
-    const auto negative_denom = mpfr_cmp_d(abs_denom, 0.0) < 0;
     AR_ASSERT(0 == mpfr_abs(abs_denom, abs_denom, MPFR_RNDN));
 
-    /// c_y * denom.
+    /// c_y * abs(denom).
     mpfr_t lower_bound;
     mpfr_init2(lower_bound, precision);
     AR_ASSERT(0 == mpfr_set_si(lower_bound, c_y, MPFR_RNDN));
     AR_ASSERT(0 == mpfr_mul(lower_bound, lower_bound, abs_denom, MPFR_RNDN));
 
-    /// (c_y + 1) * denom.
+    /// (c_y + 1) * abs(denom).
     mpfr_t upper_bound;
     mpfr_init2(upper_bound, precision);
     AR_ASSERT(0 == mpfr_set_si(upper_bound, c_y, MPFR_RNDN));
@@ -62,6 +61,7 @@ bool check_column_border_intersecion(
     AR_ASSERT(0 == mpfr_mul_si(tmp, tmp, c_x, MPFR_RNDN));
 
     AR_ASSERT(0 == mpfr_add(num, num, tmp, MPFR_RNDN));
+    const auto negative_denom = b_x < a_x;
     if (negative_denom)
     {
         AR_ASSERT(0 == mpfr_neg(num, num, MPFR_RNDN));

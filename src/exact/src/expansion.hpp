@@ -22,18 +22,40 @@ namespace r7
 /// @invariant |approx| > |err|.
 /// @tparam T type of expansion components.
 template <std::floating_point T>
-struct TwoExpansion final
+class TwoExpansion final
 {
-    /// @brief Roundoff error.
-    T err;
-    /// @brief Approximation.
-    T approx;
-
-    [[nodiscard]] constexpr auto span() const noexcept
+public:
+    constexpr explicit TwoExpansion(const T approx) noexcept
+        : expansion_ { T {}, approx }
     {
-        AR_ASSERT(&err + 1 == &approx);
-        return std::span<const T, 2> { &err, 2 };
     }
+
+    constexpr TwoExpansion(const std::array<T, 2> & expansion) noexcept
+        : expansion_ { expansion }
+    {
+    }
+
+    constexpr TwoExpansion & operator=(const std::array<T, 2> & expansion) noexcept
+    {
+        expansion_ = expansion;
+        return *this;
+    }
+
+public:
+    /// @brief Roundoff error.
+    constexpr T err() const
+    {
+        return expansion_[0];
+    }
+
+    /// @brief Approximation.
+    constexpr T approx() const
+    {
+        return expansion_[1];
+    }
+
+private:
+    std::array<T, 2> expansion_;
 };
 
 /// @brief Exact sum of two pre-ordered numbers.
@@ -43,13 +65,13 @@ struct TwoExpansion final
 /// @post result is nonadjacent if round-to-even tiebreaking is used.
 /// @tparam T type of expansion components.
 template <std::floating_point T>
-[[nodiscard]] constexpr TwoExpansion<T> fast_two_sum(const T a, const T b) noexcept
+[[nodiscard]] constexpr std::array<T, 2> fast_two_sum(const T a, const T b) noexcept
 {
     AR_PRE(std::abs(a) >= std::abs(b) || a == 0.0 || b == 0.0);
     const auto approx = a + b;
     const auto b_virtual = approx - a;
     const auto err = b - b_virtual;
-    return { .err = err, .approx = approx };
+    return { err, approx };
 }
 
 /// @brief Exact difference of two pre-ordered numbers.
@@ -59,13 +81,13 @@ template <std::floating_point T>
 /// @post result is nonadjacent if round-to-even tiebreaking is used.
 /// @tparam T type of expansion components.
 template <std::floating_point T>
-[[nodiscard]] constexpr TwoExpansion<T> fast_two_diff(const T a, const T b) noexcept
+[[nodiscard]] constexpr std::array<T, 2> fast_two_diff(const T a, const T b) noexcept
 {
     AR_PRE(std::abs(a) >= std::abs(b) || a == 0.0 || b == 0.0);
     const auto approx = a - b;
     const auto b_virtual = a - approx;
     const auto err = b_virtual - b;
-    return { .err = err, .approx = approx };
+    return { err, approx };
 }
 
 /// @brief Exact sum of two numbers.
@@ -74,7 +96,7 @@ template <std::floating_point T>
 /// @post result is nonadjacent if round-to-even tiebreaking is used.
 /// @tparam T type of expansion components.
 template <std::floating_point T>
-[[nodiscard]] constexpr TwoExpansion<T> two_sum(const T a, const T b) noexcept
+[[nodiscard]] constexpr std::array<T, 2> two_sum(const T a, const T b) noexcept
 {
     const auto approx = a + b;
     const auto b_virtual = approx - a;
@@ -82,7 +104,7 @@ template <std::floating_point T>
     const auto b_roundoff = b - b_virtual;
     const auto a_roundoff = a - a_virtual;
     const auto err = a_roundoff + b_roundoff;
-    return { .err = err, .approx = approx };
+    return { err, approx };
 }
 
 /// @brief Exact difference of two numbers.
@@ -91,7 +113,7 @@ template <std::floating_point T>
 /// @post result is nonadjacent if round-to-even tiebreaking is used.
 /// @tparam T type of expansion components.
 template <std::floating_point T>
-[[nodiscard]] constexpr TwoExpansion<T> two_diff(const T a, const T b) noexcept
+[[nodiscard]] constexpr std::array<T, 2> two_diff(const T a, const T b) noexcept
 {
     const auto approx = a - b;
     const auto b_virtual = a - approx;
@@ -99,7 +121,7 @@ template <std::floating_point T>
     const auto b_roundoff = b_virtual - b;
     const auto a_roundoff = a - a_virtual;
     const auto err = a_roundoff + b_roundoff;
-    return { .err = err, .approx = approx };
+    return { err, approx };
 }
 
 /// @brief Sum of expansion and number.
@@ -119,13 +141,13 @@ constexpr void grow_expansion(
     AR_PRE(
         &expansion.back() < &result.front() || &result.back() < &expansion.front() ||
         &result.front() <= &expansion.front());
-    TwoExpansion<T> sum { .err {}, .approx = number };
+    TwoExpansion sum { number };
     for (size_t i = 0; i < expansion.size(); ++i)
     {
-        sum = two_sum(sum.approx, expansion[i]);
-        result[i] = sum.err;
+        sum = two_sum(sum.approx(), expansion[i]);
+        result[i] = sum.err();
     }
-    result.back() = sum.approx;
+    result.back() = sum.approx();
 }
 
 /// @brief Computes lhs + sign * rhs.
@@ -207,26 +229,26 @@ constexpr void fast_expansion_sum_impl(
 
     const auto merged_0 = next_merged();
     const auto merged_1 = next_merged();
-    auto sum_err = fast_two_sum(merged_1, merged_0);
+    TwoExpansion sum_err = fast_two_sum(merged_1, merged_0);
     auto result_it = result.begin();
-    *result_it++ = sum_err.err;
+    *result_it++ = sum_err.err();
 
     while (lhs_it != lhs.end() && rhs_it != rhs.end())
     {
-        sum_err = two_sum(sum_err.approx, next_merged());
-        *result_it++ = sum_err.err;
+        sum_err = two_sum(sum_err.approx(), next_merged());
+        *result_it++ = sum_err.err();
     }
     while (lhs_it != lhs.end())
     {
-        sum_err = two_sum(sum_err.approx, *lhs_it);
+        sum_err = two_sum(sum_err.approx(), *lhs_it);
         ++lhs_it;
-        *result_it++ = sum_err.err;
+        *result_it++ = sum_err.err();
     }
     while (rhs_it != rhs.end())
     {
-        sum_err = two_sum(sum_err.approx, sign * *rhs_it);
+        sum_err = two_sum(sum_err.approx(), sign * *rhs_it);
         ++rhs_it;
-        *result_it++ = sum_err.err;
+        *result_it++ = sum_err.err();
     }
 }
 
@@ -292,7 +314,7 @@ template <u8 S, std::floating_point T>
 /// [Shewchuk]
 /// @tparam T type of expansion components.
 template <std::floating_point T>
-[[nodiscard]] constexpr TwoExpansion<T> two_product(const T lhs, const T rhs)
+[[nodiscard]] constexpr std::array<T, 2> two_product(const T lhs, const T rhs)
 {
     constexpr auto split_point = (std::numeric_limits<T>::digits + 1) / 2;
     const auto approx = lhs * rhs;
@@ -302,7 +324,7 @@ template <std::floating_point T>
     err -= a.lo * b.hi;
     err -= a.hi * b.lo;
     err = a.lo * b.lo - err;
-    return { .err = err, .approx = approx };
+    return { err, approx };
 }
 
 /// @brief Product of expansion and number.
@@ -319,18 +341,18 @@ constexpr void scale_expansion(
 {
     auto result_it = result.begin();
 
-    auto prod_err = two_product(expansion.front(), number);
-    *result_it++ = prod_err.err;
+    TwoExpansion prod_err = two_product(expansion.front(), number);
+    *result_it++ = prod_err.err();
 
     for (size_t i = 1; i < expansion.size(); ++i)
     {
-        const auto t = two_product(expansion[i], number);
-        prod_err = two_sum(prod_err.approx, t.err);
-        *result_it++ = prod_err.err;
-        prod_err = fast_two_sum(t.approx, prod_err.approx);
-        *result_it++ = prod_err.err;
+        const TwoExpansion t = two_product(expansion[i], number);
+        prod_err = two_sum(prod_err.approx(), t.err());
+        *result_it++ = prod_err.err();
+        prod_err = fast_two_sum(t.approx(), prod_err.approx());
+        *result_it++ = prod_err.err();
     }
-    *result_it++ = prod_err.approx;
+    *result_it++ = prod_err.approx();
 }
 
 /// @brief Finds leading non-zero component of the expansion.

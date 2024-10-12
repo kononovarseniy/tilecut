@@ -67,18 +67,18 @@ bool line_intersects_cell(
 
     /// a_x * b_y - a_y * b_x
     std::array<f64, 4> precomputed_first;
-    expansion_diff(two_product(a_x, b_y).span(), two_product(a_y, b_x).span(), span(precomputed_first));
+    expansion_diff(const_span(two_product(a_x, b_y)), const_span(two_product(a_y, b_x)), span(precomputed_first));
 
     /// size * (dy -+ dx)
     std::array<f64, 8> corners_delta;
     std::array<f64, 4> tmp;
     if (intersect_with_main_diagonal)
     {
-        expansion_diff(dy.span(), dx.span(), span(tmp));
+        expansion_diff(const_span(dy), const_span(dx), span(tmp));
     }
     else
     {
-        expansion_sum(dy.span(), dx.span(), span(tmp));
+        expansion_sum(const_span(dy), const_span(dx), span(tmp));
     }
     scale_expansion(const_span(tmp), size, span(corners_delta));
 
@@ -90,9 +90,9 @@ bool line_intersects_cell(
     const auto m = exact_cast_int<f64>(intersect_with_main_diagonal ? c_y : c_y + 1);
     std::array<f64, 16> cell_dependent_term;
     std::array<f64, 4> ndy;
-    scale_expansion(dy.span(), n, span(ndy));
+    scale_expansion(const_span(dy), n, span(ndy));
     std::array<f64, 4> mdx;
-    scale_expansion(dx.span(), m, span(mdx));
+    scale_expansion(const_span(dx), m, span(mdx));
     std::array<f64, 8> cell_tmp;
     expansion_diff(const_span(ndy), const_span(mdx), span(cell_tmp));
     scale_expansion(const_span(cell_tmp), size, span(cell_dependent_term));
@@ -136,7 +136,7 @@ s64 column_containing_position(const f64 x, const f64 size) noexcept
         // The quotient may have been rounded towards infinity,
         // so the result needs to be checked exactly.
         std::array<f64, 3> difference;
-        grow_expansion(two_product(candidate, size).span(), -x, span(difference));
+        grow_expansion(const_span(two_product(candidate, size)), -x, span(difference));
         const auto sign = expansion_approx(const_span(difference));
         // candidate * size > x
         if (sign > 0.0)
@@ -159,7 +159,7 @@ s64 column_border_intersecion(
     {
         std::array<f64, 3> fms;
         const auto tmp = two_product(exact_cast_int<f64>(n), s);
-        grow_expansion(tmp.span(), -x, span(fms));
+        grow_expansion(const_span(tmp), -x, span(fms));
         AR_PRE(cmp(expansion_approx(const_span(fms)), 0.0));
     };
     AR_PRE(a_x != b_x);
@@ -197,10 +197,10 @@ s64 column_border_intersecion(
     {
         /// a_y * b_x - a_x * b_y
         std::array<f64, 4> numerator_1;
-        expansion_diff(two_product(a_y, b_x).span(), two_product(a_x, b_y).span(), span(numerator_1));
+        expansion_diff(const_span(two_product(a_y, b_x)), const_span(two_product(a_x, b_y)), span(numerator_1));
         /// size * (b_y - a_y)
         std::array<f64, 4> size_dy;
-        scale_expansion(two_diff(b_y, a_y).span(), size, span(size_dy));
+        scale_expansion(const_span(two_diff(b_y, a_y)), size, span(size_dy));
         /// c_x * size * (b_y - a_y)
         std::array<f64, 8> numerator_2;
         scale_expansion(const_span(size_dy), exact_cast_int<f64>(c_x), span(numerator_2));
@@ -209,10 +209,9 @@ s64 column_border_intersecion(
         // TODO: fast_expansion_sum
         expansion_sum(const_span(numerator_1), const_span(numerator_2), span(numerator));
 
-        const auto positive_denominator = b_x > a_x;
         /// size * (b_x - a_x)
         std::array<f64, 4> denominator;
-        scale_expansion(two_diff(b_x, a_x).span(), size, span(denominator));
+        scale_expansion(const_span(two_diff(b_x, a_x)), size, span(denominator));
 
         /// value * denominator
         std::array<f64, 8> product;
@@ -223,6 +222,7 @@ s64 column_border_intersecion(
         expansion_diff(const_span(product), const_span(numerator), span(difference));
 
         const auto difference_sign = expansion_approx(const_span(difference));
+        const auto positive_denominator = b_x > a_x;
         return positive_denominator ? difference_sign <= 0.0 : difference_sign >= 0.0;
     };
 
