@@ -19,11 +19,11 @@ namespace r7
 inline namespace
 {
 /// @brief Prevents underflows.
-constexpr f64 g_min_regular_grid_input_coordinate = 0.005;
+constexpr f64 g_min_regular_grid_input_coordinate = 0.5;
 /// @brief Limits absolute error.
-constexpr f64 g_max_regular_grid_input_coordinate = 0x1p25;
+constexpr f64 g_max_regular_grid_input_coordinate = 0x1p32;
 /// @brief WGS 84 equator in meters.
-constexpr f64 g_epsg_3857_equator = 2.0 * 20037508.34;
+constexpr f64 g_epsg_3857_equator_cm = 2.0 * 2003750834.00;
 /// @brief Max length of the equator in target projections.
 constexpr f64 g_max_grid_size = 0x1p32;
 
@@ -59,7 +59,7 @@ struct Constants final
 {
     mpfr_t min_grid_step;
     mpfr_init2(min_grid_step, 53);
-    mpfr_set_d(min_grid_step, g_epsg_3857_equator, MPFR_RNDD);
+    mpfr_set_d(min_grid_step, g_epsg_3857_equator_cm, MPFR_RNDD);
     mpfr_div_d(min_grid_step, min_grid_step, g_max_grid_size, MPFR_RNDD);
     const auto min_step = to_hex(min_grid_step);
 
