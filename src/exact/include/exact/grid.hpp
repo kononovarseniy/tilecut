@@ -6,10 +6,10 @@ namespace r7
 {
 
 /// @brief Checks line for intersection with the cell of regular grid.
-/// @param a_x, a_y coordinates of the first point on the line.
-/// @param b_x, b_y coordinates of the second point on the line.
+/// @param a_x , a_y coordinates of the first point on the line.
+/// @param b_x , b_y coordinates of the second point on the line.
 /// @param size size of a grid cell.
-/// @param c_x, c_y integer coordinates of the cell.
+/// @param c_x , c_y integer coordinates of the cell.
 /// @return true if the line intersects the cell.
 [[nodiscard]] bool line_intersects_cell(
     const f64 a_x,
@@ -32,8 +32,8 @@ namespace r7
 
 /// @brief Finds the row containing the intersection point
 /// of a given line and the left border of a regular grid column.
-/// @param a_x, a_y coordinates of the first point on the line.
-/// @param b_x, b_y coordinates of the second point on the line.
+/// @param a_x , a_y coordinates of the first point on the line.
+/// @param b_x , b_y coordinates of the second point on the line.
 /// @param size size of a grid cell.
 /// @param c_x integer X coordinate of the column.
 /// @return The Y coordinate of the found row.
@@ -47,8 +47,8 @@ namespace r7
 
 /// @brief Finds the column containing the intersection point
 /// of a given line and the bottom border of a regular grid row.
-/// @param a_x, a_y coordinates of the first point on the line.
-/// @param b_x, b_y coordinates of the second point on the line.
+/// @param a_x , a_y coordinates of the first point on the line.
+/// @param b_x , b_y coordinates of the second point on the line.
 /// @param size size of a grid cell.
 /// @param c_y integer Y coordinate of the row.
 /// @return The X coordinate of the found column.

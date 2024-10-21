@@ -38,7 +38,7 @@ target_link_libraries(TilecutExact_Test
         TilecutExact
         TilecutGeometryTypes
         gtest
-        mpfr
+        CONAN_PKG::mpfr
 )
 
 gtest_discover_tests(TilecutExact_Test)

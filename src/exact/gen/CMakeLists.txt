@@ -10,7 +10,7 @@ target_link_libraries(TilecutExact_Gen
     PRIVATE
         r7common
         Boost::program_options
-        mpfr
+        CONAN_PKG::mpfr
 )
 
 set(tilecut_exact_include_dir ${CMAKE_CURRENT_BINARY_DIR}/include)
