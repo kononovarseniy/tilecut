@@ -54,7 +54,7 @@ Out snap_round(const HotPixelIndex & hot_pixels, f64 grid_step, In && line, Out 
                 hot_pixel.y);
         };
         const bool horizontal_ascending = prev_pixel.x <= pixel.x;
-        const bool vertical_ascending = prev_vertex.y <= pixel.y;
+        const bool vertical_ascending = prev_pixel.y <= pixel.y;
         // clang-format off
         using enum HotPixelOrder;
         output = horizontal_ascending
