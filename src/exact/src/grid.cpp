@@ -277,7 +277,7 @@ s64 row_border_intersecion(
     const f64 size,
     const s64 c_y) noexcept
 {
-    return column_border_intersecion(-a_y, a_x, -b_y, b_x, size, c_y);
+    return column_border_intersecion(-a_y, a_x, -b_y, b_x, size, -c_y);
 }
 
 } // namespace r7
