@@ -24,8 +24,6 @@ target_link_libraries(TilecutExact
 )
 
 
-find_package(mpfr REQUIRED)
-
 add_executable(TilecutExact_Test
     test/check_column_border_intersection.cpp
     test/check_column_border_intersection.hpp
@@ -39,8 +37,8 @@ target_link_libraries(TilecutExact_Test
         r7common
         TilecutExact
         TilecutGeometryTypes
-        gtest::gtest
-        mpfr::mpfr
+        gtest
+        mpfr
 )
 
 gtest_discover_tests(TilecutExact_Test)

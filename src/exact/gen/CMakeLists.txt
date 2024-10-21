@@ -1,5 +1,4 @@
-find_package(Boost REQUIRED)
-find_package(mpfr REQUIRED)
+find_package(Boost REQUIRED COMPONENTS program_options)
 
 add_executable(TilecutExact_Gen
     generate.cpp
@@ -11,7 +10,7 @@ target_link_libraries(TilecutExact_Gen
     PRIVATE
         r7common
         Boost::program_options
-        mpfr::mpfr
+        mpfr
 )
 
 set(tilecut_exact_include_dir ${CMAKE_CURRENT_BINARY_DIR}/include)
