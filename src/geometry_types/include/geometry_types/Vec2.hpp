@@ -23,5 +23,6 @@ struct Vec2 final
 
 using Vec2f64 = Vec2<f64>;
 using Vec2s64 = Vec2<s64>;
+using Vec2s32 = Vec2<s32>;
 
 } // namespace r7
