@@ -1,9 +1,11 @@
 add_library(TilecutTilecut
     include/tilecut/collect_tiles.hpp
     include/tilecut/filter_segments.hpp
+    include/tilecut/find_cuts.hpp
 
     src/collect_tiles.cpp
     src/filter_segments.cpp
+    src/find_cuts.cpp
 )
 
 target_include_directories(TilecutTilecut PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

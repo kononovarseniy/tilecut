@@ -29,8 +29,21 @@ void filter_segments(std::vector<Segment2s64> & segments) noexcept
     }
     std::ranges::sort(segments, {}, unoriented);
     auto out_it = segments.begin();
-    const Segment2s64 * main_segment;
     s64 counter = 0;
+    const auto orient_and_push_segment = [&](const auto & segment)
+    {
+        AR_PRE(-1 <= counter && counter <= 1);
+        if (counter > 0)
+        {
+            *out_it++ = segment;
+        }
+        else if (counter < 0)
+        {
+            *out_it++ = flipped(segment);
+        }
+    };
+
+    const Segment2s64 * main_segment;
     for (auto it = out_it; it != segments.end(); ++it)
     {
         if (main_segment == nullptr)
@@ -54,16 +67,13 @@ void filter_segments(std::vector<Segment2s64> & segments) noexcept
         }
         else
         {
-            AR_PRE(-1 <= counter && counter <= 1);
-            if (counter > 0)
-            {
-                *out_it++ = *main_segment;
-            }
-            else if (counter < 0)
-            {
-                *out_it++ = flipped(*main_segment);
-            }
+            orient_and_push_segment(*main_segment);
+            main_segment = nullptr;
         }
+    }
+    if (main_segment != nullptr)
+    {
+        orient_and_push_segment(*main_segment);
     }
     segments.erase(out_it, segments.end());
 }

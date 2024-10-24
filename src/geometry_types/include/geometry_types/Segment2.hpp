@@ -23,5 +23,6 @@ struct Segment2 final
 };
 
 using Segment2s64 = Segment2<s64>;
+using Segment2u16 = Segment2<u16>;
 
 } // namespace r7

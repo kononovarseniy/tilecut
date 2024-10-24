@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include <common/assert.hpp>
+#include <common/cast.hpp>
 #include <common/fixed.hpp>
 #include <tilecut/collect_tiles.hpp>
 
@@ -43,8 +44,19 @@ inline namespace
 
 } // namespace
 
-void collect_tiles(std::vector<Segment2s64> & unique_segments, std::vector<Tile> & tiles, const u16 tile_size) noexcept
+void collect_tiles(
+    std::vector<Segment2s64> & unique_segments,
+    std::vector<Segment2u16> & tile_segments,
+    std::vector<Tile> & tiles,
+    const u16 tile_size) noexcept
 {
+    tile_segments.clear();
+    tiles.clear();
+    if (unique_segments.empty())
+    {
+        return;
+    }
+
     const auto segment_to_tile = [&](const auto & segment)
     {
         return segment_tile(segment, tile_size);
@@ -52,21 +64,30 @@ void collect_tiles(std::vector<Segment2s64> & unique_segments, std::vector<Tile>
 
     std::ranges::sort(unique_segments, {}, segment_to_tile);
 
-    tiles.clear();
-    auto it = unique_segments.begin();
-    while (it != unique_segments.end())
+    tile_segments.reserve(unique_segments.size());
+
+    auto flush_tile = [local_it = tile_segments.begin(), &tiles, &tile_segments](const Vec2s32 tile) mutable
     {
-        auto next = std::ranges::adjacent_find(unique_segments, std::not_equal_to<> {}, segment_to_tile);
-        if (next != unique_segments.end())
+        tiles.push_back({ .tile = tile, .segments { local_it, tile_segments.end() } });
+        local_it = tile_segments.end();
+    };
+
+    auto prev_tile = segment_to_tile(unique_segments.front());
+
+    for (const auto & segment : unique_segments)
+    {
+        const auto tile = segment_to_tile(segment);
+        if (tile != prev_tile)
         {
-            ++next;
+            flush_tile(prev_tile);
+            prev_tile = tile;
         }
-        tiles.push_back({
-            .tile = segment_to_tile(*it),
-            .segments { it, next },
+        tile_segments.push_back({
+            { exact_cast<u16>(segment.a.x - tile.x * tile_size), exact_cast<u16>(segment.a.y - tile.y * tile_size) },
+            { exact_cast<u16>(segment.b.x - tile.x * tile_size), exact_cast<u16>(segment.b.y - tile.y * tile_size) },
         });
-        it = next;
     }
+    flush_tile(prev_tile);
 }
 
 } // namespace r7
