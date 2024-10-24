@@ -5,7 +5,7 @@
 
 #include <common/cast.hpp>
 #include <common/fixed.hpp>
-#include <exact/generated/constants.hpp>
+#include "constants.hpp"
 #include <exact/grid.hpp>
 
 #include "expansion.hpp"

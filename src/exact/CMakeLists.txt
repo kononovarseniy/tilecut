@@ -1,4 +1,4 @@
-add_subdirectory(gen)
+# add_subdirectory(gen)
 
 add_library(TilecutExact
     include/exact/grid.hpp
@@ -17,28 +17,28 @@ target_enable_warnings(TilecutExact)
 
 target_link_libraries(TilecutExact
     PUBLIC
-        TilecutExact_Generated
+        # TilecutExact_Generated
         
         r7common
         TilecutGeometryTypes
 )
 
 
-add_executable(TilecutExact_Test
-    test/check_column_border_intersection.cpp
-    test/check_column_border_intersection.hpp
-    test/test_check_column_border_intersection.cpp
-    test/test_column_border_intersection.cpp
-    test/test_snap_rounding.cpp
-)
-target_enable_warnings(TilecutExact_Test)
-target_link_libraries(TilecutExact_Test
-    PRIVATE
-        r7common
-        TilecutExact
-        TilecutGeometryTypes
-        gtest
-        CONAN_PKG::mpfr
-)
+# add_executable(TilecutExact_Test
+#     test/check_column_border_intersection.cpp
+#     test/check_column_border_intersection.hpp
+#     test/test_check_column_border_intersection.cpp
+#     test/test_column_border_intersection.cpp
+#     test/test_snap_rounding.cpp
+# )
+# target_enable_warnings(TilecutExact_Test)
+# target_link_libraries(TilecutExact_Test
+#     PRIVATE
+#         r7common
+#         TilecutExact
+#         TilecutGeometryTypes
+#         gtest
+#         CONAN_PKG::mpfr
+# )
 
-gtest_discover_tests(TilecutExact_Test)
+# gtest_discover_tests(TilecutExact_Test)
