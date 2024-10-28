@@ -24,12 +24,13 @@ void HotPixelCollector::new_contour() noexcept
     prev_vertex_.reset();
 }
 
+template <GridRounding rounding>
 void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcept
 {
     AR_PRE(grid_step_ > 0.0);
     const auto pixel = hot_pixels_.emplace_back(
-        column_containing_position(vertex.x, grid_step_),
-        column_containing_position(vertex.y, grid_step_));
+        column_containing_position<rounding>(vertex.x, grid_step_),
+        column_containing_position<rounding>(vertex.y, grid_step_));
     if (prev_vertex_.has_value())
     {
         AR_ASSERT(prev_pixel_.has_value());
@@ -64,8 +65,15 @@ void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcep
             {
                 if (border_between_coordinates(prev_vertex_->x, vertex.x, grid_step_, x))
                 {
-                    const auto y =
-                        column_border_intersecion(prev_vertex_->x, prev_vertex_->y, vertex.x, vertex.y, grid_step_, x);
+                    // clang-format off
+                    const auto y = column_border_intersection<rounding>(
+                        prev_vertex_->x,
+                        prev_vertex_->y,
+                        vertex.x,
+                        vertex.y,
+                        grid_step_,
+                        x);
+                    // clang-format on
                     hot_pixels_.emplace_back(x, y);
                 }
             }
@@ -76,8 +84,15 @@ void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcep
             {
                 if (border_between_coordinates(prev_vertex_->y, vertex.y, grid_step_, y))
                 {
-                    const auto x =
-                        row_border_intersecion(prev_vertex_->x, prev_vertex_->y, vertex.x, vertex.y, grid_step_, y);
+                    // clang-format off
+                    const auto x = row_border_intersection<rounding>(
+                        prev_vertex_->x,
+                        prev_vertex_->y,
+                        vertex.x,
+                        vertex.y,
+                        grid_step_,
+                        y);
+                    // clang-format on
                     hot_pixels_.emplace_back(x, y);
                 }
             }
@@ -86,6 +101,9 @@ void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcep
     prev_vertex_ = vertex;
     prev_pixel_ = pixel;
 }
+
+template void HotPixelCollector::add_vertex_and_tile_cuts<GridRounding::Cell>(const Vec2f64 & vertex) noexcept;
+template void HotPixelCollector::add_vertex_and_tile_cuts<GridRounding::NearestNode>(const Vec2f64 & vertex) noexcept;
 
 const HotPixelIndex & HotPixelCollector::build_index() noexcept
 {
@@ -96,6 +114,7 @@ const HotPixelIndex & HotPixelCollector::build_index() noexcept
     const auto to_remove = std::ranges::unique(hot_pixels_);
     hot_pixels_.erase(to_remove.begin(), to_remove.end());
 
+    index_.grid_step_ = grid_step_;
     index_.columns_.clear();
 
     size_t span_start = 0;

@@ -10,8 +10,8 @@ namespace r7
 {
 
 //! Performs countour snap rounding using specified hot pixels.
-template <std::ranges::input_range In, std::output_iterator<Vec2s64> Out>
-Out snap_round(const HotPixelIndex & hot_pixels, f64 grid_step, In && line, Out output)
+template <GridRounding rounding, std::ranges::input_range In, std::output_iterator<Vec2s64> Out>
+Out snap_round(const HotPixelIndex & hot_pixels, In && line, Out output)
 {
     Vec2f64 prev_vertex;
     Vec2s64 prev_pixel;
@@ -20,8 +20,8 @@ Out snap_round(const HotPixelIndex & hot_pixels, f64 grid_step, In && line, Out 
     for (const auto & vertex : line)
     {
         const Vec2s64 pixel = {
-            .x = column_containing_position(vertex.x, grid_step),
-            .y = column_containing_position(vertex.y, grid_step),
+            .x = column_containing_position<rounding>(vertex.x, hot_pixels.grid_step()),
+            .y = row_containing_position<rounding>(vertex.y, hot_pixels.grid_step()),
         };
         if (first)
         {
@@ -44,12 +44,12 @@ Out snap_round(const HotPixelIndex & hot_pixels, f64 grid_step, In && line, Out 
                 // Endpoints are added explicitly to reduce the amount of pixel repetitions.
                 return false;
             }
-            return line_intersects_cell(
+            return line_intersects_cell<rounding>(
                 prev_vertex.x,
                 prev_vertex.y,
                 vertex.x,
                 vertex.y,
-                grid_step,
+                hot_pixels.grid_step(),
                 hot_pixel.x,
                 hot_pixel.y);
         };

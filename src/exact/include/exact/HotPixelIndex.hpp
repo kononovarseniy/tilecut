@@ -9,16 +9,11 @@
 
 #include <common/assert.hpp>
 #include <common/fixed.hpp>
+#include <exact/HotPixelOrder.hpp>
 #include <geometry_types/Vec2.hpp>
 
 namespace r7
 {
-
-enum class HotPixelOrder
-{
-    Ascending,
-    Descending,
-};
 
 //! A simple data structure for querying hot pixels within a given region.
 //! Lifetime is bound to parent HotPixelCollector. The index is invalidated on HotPixelCollector modifications.
@@ -27,6 +22,11 @@ class HotPixelIndex final
     friend class HotPixelCollector;
 
 public:
+    [[nodiscard]] f64 grid_step() const noexcept
+    {
+        return grid_step_;
+    }
+
     template <HotPixelOrder horizontal_order, HotPixelOrder vertical_order, std::output_iterator<Vec2s64> Out>
     [[nodiscard]] Out find_if(
         const s64 min_x,
@@ -124,6 +124,7 @@ private:
     };
 
 private:
+    f64 grid_step_;
     //! Contains x-ordered columns, each containing y-ordered hot pixels. Populated by HotPixelCollector.
     std::vector<Column> columns_;
 };

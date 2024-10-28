@@ -2,12 +2,19 @@ add_subdirectory(gen)
 
 add_library(TilecutExact
     include/exact/grid.hpp
+    include/exact/GridRounding.hpp
     include/exact/HotPixelCollector.hpp
     include/exact/HotPixelIndex.hpp
+    include/exact/HotPixelOrder.hpp
     include/exact/snap_round.hpp
 
+    src/grid/border_between_coordinates.cpp
+    src/grid/border_intersection.cpp
+    src/grid/cell_containg_position.cpp
+    src/grid/common.hpp
+    src/grid/line_intersects_cell.cpp
+
     src/expansion.hpp
-    src/grid.cpp
     src/HotPixelCollector.cpp
 )
 

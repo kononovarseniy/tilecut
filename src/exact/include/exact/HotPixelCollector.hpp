@@ -3,6 +3,7 @@
 #include <optional>
 #include <vector>
 
+#include <exact/GridRounding.hpp>
 #include <exact/HotPixelIndex.hpp>
 #include <geometry_types/Vec2.hpp>
 
@@ -21,6 +22,7 @@ public:
 
     //! Add hot pixels around the endpoints of the new segment
     //! and around the intersection points of the segment and tiles.
+    template <GridRounding rounding>
     void add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcept;
 
     //! The index is invalidated on HotPixelCollector modifications.

@@ -82,7 +82,8 @@ TEST(ColumnBorderIntersectionTest, combinations_of_dangerous_values)
                                 continue;
                             }
                             prev_c_x = c_x;
-                            const auto c_y = column_border_intersecion(a_x, a_y, b_x, b_y, size, c_x);
+                            const auto c_y =
+                                column_border_intersection<GridRounding::Cell>(a_x, a_y, b_x, b_y, size, c_x);
                             ASSERT_TRUE(check_column_border_intersecion(a_x, a_y, b_x, b_y, size, c_x, c_y))
                                 << std::format(
                                        "#{})s: {}; a: {}, {}; b: {}, {}; c: {}, {}",

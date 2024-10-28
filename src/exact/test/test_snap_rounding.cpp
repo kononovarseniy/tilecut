@@ -66,12 +66,12 @@ TEST(SnapRoundingTest, distorted_square)
     collector.new_contour();
     for (const auto & vertex : geometry)
     {
-        collector.add_vertex_and_tile_cuts(vertex);
+        collector.add_vertex_and_tile_cuts<GridRounding::Cell>(vertex);
     }
     const auto & hot_pixels = collector.build_index();
 
     std::vector<Vec2s64> result;
-    snap_round(hot_pixels, gird_step, geometry, std::back_inserter(result));
+    snap_round<GridRounding::Cell>(hot_pixels, geometry, std::back_inserter(result));
 
     EXPECT_THAT(result, ElementsAreArray(expected));
 }
@@ -108,12 +108,12 @@ TEST(SnapRoundingTest, perfect_square)
     collector.new_contour();
     for (const auto & vertex : geometry)
     {
-        collector.add_vertex_and_tile_cuts(vertex);
+        collector.add_vertex_and_tile_cuts<GridRounding::Cell>(vertex);
     }
     const auto & hot_pixels = collector.build_index();
 
     std::vector<Vec2s64> result;
-    snap_round(hot_pixels, gird_step, geometry, std::back_inserter(result));
+    snap_round<GridRounding::Cell>(hot_pixels, geometry, std::back_inserter(result));
 
     EXPECT_THAT(result, ElementsAreArray(expected));
 }
@@ -150,12 +150,12 @@ TEST(SnapRoundingTest, half_integer_perfect_square)
     collector.new_contour();
     for (const auto & vertex : geometry)
     {
-        collector.add_vertex_and_tile_cuts(vertex);
+        collector.add_vertex_and_tile_cuts<GridRounding::Cell>(vertex);
     }
     const auto & hot_pixels = collector.build_index();
 
     std::vector<Vec2s64> result;
-    snap_round(hot_pixels, gird_step, geometry, std::back_inserter(result));
+    snap_round<GridRounding::Cell>(hot_pixels, geometry, std::back_inserter(result));
 
     EXPECT_THAT(result, ElementsAreArray(expected));
 }
