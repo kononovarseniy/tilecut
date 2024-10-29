@@ -118,14 +118,20 @@ s64 column_border_intersection(
     const f64 size,
     const s64 c_x) noexcept
 {
-    switch (rounding)
+    const auto c_y = [&]
     {
-    case GridRounding::Cell:
-        return column_border_intersecion_impl(a_x, a_y, b_x, b_y, size, c_x);
-    case GridRounding::NearestNode:
-        return half_cell_to_nearest_full_cell(column_border_intersecion_impl(a_x, a_y, b_x, b_y, size / 2.0, c_x));
-    }
-    AR_UNREACHABLE;
+        switch (rounding)
+        {
+        case GridRounding::Cell:
+            return column_border_intersecion_impl(a_x, a_y, b_x, b_y, size, c_x);
+        case GridRounding::NearestNode:
+            return half_cell_to_nearest_full_cell(
+                column_border_intersecion_impl(a_x, a_y, b_x, b_y, size / 2.0, c_x * 2.0));
+        }
+        AR_UNREACHABLE;
+    }();
+    AR_POST(line_intersects_cell<rounding>(a_x, a_y, b_x, b_y, size, c_x, c_y));
+    return c_y;
 }
 
 template s64 column_border_intersection<GridRounding::Cell>(f64 a_x, f64 a_y, f64 b_x, f64 b_y, f64 size, s64 c_x);
@@ -141,14 +147,20 @@ s64 row_border_intersection(
     const f64 size,
     const s64 c_y) noexcept
 {
-    switch (rounding)
+    const auto c_x = [&]
     {
-    case GridRounding::Cell:
-        return column_border_intersecion_impl(-a_y, a_x, -b_y, b_x, size, -c_y);
-    case GridRounding::NearestNode:
-        return half_cell_to_nearest_full_cell(column_border_intersecion_impl(-a_y, a_x, -b_y, b_x, size / 2.0, -c_y));
-    }
-    AR_UNREACHABLE;
+        switch (rounding)
+        {
+        case GridRounding::Cell:
+            return column_border_intersecion_impl(-a_y, a_x, -b_y, b_x, size, -c_y);
+        case GridRounding::NearestNode:
+            return half_cell_to_nearest_full_cell(
+                column_border_intersecion_impl(-a_y, a_x, -b_y, b_x, size / 2.0, -c_y * 2));
+        }
+        AR_UNREACHABLE;
+    }();
+    AR_POST(line_intersects_cell<rounding>(a_x, a_y, b_x, b_y, size, c_x, c_y));
+    return c_x;
 }
 
 template s64 row_border_intersection<GridRounding::Cell>(f64 a_x, f64 a_y, f64 b_x, f64 b_y, f64 size, s64 c_y);

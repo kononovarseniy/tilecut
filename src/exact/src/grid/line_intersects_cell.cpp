@@ -97,14 +97,22 @@ struct Flags final
     return term;
 }
 
+struct CellNode final
+{
+    s64 x;
+    s64 y;
+    /// Power of two.
+    f64 size_multiplier;
+};
+
 template <GridRounding rounding>
-[[nodiscard]] inline std::pair<s64, s64> main_cell_node(const bool main_diagonal, const s64 c_x, const s64 c_y) noexcept
+[[nodiscard]] inline CellNode main_cell_node(const bool main_diagonal, const s64 c_x, const s64 c_y) noexcept
 {
     /// For snapping to grid nodes we internaly use rounding to cell to reduce number of possibly inexact operations.
     if constexpr (rounding == GridRounding::Cell)
     {
         AR_PRE(c_y <= std::numeric_limits<decltype(c_y)>::max() - 1);
-        return { c_x, main_diagonal ? c_y : c_y + 1 };
+        return { c_x, main_diagonal ? c_y : c_y + 1, 1.0 };
     }
     if constexpr (rounding == GridRounding::NearestNode)
     {
@@ -112,7 +120,7 @@ template <GridRounding rounding>
         // The distance between corners remains the same, so does difference_term.
         AR_PRE(c_x >= (std::numeric_limits<decltype(c_x)>::min() + 1) / 2);
         AR_PRE(c_y <= (std::numeric_limits<decltype(c_y)>::max() - 1) / 2);
-        return { c_x * 2 - 1, main_diagonal ? c_y * 2 - 1 : c_y * 2 + 1 };
+        return { c_x * 2 - 1, main_diagonal ? c_y * 2 - 1 : c_y * 2 + 1, 0.5 };
     }
     AR_UNREACHABLE;
 }
@@ -195,8 +203,9 @@ bool line_intersects_cell(
 
     const auto common_term = line_cell_intersection::common_term(a_x, a_y, b_x, b_y);
 
-    const auto [n_x, n_y] = line_cell_intersection::main_cell_node<rounding>(main_diagonal, c_x, c_y);
-    const auto cell_dependent_term = line_cell_intersection::cell_dependent_term(n_x, n_y, size, dx, dy);
+    const auto node = line_cell_intersection::main_cell_node<rounding>(main_diagonal, c_x, c_y);
+    const auto cell_dependent_term =
+        line_cell_intersection::cell_dependent_term(node.x, node.y, node.size_multiplier * size, dx, dy);
 
     const auto first_sign = line_cell_intersection::first_determinant_sign(common_term, cell_dependent_term);
     if (main_diagonal && first_sign == 0)
