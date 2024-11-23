@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.23)
 
 project(ka_common)
 
@@ -11,25 +11,38 @@ include(CTest)
 
 include(cmake/warnings.cmake)
 
-add_library(ka_common
-    include/ka/common/assert.hpp
-    include/ka/common/cast.hpp
-    include/ka/common/fixed.hpp
-    include/ka/common/hash.hpp
-    include/ka/common/log.hpp
+set(module_name common)
 
-    src/log.cpp
+add_library(ka_${module_name})
+add_library(ka::${module_name} ALIAS ka_${module_name})
+
+target_sources(ka_${module_name}
+    PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS include
+    FILES
+        include/ka/common/assert.hpp
+        include/ka/common/cast.hpp
+        include/ka/common/fixed.hpp
+        include/ka/common/hash.hpp
+        include/ka/common/log.hpp
+
+    PRIVATE
+        src/log.cpp
 )
 
 find_package(fmt REQUIRED)
 
-target_include_directories(ka_common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_enable_warnings(ka_${module_name})
 
-target_enable_warnings(ka_common)
-
-target_link_libraries(ka_common
+target_link_libraries(ka_${module_name}
     PUBLIC
         fmt::fmt
 )
 
-add_library(ka::common ALIAS ka_common)
+install(TARGETS ka_${module_name}
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+    FILE_SET HEADERS DESTINATION include
+)
