@@ -13,7 +13,7 @@
 
 #include <common/fixed.hpp>
 
-namespace r7
+namespace ka
 {
 
 inline namespace
@@ -108,7 +108,7 @@ void generate_constants_cpp(const std::filesystem::path & output_file)
         << "#pragma once" << std::endl
         << std::endl
         << "#include <common/fixed.hpp>" << std::endl;
-    output << std::format(begin_namespace_template, "r7");
+    output << std::format(begin_namespace_template, "ka");
 
     output << std::format(
         constant_template,
@@ -141,16 +141,16 @@ void generate_constants_cpp(const std::filesystem::path & output_file)
 
     output << std::format(end_namespace_template, "column_border_intersecion_detail");
 
-    output << std::format(end_namespace_template, "r7");
+    output << std::format(end_namespace_template, "ka");
 }
 
 } // namespace
 
-} // namespace r7
+} // namespace ka
 
 int main(int argc, char * argv[])
 {
-    using namespace r7;
+    using namespace ka;
     namespace po = boost::program_options;
 
     po::options_description desc("Allowed options");

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace r7
+namespace ka
 {
 
 /// @brief Rule for matching points to grid cells.
@@ -12,4 +12,4 @@ enum class GridRounding
     NearestNode,
 };
 
-} // namespace r7
+} // namespace ka

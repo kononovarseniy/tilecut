@@ -15,7 +15,7 @@
 #include <common/assert.hpp>
 #include <common/fixed.hpp>
 
-namespace r7
+namespace ka
 {
 
 /// @brief Basic expansion with two components.
@@ -372,4 +372,4 @@ template <typename T, size_t Size>
     return {};
 }
 
-} // namespace r7
+} // namespace ka

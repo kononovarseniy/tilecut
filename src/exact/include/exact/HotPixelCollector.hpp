@@ -7,7 +7,7 @@
 #include <exact/HotPixelIndex.hpp>
 #include <geometry_types/Vec2.hpp>
 
-namespace r7
+namespace ka
 {
 
 //! Collects hot pixels to index.
@@ -37,4 +37,4 @@ private:
     HotPixelIndex index_;
 };
 
-} // namespace r7
+} // namespace ka

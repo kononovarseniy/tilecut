@@ -9,7 +9,7 @@
 #include "../expansion.hpp"
 #include "common.hpp"
 
-namespace r7
+namespace ka
 {
 
 s64 column_containing_position_impl(const f64 x, const f64 size) noexcept
@@ -60,4 +60,4 @@ s64 row_containing_position(const f64 y, const f64 size) noexcept
 template s64 row_containing_position<GridRounding::Cell>(f64 y, f64 size);
 template s64 row_containing_position<GridRounding::NearestNode>(f64 y, f64 size);
 
-} // namespace r7
+} // namespace ka

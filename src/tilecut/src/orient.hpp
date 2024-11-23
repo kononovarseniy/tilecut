@@ -1,7 +1,7 @@
 #include <common/fixed.hpp>
 #include <geometry_types/Vec2.hpp>
 
-namespace r7
+namespace ka
 {
 
 [[nodiscard]] constexpr s64 orient(const Vec2u16 line_a, const Vec2u16 line_b, const Vec2u16 point_c) noexcept
@@ -124,4 +124,4 @@ private:
     s64 value_;
 };
 
-} // namespace r7
+} // namespace ka

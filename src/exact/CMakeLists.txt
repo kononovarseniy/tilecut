@@ -26,7 +26,7 @@ target_link_libraries(TilecutExact
     PUBLIC
         TilecutExact_Generated
         
-        r7common
+        ka::common
         TilecutGeometryTypes
 )
 
@@ -43,7 +43,7 @@ add_executable(TilecutExact_Test
 target_enable_warnings(TilecutExact_Test)
 target_link_libraries(TilecutExact_Test
     PRIVATE
-        r7common
+        ka::common
         TilecutExact
         TilecutGeometryTypes
         gtest::gtest

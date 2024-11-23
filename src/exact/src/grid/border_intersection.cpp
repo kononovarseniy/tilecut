@@ -9,7 +9,7 @@
 #include "../expansion.hpp"
 #include "common.hpp"
 
-namespace r7
+namespace ka
 {
 
 s64 column_border_intersecion_impl(
@@ -166,4 +166,4 @@ s64 row_border_intersection(
 template s64 row_border_intersection<GridRounding::Cell>(f64 a_x, f64 a_y, f64 b_x, f64 b_y, f64 size, s64 c_y);
 template s64 row_border_intersection<GridRounding::NearestNode>(f64 a_x, f64 a_y, f64 b_x, f64 b_y, f64 size, s64 c_y);
 
-} // namespace r7
+} // namespace ka

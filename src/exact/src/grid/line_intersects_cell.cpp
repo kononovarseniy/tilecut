@@ -10,7 +10,7 @@
 #include "../expansion.hpp"
 #include "common.hpp"
 
-namespace r7
+namespace ka
 {
 
 inline namespace
@@ -227,4 +227,4 @@ template bool line_intersects_cell<GridRounding::Cell>(f64 a_x, f64 a_y, f64 b_x
 template bool line_intersects_cell<
     GridRounding::NearestNode>(f64 a_x, f64 a_y, f64 b_x, f64 b_y, f64 size, s64 c_x, s64 c_y);
 
-} // namespace r7
+} // namespace ka

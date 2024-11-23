@@ -1,6 +1,6 @@
 #pragma once
 
-namespace r7
+namespace ka
 {
 
 enum class HotPixelOrder
@@ -9,4 +9,4 @@ enum class HotPixelOrder
     Descending,
 };
 
-} // namespace r7
+} // namespace ka

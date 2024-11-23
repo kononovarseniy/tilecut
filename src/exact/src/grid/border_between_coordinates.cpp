@@ -7,7 +7,7 @@
 #include "../expansion.hpp"
 #include "common.hpp"
 
-namespace r7
+namespace ka
 {
 
 bool border_between_coordinates(const f64 a, const f64 b, const f64 size, const s64 x) noexcept
@@ -32,4 +32,4 @@ bool border_between_coordinates(const f64 a, const f64 b, const f64 size, const 
     }
 }
 
-} // namespace r7
+} // namespace ka

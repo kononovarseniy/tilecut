@@ -3,7 +3,7 @@
 #include <common/fixed.hpp>
 #include <exact/GridRounding.hpp>
 
-namespace r7
+namespace ka
 {
 
 /// @brief Checks line for intersection with the cell of regular grid.
@@ -55,4 +55,4 @@ template <GridRounding rounding>
 template <GridRounding rounding>
 [[nodiscard]] s64 row_border_intersection(f64 a_x, f64 a_y, f64 b_x, f64 b_y, f64 size, s64 c_y) noexcept;
 
-} // namespace r7
+} // namespace ka

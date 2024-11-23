@@ -17,5 +17,5 @@ target_link_libraries(TilecutTilecut
     PUBLIC
         TilecutGeometryTypes
 
-        r7common
+        ka::common
 )

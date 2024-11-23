@@ -12,7 +12,7 @@
 #include <exact/snap_round.hpp>
 #include <geometry_types/Vec2.hpp>
 
-namespace r7
+namespace ka
 {
 
 using ::testing::ElementsAreArray;
@@ -160,4 +160,4 @@ TEST(SnapRoundingTest, half_integer_perfect_square)
     EXPECT_THAT(result, ElementsAreArray(expected));
 }
 
-} // namespace r7
+} // namespace ka

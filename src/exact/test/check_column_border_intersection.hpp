@@ -2,7 +2,7 @@
 
 #include <common/fixed.hpp>
 
-namespace r7
+namespace ka
 {
 
 [[nodiscard]] bool check_column_border_intersecion(
@@ -14,4 +14,4 @@ namespace r7
     const s64 c_x,
     const s64 c_y);
 
-} // namespace r7
+} // namespace ka

@@ -5,7 +5,7 @@
 #include <common/fixed.hpp>
 #include <tilecut/collect_tiles.hpp>
 
-namespace r7
+namespace ka
 {
 
 inline namespace
@@ -99,4 +99,4 @@ void collect_tiles(
     flush_tile(prev_tile);
 }
 
-} // namespace r7
+} // namespace ka

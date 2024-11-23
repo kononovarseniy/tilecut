@@ -3,7 +3,7 @@
 #include <common/fixed.hpp>
 #include <common/hash.hpp>
 
-namespace r7
+namespace ka
 {
 
 template <typename T>
@@ -26,4 +26,4 @@ using Vec2s64 = Vec2<s64>;
 using Vec2s32 = Vec2<s32>;
 using Vec2u16 = Vec2<u16>;
 
-} // namespace r7
+} // namespace ka

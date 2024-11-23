@@ -14,7 +14,7 @@
 
 #include "check_column_border_intersection.hpp"
 
-namespace r7
+namespace ka
 {
 
 TEST(ColumnBorderIntersectionTest, combinations_of_dangerous_values)
@@ -106,4 +106,4 @@ TEST(ColumnBorderIntersectionTest, combinations_of_dangerous_values)
     mpfr_clear(value);
 }
 
-} // namespace r7
+} // namespace ka

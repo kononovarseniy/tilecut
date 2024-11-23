@@ -9,5 +9,5 @@ target_include_directories(TilecutGeometryTypes INTERFACE ${CMAKE_CURRENT_SOURCE
 
 target_link_libraries(TilecutGeometryTypes
     INTERFACE
-        r7common
+        ka::common
 )

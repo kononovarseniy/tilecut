@@ -6,7 +6,7 @@
 
 #include <common/fixed.hpp>
 
-namespace r7
+namespace ka
 {
 
 inline namespace
@@ -35,4 +35,4 @@ template <typename T, size_t E>
 
 } // namespace
 
-} // namespace r7
+} // namespace ka

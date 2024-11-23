@@ -4,7 +4,7 @@
 
 #include "check_column_border_intersection.hpp"
 
-namespace r7
+namespace ka
 {
 
 TEST(CheckColumnBorderIntersectionTest, horizontal_line_zero_y)
@@ -97,4 +97,4 @@ TEST(CheckColumnBorderIntersectionTest, simple_line)
     EXPECT_TRUE(check_column_border_intersecion(b_x, b_y, a_x, a_y, size, 6, -5)) << "Second endpoint opposite";
 }
 
-} // namespace r7
+} // namespace ka

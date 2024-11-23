@@ -9,7 +9,7 @@ target_enable_warnings(TilecutExact_Gen)
 
 target_link_libraries(TilecutExact_Gen
     PRIVATE
-        r7common
+        ka::common
         Boost::program_options
         mpfr::mpfr
 )

@@ -4,7 +4,7 @@
 #include <exact/HotPixelCollector.hpp>
 #include <exact/grid.hpp>
 
-namespace r7
+namespace ka
 {
 
 void HotPixelCollector::init(const f64 grid_step, const u16 tile_step) noexcept
@@ -132,4 +132,4 @@ const HotPixelIndex & HotPixelCollector::build_index() noexcept
     return index_;
 }
 
-} // namespace r7
+} // namespace ka

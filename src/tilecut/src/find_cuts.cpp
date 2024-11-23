@@ -9,7 +9,7 @@
 
 #include "orient.hpp"
 
-namespace r7
+namespace ka
 {
 
 inline namespace
@@ -273,4 +273,4 @@ bool open_on_the_bottom(const std::span<const Segment2u16> cut_segments) noexcep
         });
 }
 
-} // namespace r7
+} // namespace ka

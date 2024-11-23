@@ -3,7 +3,7 @@
 #include <common/assert.hpp>
 #include <tilecut/filter_segments.hpp>
 
-namespace r7
+namespace ka
 {
 
 inline namespace
@@ -76,4 +76,4 @@ void filter_segments(std::vector<Segment2s64> & segments) noexcept
     segments.erase(out_it, segments.end());
 }
 
-} // namespace r7
+} // namespace ka

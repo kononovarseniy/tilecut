@@ -12,7 +12,7 @@
 #include <exact/HotPixelOrder.hpp>
 #include <geometry_types/Vec2.hpp>
 
-namespace r7
+namespace ka
 {
 
 //! A simple data structure for querying hot pixels within a given region.
@@ -129,4 +129,4 @@ private:
     std::vector<Column> columns_;
 };
 
-} // namespace r7
+} // namespace ka

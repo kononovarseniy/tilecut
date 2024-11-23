@@ -6,7 +6,7 @@
 #include <geometry_types/Segment2.hpp>
 #include <geometry_types/Vec2.hpp>
 
-namespace r7
+namespace ka
 {
 
 struct Tile final
@@ -21,4 +21,4 @@ void collect_tiles(
     std::vector<Tile> & tiles,
     u16 tile_size) noexcept;
 
-} // namespace r7
+} // namespace ka

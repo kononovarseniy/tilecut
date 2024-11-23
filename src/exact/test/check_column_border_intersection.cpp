@@ -4,7 +4,7 @@
 
 #include <common/assert.hpp>
 
-namespace r7
+namespace ka
 {
 
 bool check_column_border_intersecion(
@@ -74,4 +74,4 @@ bool check_column_border_intersecion(
     return result;
 }
 
-} // namespace r7
+} // namespace ka

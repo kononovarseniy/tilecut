@@ -6,7 +6,7 @@
 #include <exact/grid.hpp>
 #include <geometry_types/Vec2.hpp>
 
-namespace r7
+namespace ka
 {
 
 //! Performs countour snap rounding using specified hot pixels.
@@ -72,4 +72,4 @@ Out snap_round(const HotPixelIndex & hot_pixels, In && line, Out output)
     return output;
 }
 
-} // namespace r7
+} // namespace ka
