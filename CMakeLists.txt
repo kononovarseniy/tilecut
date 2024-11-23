@@ -12,11 +12,11 @@ include(CTest)
 include(cmake/warnings.cmake)
 
 add_library(ka_common
-    include/common/assert.hpp
-    include/common/cast.hpp
-    include/common/fixed.hpp
-    include/common/hash.hpp
-    include/common/log.hpp
+    include/ka/common/assert.hpp
+    include/ka/common/cast.hpp
+    include/ka/common/fixed.hpp
+    include/ka/common/hash.hpp
+    include/ka/common/log.hpp
 
     src/log.cpp
 )

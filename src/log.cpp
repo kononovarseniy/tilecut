@@ -2,7 +2,7 @@
 
 #include <fmt/format.h>
 
-#include <common/log.hpp>
+#include <ka/common/log.hpp>
 
 namespace ka
 {
