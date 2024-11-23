@@ -3,7 +3,7 @@
 #include <iostream>
 #include <source_location>
 
-namespace r7
+namespace ka
 {
 
 namespace __log_detail
@@ -56,4 +56,4 @@ void log_assert(
     std::string_view condition,
     const std::source_location & location = std::source_location::current());
 
-} // namespace r7
+} // namespace ka

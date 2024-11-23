@@ -4,7 +4,7 @@
 
 #include <common/log.hpp>
 
-namespace r7
+namespace ka
 {
 
 namespace __log_detail
@@ -36,4 +36,4 @@ void log_assert(
     log_fatal(fmt::format("{} failed: AR_ASSERT({})", assert_type, condition), location);
 }
 
-} // namespace r7
+} // namespace ka

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <limits>
 
-namespace r7
+namespace ka
 {
 
 using u8 = std::uint8_t;
@@ -25,4 +25,4 @@ static_assert(std::numeric_limits<f64>::is_iec559);
 static_assert(std::numeric_limits<f32>::digits == 24);
 static_assert(std::numeric_limits<f64>::digits == 53);
 
-} // namespace r7
+} // namespace ka

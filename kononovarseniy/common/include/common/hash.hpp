@@ -7,7 +7,7 @@
 
 #include <common/fixed.hpp>
 
-namespace r7
+namespace ka
 {
 
 class Hasher;
@@ -131,4 +131,4 @@ struct StrEq final
     }
 };
 
-} // namespace r7
+} // namespace ka
