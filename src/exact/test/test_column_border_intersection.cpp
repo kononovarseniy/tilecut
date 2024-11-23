@@ -7,7 +7,6 @@
 
 #include <mpfr.h>
 
-#include <ka/common/assert.hpp>
 #include <ka/common/fixed.hpp>
 #include <ka/exact/generated/constants.hpp>
 #include <ka/exact/grid.hpp>
@@ -23,7 +22,7 @@ TEST(ColumnBorderIntersectionTest, combinations_of_dangerous_values)
     mpfr_init2(value, 53);
     const auto round_to_cell = [&value](const f64 x, const f64 size, const mpfr_rnd_t rnd) -> s64
     {
-        AR_ASSERT(0 == mpfr_set_d(value, x, rnd));
+        EXPECT_EQ(0, mpfr_set_d(value, x, rnd));
         mpfr_div_d(value, value, size, rnd);
         return mpfr_get_si(value, rnd);
     };
