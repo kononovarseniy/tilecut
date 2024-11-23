@@ -8,14 +8,14 @@
     #define AR_POST(condition) ((void)0)
     #define AR_NESTED_ASSERT(condition, assert_type, location)                                                         \
         ((void)(condition), (void)(assert_type), (void)(location))
-    #define AR_UNREACHABLE ::r7::__assert_detail::unreachable()
+    #define AR_UNREACHABLE ::ka::__assert_detail::unreachable()
 #else
     #define AR_NESTED_ASSERT(condition, assert_type, location)                                                         \
         do                                                                                                             \
         {                                                                                                              \
             if (!(condition))                                                                                          \
             {                                                                                                          \
-                ::r7::__assert_detail::assert_handler(assert_type, #condition, location);                              \
+                ::ka::__assert_detail::assert_handler(assert_type, #condition, location);                              \
             }                                                                                                          \
         } while (false)
     #define AR_ASSERT(condition) AR_NESTED_ASSERT(condition, "Assertion", std::source_location::current())
@@ -24,12 +24,12 @@
     #define AR_UNREACHABLE                                                                                             \
         do                                                                                                             \
         {                                                                                                              \
-            ::r7::__assert_detail::assert_handler("Unreachable", "unreachable", std::source_location::current());      \
-            ::r7::__assert_detail::unreachable();                                                                      \
+            ::ka::__assert_detail::assert_handler("Unreachable", "unreachable", std::source_location::current());      \
+            ::ka::__assert_detail::unreachable();                                                                      \
         } while (false)
 #endif
 
-namespace r7::__assert_detail
+namespace ka::__assert_detail
 {
 
 inline void assert_handler(
@@ -55,4 +55,4 @@ inline void assert_handler(
 #endif
 }
 
-} // namespace r7::__assert_detail
+} // namespace ka::__assert_detail

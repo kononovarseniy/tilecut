@@ -9,7 +9,7 @@
 #include <common/assert.hpp>
 #include <common/fixed.hpp>
 
-namespace r7
+namespace ka
 {
 
 template <std::integral T, std::floating_point S>
@@ -138,4 +138,4 @@ static_assert(!SafelyCastableTo<f64, s64>);
 static_assert(SafelyCastableTo<f64, f32>);
 static_assert(!SafelyCastableTo<f32, f64>);
 
-} // namespace r7
+} // namespace ka

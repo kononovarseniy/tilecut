@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(r7common)
+project(ka_common)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -11,7 +11,7 @@ include(CTest)
 
 include(cmake/warnings.cmake)
 
-add_library(r7common
+add_library(ka_common
     include/common/assert.hpp
     include/common/cast.hpp
     include/common/fixed.hpp
@@ -23,11 +23,13 @@ add_library(r7common
 
 find_package(fmt REQUIRED)
 
-target_include_directories(r7common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(ka_common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-target_enable_warnings(r7common)
+target_enable_warnings(ka_common)
 
-target_link_libraries(r7common
+target_link_libraries(ka_common
     PUBLIC
         fmt::fmt
 )
+
+add_library(ka::common ALIAS ka_common)
