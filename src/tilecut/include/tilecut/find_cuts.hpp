@@ -14,4 +14,10 @@ namespace r7
 /// @param tile_size size of the tile.
 void find_cuts(std::span<const Segment2u16> segments, std::vector<Segment2u16> & result, u16 tile_size) noexcept;
 
+/// @brief Checks that the interior of the tile below the current tile contains some points of the same multipolygon.
+/// One can use this info to find tiles completely covered by the multipolygon.
+/// @param cut_segments tile border parts that belongs to the interior of a multipolygon.
+/// @return True if there is a cut segment on the bottom border of the tile.
+[[nodiscard]] bool open_on_the_bottom(std::span<const Segment2u16> cut_segments) noexcept;
+
 } // namespace r7

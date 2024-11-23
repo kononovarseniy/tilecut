@@ -263,4 +263,14 @@ void find_cuts(
     }
 }
 
+bool open_on_the_bottom(const std::span<const Segment2u16> cut_segments) noexcept
+{
+    return std::ranges::any_of(
+        cut_segments,
+        [&](const Segment2u16 & segment)
+        {
+            return segment.a.y == 0 && segment.b.y == 0;
+        });
+}
+
 } // namespace r7
