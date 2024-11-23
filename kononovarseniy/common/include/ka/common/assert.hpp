@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/log.hpp>
+#include <ka/common/log.hpp>
 
 #ifdef NDEBUG
     #define AR_ASSERT(condition) ((void)0)
