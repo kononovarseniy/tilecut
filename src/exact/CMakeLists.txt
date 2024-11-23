@@ -1,53 +1,67 @@
 add_subdirectory(gen)
 
-add_library(TilecutExact
-    include/ka/exact/grid.hpp
-    include/ka/exact/GridRounding.hpp
-    include/ka/exact/HotPixelCollector.hpp
-    include/ka/exact/HotPixelIndex.hpp
-    include/ka/exact/HotPixelOrder.hpp
-    include/ka/exact/snap_round.hpp
+set(module_name exact)
 
-    src/grid/border_between_coordinates.cpp
-    src/grid/border_intersection.cpp
-    src/grid/cell_containg_position.cpp
-    src/grid/common.hpp
-    src/grid/line_intersects_cell.cpp
+add_library(ka_${module_name})
+add_library(ka::${module_name} ALIAS ka_${module_name})
 
-    src/expansion.hpp
-    src/HotPixelCollector.cpp
+target_sources(ka_${module_name}
+    PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS include
+    FILES
+        include/ka/exact/grid.hpp
+        include/ka/exact/GridRounding.hpp
+        include/ka/exact/HotPixelCollector.hpp
+        include/ka/exact/HotPixelIndex.hpp
+        include/ka/exact/HotPixelOrder.hpp
+        include/ka/exact/snap_round.hpp
+
+    PRIVATE
+        src/grid/border_between_coordinates.cpp
+        src/grid/border_intersection.cpp
+        src/grid/cell_containg_position.cpp
+        src/grid/common.hpp
+        src/grid/line_intersects_cell.cpp
+
+        src/expansion.hpp
+        src/HotPixelCollector.cpp
 )
 
-target_include_directories(TilecutExact PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_enable_warnings(ka_${module_name})
 
-target_enable_warnings(TilecutExact)
-
-target_link_libraries(TilecutExact
+target_link_libraries(ka_${module_name}
     PUBLIC
-        TilecutExact_Generated
-        
         ka::common
-        TilecutGeometryTypes
+        ka::exact_generated
+        ka::geometry_types
+)
+
+install(TARGETS ka_${module_name}
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+    FILE_SET HEADERS DESTINATION include
 )
 
 
 find_package(mpfr REQUIRED)
 
-add_executable(TilecutExact_Test
+add_executable(ka_${module_name}_test
     test/check_column_border_intersection.cpp
     test/check_column_border_intersection.hpp
     test/test_check_column_border_intersection.cpp
     test/test_column_border_intersection.cpp
     test/test_snap_rounding.cpp
 )
-target_enable_warnings(TilecutExact_Test)
-target_link_libraries(TilecutExact_Test
+target_enable_warnings(ka_${module_name}_test)
+target_link_libraries(ka_${module_name}_test
     PRIVATE
         ka::common
-        TilecutExact
-        TilecutGeometryTypes
+        ka::exact
+        ka::geometry_types
         gtest::gtest
         mpfr::mpfr
 )
 
-gtest_discover_tests(TilecutExact_Test)
+gtest_discover_tests(ka_${module_name}_test)
