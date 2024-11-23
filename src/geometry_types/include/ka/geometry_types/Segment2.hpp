@@ -1,8 +1,8 @@
 #pragma once
 
-#include <common/fixed.hpp>
-#include <common/hash.hpp>
-#include <geometry_types/Vec2.hpp>
+#include <ka/common/fixed.hpp>
+#include <ka/common/hash.hpp>
+#include <ka/geometry_types/Vec2.hpp>
 
 namespace ka
 {

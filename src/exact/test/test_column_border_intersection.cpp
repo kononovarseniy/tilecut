@@ -7,10 +7,10 @@
 
 #include <mpfr.h>
 
-#include <common/assert.hpp>
-#include <common/fixed.hpp>
-#include <exact/generated/constants.hpp>
-#include <exact/grid.hpp>
+#include <ka/common/assert.hpp>
+#include <ka/common/fixed.hpp>
+#include <ka/exact/generated/constants.hpp>
+#include <ka/exact/grid.hpp>
 
 #include "check_column_border_intersection.hpp"
 

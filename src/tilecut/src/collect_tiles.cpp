@@ -1,9 +1,9 @@
 #include <algorithm>
 
-#include <common/assert.hpp>
-#include <common/cast.hpp>
-#include <common/fixed.hpp>
-#include <tilecut/collect_tiles.hpp>
+#include <ka/common/assert.hpp>
+#include <ka/common/cast.hpp>
+#include <ka/common/fixed.hpp>
+#include <ka/tilecut/collect_tiles.hpp>
 
 namespace ka
 {

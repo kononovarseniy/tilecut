@@ -1,10 +1,10 @@
 #include <cmath>
 
-#include <common/assert.hpp>
-#include <common/cast.hpp>
-#include <common/fixed.hpp>
-#include <exact/generated/constants.hpp>
-#include <exact/grid.hpp>
+#include <ka/common/assert.hpp>
+#include <ka/common/cast.hpp>
+#include <ka/common/fixed.hpp>
+#include <ka/exact/generated/constants.hpp>
+#include <ka/exact/grid.hpp>
 
 #include "../expansion.hpp"
 #include "common.hpp"

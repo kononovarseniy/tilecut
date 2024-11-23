@@ -1,11 +1,11 @@
 #include <algorithm>
 #include <optional>
 
-#include <common/assert.hpp>
-#include <common/cast.hpp>
-#include <common/fixed.hpp>
-#include <geometry_types/Vec2.hpp>
-#include <tilecut/find_cuts.hpp>
+#include <ka/common/assert.hpp>
+#include <ka/common/cast.hpp>
+#include <ka/common/fixed.hpp>
+#include <ka/geometry_types/Vec2.hpp>
+#include <ka/tilecut/find_cuts.hpp>
 
 #include "orient.hpp"
 

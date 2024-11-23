@@ -1,7 +1,7 @@
 #include <algorithm>
 
-#include <common/assert.hpp>
-#include <tilecut/filter_segments.hpp>
+#include <ka/common/assert.hpp>
+#include <ka/tilecut/filter_segments.hpp>
 
 namespace ka
 {

@@ -7,10 +7,10 @@
 #include <span>
 #include <vector>
 
-#include <common/assert.hpp>
-#include <common/fixed.hpp>
-#include <exact/HotPixelOrder.hpp>
-#include <geometry_types/Vec2.hpp>
+#include <ka/common/assert.hpp>
+#include <ka/common/fixed.hpp>
+#include <ka/exact/HotPixelOrder.hpp>
+#include <ka/geometry_types/Vec2.hpp>
 
 namespace ka
 {

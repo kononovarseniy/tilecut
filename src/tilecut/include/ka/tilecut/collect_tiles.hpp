@@ -3,8 +3,8 @@
 #include <span>
 #include <vector>
 
-#include <geometry_types/Segment2.hpp>
-#include <geometry_types/Vec2.hpp>
+#include <ka/geometry_types/Segment2.hpp>
+#include <ka/geometry_types/Vec2.hpp>
 
 namespace ka
 {

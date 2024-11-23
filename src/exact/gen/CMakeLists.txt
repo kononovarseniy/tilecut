@@ -15,7 +15,7 @@ target_link_libraries(TilecutExact_Gen
 )
 
 set(tilecut_exact_include_dir ${CMAKE_CURRENT_BINARY_DIR}/include)
-set(tilecut_exact_generated_dir ${tilecut_exact_include_dir}/exact/generated)
+set(tilecut_exact_generated_dir ${tilecut_exact_include_dir}/ka/exact/generated)
 file(MAKE_DIRECTORY ${tilecut_exact_generated_dir})
 set(tilecut_exact_generated_constants ${tilecut_exact_generated_dir}/constants.hpp)
 

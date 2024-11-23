@@ -8,9 +8,9 @@
 #include <iterator>
 #include <vector>
 
-#include <exact/HotPixelCollector.hpp>
-#include <exact/snap_round.hpp>
-#include <geometry_types/Vec2.hpp>
+#include <ka/exact/HotPixelCollector.hpp>
+#include <ka/exact/snap_round.hpp>
+#include <ka/geometry_types/Vec2.hpp>
 
 namespace ka
 {

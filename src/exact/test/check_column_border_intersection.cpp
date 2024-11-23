@@ -2,7 +2,7 @@
 
 #include <mpfr.h>
 
-#include <common/assert.hpp>
+#include <ka/common/assert.hpp>
 
 namespace ka
 {

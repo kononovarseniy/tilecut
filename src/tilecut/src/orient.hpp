@@ -1,5 +1,5 @@
-#include <common/fixed.hpp>
-#include <geometry_types/Vec2.hpp>
+#include <ka/common/fixed.hpp>
+#include <ka/geometry_types/Vec2.hpp>
 
 namespace ka
 {

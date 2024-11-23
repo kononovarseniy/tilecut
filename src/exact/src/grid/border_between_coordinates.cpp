@@ -1,8 +1,8 @@
 #include <functional>
 
-#include <common/assert.hpp>
-#include <common/cast.hpp>
-#include <common/fixed.hpp>
+#include <ka/common/assert.hpp>
+#include <ka/common/cast.hpp>
+#include <ka/common/fixed.hpp>
 
 #include "../expansion.hpp"
 #include "common.hpp"

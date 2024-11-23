@@ -1,7 +1,7 @@
 #pragma once
 
-#include <common/fixed.hpp>
-#include <exact/GridRounding.hpp>
+#include <ka/common/fixed.hpp>
+#include <ka/exact/GridRounding.hpp>
 
 namespace ka
 {

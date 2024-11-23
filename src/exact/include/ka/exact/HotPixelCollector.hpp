@@ -3,9 +3,9 @@
 #include <optional>
 #include <vector>
 
-#include <exact/GridRounding.hpp>
-#include <exact/HotPixelIndex.hpp>
-#include <geometry_types/Vec2.hpp>
+#include <ka/exact/GridRounding.hpp>
+#include <ka/exact/HotPixelIndex.hpp>
+#include <ka/geometry_types/Vec2.hpp>
 
 namespace ka
 {

@@ -1,7 +1,7 @@
 add_library(TilecutTilecut
-    include/tilecut/collect_tiles.hpp
-    include/tilecut/filter_segments.hpp
-    include/tilecut/find_cuts.hpp
+    include/ka/tilecut/collect_tiles.hpp
+    include/ka/tilecut/filter_segments.hpp
+    include/ka/tilecut/find_cuts.hpp
 
     src/collect_tiles.cpp
     src/filter_segments.cpp

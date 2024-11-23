@@ -11,7 +11,7 @@
 
 #include <mpfr.h>
 
-#include <common/fixed.hpp>
+#include <ka/common/fixed.hpp>
 
 namespace ka
 {
@@ -107,7 +107,7 @@ void generate_constants_cpp(const std::filesystem::path & output_file)
         << std::endl
         << "#pragma once" << std::endl
         << std::endl
-        << "#include <common/fixed.hpp>" << std::endl;
+        << "#include <ka/common/fixed.hpp>" << std::endl;
     output << std::format(begin_namespace_template, "ka");
 
     output << std::format(

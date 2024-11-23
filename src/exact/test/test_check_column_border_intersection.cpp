@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <common/fixed.hpp>
+#include <ka/common/fixed.hpp>
 
 #include "check_column_border_intersection.hpp"
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <common/fixed.hpp>
-#include <common/hash.hpp>
+#include <ka/common/fixed.hpp>
+#include <ka/common/hash.hpp>
 
 namespace ka
 {

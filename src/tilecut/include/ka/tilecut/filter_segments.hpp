@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <geometry_types/Segment2.hpp>
+#include <ka/geometry_types/Segment2.hpp>
 
 namespace ka
 {

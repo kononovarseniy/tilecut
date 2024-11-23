@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <span>
 
-#include <common/fixed.hpp>
+#include <ka/common/fixed.hpp>
 
 namespace ka
 {

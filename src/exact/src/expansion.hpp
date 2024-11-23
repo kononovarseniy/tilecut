@@ -12,8 +12,8 @@
 #include <concepts>
 #include <span>
 
-#include <common/assert.hpp>
-#include <common/fixed.hpp>
+#include <ka/common/assert.hpp>
+#include <ka/common/fixed.hpp>
 
 namespace ka
 {
