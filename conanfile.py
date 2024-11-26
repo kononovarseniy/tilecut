@@ -67,6 +67,8 @@ class TilecutRecipe(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
+        if self.options.build_tests:
+            cmake.test()
 
     def package(self):
         cmake = CMake(self)
