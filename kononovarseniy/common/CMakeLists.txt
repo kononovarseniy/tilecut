@@ -31,14 +31,7 @@ target_sources(ka_${module_name}
         src/log.cpp
 )
 
-find_package(fmt REQUIRED)
-
 target_enable_warnings(ka_${module_name})
-
-target_link_libraries(ka_${module_name}
-    PUBLIC
-        fmt::fmt
-)
 
 install(TARGETS ka_${module_name}
     ARCHIVE DESTINATION lib
