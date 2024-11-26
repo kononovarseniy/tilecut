@@ -1,6 +1,5 @@
 #include <filesystem>
-
-#include <fmt/format.h>
+#include <format>
 
 #include <ka/common/log.hpp>
 
@@ -17,7 +16,7 @@ std::string format_message(
 {
     constexpr auto here = std::source_location::current().file_name();
     const auto root = std::filesystem::path(here).parent_path().parent_path().parent_path();
-    return fmt::format(
+    return std::format(
         "{} ({}:{}.{}) {}",
         type,
         std::filesystem::path(location.file_name()).lexically_proximate(root).string(),
@@ -33,7 +32,7 @@ void log_assert(
     const std::string_view condition,
     const std::source_location & location)
 {
-    log_fatal(fmt::format("{} failed: AR_ASSERT({})", assert_type, condition), location);
+    log_fatal(std::format("{} failed: AR_ASSERT({})", assert_type, condition), location);
 }
 
 } // namespace ka
