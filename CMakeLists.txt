@@ -7,9 +7,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
-find_package(GTest REQUIRED)
-include(GoogleTest)
-enable_testing()
+option(GENERATE_GRID "Build using GNU MPFR for code generation" ON)
+option(BUILD_TESTS "Build tests" ON)
+
+if(BUILD_TESTS)
+    find_package(GTest REQUIRED)
+    include(GoogleTest)
+    enable_testing()
+endif()
 
 function(target_enable_warnings TARGET_NAME)
     target_compile_options(${TARGET_NAME} PRIVATE

@@ -1,34 +1,41 @@
 set(module_name exact_generated)
 
-find_package(Boost REQUIRED)
-find_package(mpfr REQUIRED)
+set(embedded_grid_file ka/exact/generated/embedded_grid.hpp)
 
-add_executable(ka_${module_name}_generator)
-add_executable(ka::${module_name}_generator ALIAS ka_${module_name}_generator)
+if (GENERATE_GRID)
+    find_package(Boost REQUIRED)
+    find_package(mpfr REQUIRED)
 
-target_sources(ka_${module_name}_generator
-    PRIVATE
-        generate.cpp
-)
+    add_executable(ka_${module_name}_generator)
+    add_executable(ka::${module_name}_generator ALIAS ka_${module_name}_generator)
 
-target_enable_warnings(ka_${module_name}_generator)
+    target_sources(ka_${module_name}_generator
+        PRIVATE
+            generate.cpp
+    )
 
-target_link_libraries(ka_${module_name}_generator
-    PRIVATE
-        ka::common
-        Boost::program_options
-        mpfr::mpfr
-)
+    target_enable_warnings(ka_${module_name}_generator)
 
-set(generated_headers_base_dir ${CMAKE_CURRENT_BINARY_DIR}/include)
-set(generated_constants_file ${generated_headers_base_dir}/ka/exact/generated/embedded_grid.hpp)
+    target_link_libraries(ka_${module_name}_generator
+        PRIVATE
+            ka::common
+            Boost::program_options
+            mpfr::mpfr
+    )
 
-add_custom_command(
-    OUTPUT ${generated_constants_file}
-    COMMAND ${CMAKE_COMMAND} -E make_directory $<PATH:GET_PARENT_PATH,${generated_constants_file}>
-    COMMAND ka::${module_name}_generator --output ${generated_constants_file}
-    DEPENDS ka::${module_name}_generator
-)
+    set(generated_headers_base_dir ${CMAKE_CURRENT_BINARY_DIR}/include)
+    set(generated_constants_file ${generated_headers_base_dir}/${embedded_grid_file})
+
+    add_custom_command(
+        OUTPUT ${generated_constants_file}
+        COMMAND ${CMAKE_COMMAND} -E make_directory $<PATH:GET_PARENT_PATH,${generated_constants_file}>
+        COMMAND ka::${module_name}_generator --output ${generated_constants_file}
+        DEPENDS ka::${module_name}_generator
+    )
+else()
+    set(generated_headers_base_dir ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+    set(generated_constants_file ${generated_headers_base_dir}/${embedded_grid_file})
+endif()
 
 add_library(ka_${module_name} INTERFACE
     # Why?!

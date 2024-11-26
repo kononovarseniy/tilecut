@@ -45,24 +45,25 @@ install(TARGETS ka_${module_name}
     FILE_SET HEADERS DESTINATION include
 )
 
+if(BUILD_TESTS)
+    find_package(mpfr REQUIRED)
 
-find_package(mpfr REQUIRED)
+    add_executable(ka_${module_name}_test
+        test/check_column_border_intersection.cpp
+        test/check_column_border_intersection.hpp
+        test/test_check_column_border_intersection.cpp
+        test/test_column_border_intersection.cpp
+        test/test_snap_rounding.cpp
+    )
+    target_enable_warnings(ka_${module_name}_test)
+    target_link_libraries(ka_${module_name}_test
+        PRIVATE
+            ka::common
+            ka::exact
+            ka::geometry_types
+            gtest::gtest
+            mpfr::mpfr
+    )
 
-add_executable(ka_${module_name}_test
-    test/check_column_border_intersection.cpp
-    test/check_column_border_intersection.hpp
-    test/test_check_column_border_intersection.cpp
-    test/test_column_border_intersection.cpp
-    test/test_snap_rounding.cpp
-)
-target_enable_warnings(ka_${module_name}_test)
-target_link_libraries(ka_${module_name}_test
-    PRIVATE
-        ka::common
-        ka::exact
-        ka::geometry_types
-        gtest::gtest
-        mpfr::mpfr
-)
-
-gtest_discover_tests(ka_${module_name}_test)
+    gtest_discover_tests(ka_${module_name}_test)
+endif()

@@ -1,6 +1,9 @@
+import os
+
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout, CMakeDeps
 from conan.tools.build import check_min_cppstd
+from conan.tools.files import copy
 
 
 class TilecutRecipe(ConanFile):
@@ -14,11 +17,26 @@ class TilecutRecipe(ConanFile):
 
     settings = "os", "compiler", "build_type", "arch"
 
-    exports_sources = (
-        "CMakeLists.txt",
-        "kononovarseniy/*",
-        "src/*",
-    )
+    options = {
+        "build_tests": [True, False],
+        "generate_grid": [True, False],
+    }
+
+    default_options = {
+        "build_tests": True,
+        "generate_grid": True,
+    }
+
+    def export_sources(self):
+        copy(self, "CMakeLists.txt", self.recipe_folder, self.export_sources_folder)
+        copy(self, "kononovarseniy/*", self.recipe_folder, self.export_sources_folder)
+        copy(self, "src/*", self.recipe_folder, self.export_sources_folder)
+        copy(
+            self,
+            "embedded_grid.hpp",
+            self.recipe_folder,
+            os.path.join(self.export_sources_folder, "src", "exact", "include", "ka", "exact", "generated"),
+        )
 
     def validate(self):
         check_min_cppstd(self, "20")
@@ -27,9 +45,12 @@ class TilecutRecipe(ConanFile):
         pass
 
     def build_requirements(self):
-        self.test_requires("gtest/1.15.0")
-        self.requires("boost/1.86.0")
-        self.requires("mpfr/4.2.1")
+        if self.options.build_tests:
+            self.test_requires("gtest/1.15.0")
+        if self.options.generate_grid:
+            self.requires("boost/1.86.0")
+        if self.options.build_tests or self.options.generate_grid:
+            self.requires("mpfr/4.2.1")
 
     def layout(self):
         cmake_layout(self)
@@ -38,6 +59,8 @@ class TilecutRecipe(ConanFile):
         deps = CMakeDeps(self)
         deps.generate()
         toolchain = CMakeToolchain(self)
+        toolchain.variables["BUILD_TESTS"] = bool(self.options.build_tests)
+        toolchain.variables["GENERATE_GRID"] = bool(self.options.generate_grid)
         toolchain.generate()
 
     def build(self):
