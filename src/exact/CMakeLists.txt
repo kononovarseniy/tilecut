@@ -11,6 +11,7 @@ target_sources(ka_${module_name}
     BASE_DIRS include
     FILES
         include/ka/exact/grid.hpp
+        include/ka/exact/GridParameters.hpp
         include/ka/exact/GridRounding.hpp
         include/ka/exact/HotPixelCollector.hpp
         include/ka/exact/HotPixelIndex.hpp

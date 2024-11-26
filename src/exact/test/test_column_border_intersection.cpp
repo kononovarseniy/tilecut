@@ -8,7 +8,7 @@
 #include <mpfr.h>
 
 #include <ka/common/fixed.hpp>
-#include <ka/exact/generated/constants.hpp>
+#include <ka/exact/generated/embedded_grid.hpp>
 #include <ka/exact/grid.hpp>
 
 #include "check_column_border_intersection.hpp"
@@ -28,31 +28,31 @@ TEST(ColumnBorderIntersectionTest, combinations_of_dangerous_values)
     };
 
     const std::array coordinates {
-        -g_max_regular_grid_input_coordinate,
-        -std::nextafter(g_max_regular_grid_input_coordinate, 0.0),
+        -g_embedded_grid.max_input,
+        -std::nextafter(g_embedded_grid.max_input, 0.0),
 
-        -std::nextafter(g_min_grid_step, std::numeric_limits<f64>::infinity()),
-        -g_min_grid_step,
-        -std::nextafter(g_min_grid_step, 0.0),
+        -std::nextafter(g_embedded_grid.cell_size, std::numeric_limits<f64>::infinity()),
+        -g_embedded_grid.cell_size,
+        -std::nextafter(g_embedded_grid.cell_size, 0.0),
 
-        -std::nextafter(g_min_regular_grid_input_coordinate, std::numeric_limits<f64>::infinity()),
-        -g_min_regular_grid_input_coordinate,
+        -std::nextafter(g_embedded_grid.min_input, std::numeric_limits<f64>::infinity()),
+        -g_embedded_grid.min_input,
 
         0.0,
 
-        +g_min_regular_grid_input_coordinate,
-        +std::nextafter(g_min_regular_grid_input_coordinate, std::numeric_limits<f64>::infinity()),
+        +g_embedded_grid.min_input,
+        +std::nextafter(g_embedded_grid.min_input, std::numeric_limits<f64>::infinity()),
 
-        +std::nextafter(g_min_grid_step, 0.0),
-        +g_min_grid_step,
-        +std::nextafter(g_min_grid_step, std::numeric_limits<f64>::infinity()),
+        +std::nextafter(g_embedded_grid.cell_size, 0.0),
+        +g_embedded_grid.cell_size,
+        +std::nextafter(g_embedded_grid.cell_size, std::numeric_limits<f64>::infinity()),
 
-        +std::nextafter(g_max_regular_grid_input_coordinate, 0.0),
-        +g_max_regular_grid_input_coordinate,
+        +std::nextafter(g_embedded_grid.max_input, 0.0),
+        +g_embedded_grid.max_input,
     };
 
     size_t case_index = 0;
-    for (const auto size : { g_min_grid_step, 2.0 * g_min_grid_step })
+    for (const auto size : { g_embedded_grid.cell_size, 2.0 * g_embedded_grid.cell_size })
     {
         for (const auto a_x : coordinates)
         {

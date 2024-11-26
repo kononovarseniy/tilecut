@@ -3,7 +3,7 @@
 #include <ka/common/assert.hpp>
 #include <ka/common/cast.hpp>
 #include <ka/common/fixed.hpp>
-#include <ka/exact/generated/constants.hpp>
+#include <ka/exact/generated/embedded_grid.hpp>
 #include <ka/exact/grid.hpp>
 
 #include "../expansion.hpp"
@@ -22,15 +22,15 @@ s64 column_border_intersecion_impl(
 {
     AR_PRE(a_x != b_x);
     AR_PRE(border_between_coordinates(a_x, b_x, size, c_x));
-    AR_PRE(a_x == 0.0 || std::abs(a_x) >= g_min_regular_grid_input_coordinate);
-    AR_PRE(a_y == 0.0 || std::abs(a_y) >= g_min_regular_grid_input_coordinate);
-    AR_PRE(b_x == 0.0 || std::abs(b_x) >= g_min_regular_grid_input_coordinate);
-    AR_PRE(b_y == 0.0 || std::abs(b_y) >= g_min_regular_grid_input_coordinate);
-    AR_PRE(std::abs(a_x) <= g_max_regular_grid_input_coordinate);
-    AR_PRE(std::abs(a_y) <= g_max_regular_grid_input_coordinate);
-    AR_PRE(std::abs(b_x) <= g_max_regular_grid_input_coordinate);
-    AR_PRE(std::abs(b_y) <= g_max_regular_grid_input_coordinate);
-    AR_PRE(size >= g_min_grid_step);
+    AR_PRE(a_x == 0.0 || std::abs(a_x) >= g_embedded_grid.min_input);
+    AR_PRE(a_y == 0.0 || std::abs(a_y) >= g_embedded_grid.min_input);
+    AR_PRE(b_x == 0.0 || std::abs(b_x) >= g_embedded_grid.min_input);
+    AR_PRE(b_y == 0.0 || std::abs(b_y) >= g_embedded_grid.min_input);
+    AR_PRE(std::abs(a_x) <= g_embedded_grid.max_input);
+    AR_PRE(std::abs(a_y) <= g_embedded_grid.max_input);
+    AR_PRE(std::abs(b_x) <= g_embedded_grid.max_input);
+    AR_PRE(std::abs(b_y) <= g_embedded_grid.max_input);
+    AR_PRE(size >= g_embedded_grid.cell_size);
 
     // The fused operation is probably not required here, but it makes error analysis easier.
     const auto t_numerator = std::fma(c_x, size, -a_x);
@@ -83,12 +83,12 @@ s64 column_border_intersecion_impl(
 
     if (intersection >= 0.0)
     {
-        if (fractional_part < column_border_intersecion_detail::g_min_reliable_fractional_part &&
+        if (fractional_part < g_embedded_grid.column_border_intersecion.min_reliable_fractional_part &&
             !check_value(integral_part))
         {
             return truncated - 1;
         }
-        if (fractional_part > column_border_intersecion_detail::g_max_reliable_fractional_part &&
+        if (fractional_part > g_embedded_grid.column_border_intersecion.max_reliable_fractional_part &&
             check_value(integral_part + 1.0))
         {
             return truncated + 1;
@@ -96,12 +96,12 @@ s64 column_border_intersecion_impl(
         return truncated;
     }
 
-    if (fractional_part > column_border_intersecion_detail::g_max_reliable_fractional_part &&
+    if (fractional_part > g_embedded_grid.column_border_intersecion.max_reliable_fractional_part &&
         !check_value(integral_part - 1.0))
     {
         return truncated - 2;
     }
-    if (fractional_part < column_border_intersecion_detail::g_min_reliable_fractional_part &&
+    if (fractional_part < g_embedded_grid.column_border_intersecion.min_reliable_fractional_part &&
         check_value(integral_part))
     {
         return truncated;

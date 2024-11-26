@@ -21,7 +21,7 @@ target_link_libraries(ka_${module_name}_generator
 )
 
 set(generated_headers_base_dir ${CMAKE_CURRENT_BINARY_DIR}/include)
-set(generated_constants_file ${generated_headers_base_dir}/ka/exact/generated/constants.hpp)
+set(generated_constants_file ${generated_headers_base_dir}/ka/exact/generated/embedded_grid.hpp)
 
 add_custom_command(
     OUTPUT ${generated_constants_file}

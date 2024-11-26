@@ -3,7 +3,7 @@
 #include <ka/common/assert.hpp>
 #include <ka/common/cast.hpp>
 #include <ka/common/fixed.hpp>
-#include <ka/exact/generated/constants.hpp>
+#include <ka/exact/generated/embedded_grid.hpp>
 #include <ka/exact/grid.hpp>
 
 #include "../expansion.hpp"
@@ -14,8 +14,8 @@ namespace ka
 
 s64 column_containing_position_impl(const f64 x, const f64 size) noexcept
 {
-    AR_PRE(std::abs(x) <= g_max_regular_grid_input_coordinate);
-    AR_PRE(size >= g_min_grid_step);
+    AR_PRE(std::abs(x) <= g_embedded_grid.max_input);
+    AR_PRE(size >= g_embedded_grid.cell_size);
 
     const auto quotient = x / size;
     const auto candidate = std::floor(quotient);
