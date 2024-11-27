@@ -103,32 +103,21 @@ void add_cut(
 /// @brief Checks that all maximum inclusion contours are oriented counter-clockwise.
 /// @param segments a collection of non-intersecting oriented segments, none of which touches the boundary of a tile,
 /// that form a set of contours.
-[[nodiscard]] bool outermost_countour_is_inner(const std::span<const Segment2u16> segments) noexcept
+[[nodiscard]] bool outermost_contour_is_inner(const std::span<const Segment2u16> segments) noexcept
 {
-    struct FlippedSegment final
-    {
-        Vec2u16 a;
-        Vec2u16 b;
-        bool flipped;
-    };
-
     const auto segment_it = std::ranges::min_element(
         segments,
         [](const auto & lhs, const auto & rhs) noexcept
         {
             if (lhs.b == rhs.b)
             {
-                return PointOrder { lhs.b, lhs.a, lhs.b }.cw();
+                return PointOrder { lhs.b, lhs.a, rhs.a }.cw();
             }
             return lhs.b > rhs.b;
         },
-        [](const Segment2u16 & segment) noexcept -> FlippedSegment
+        [](const Segment2u16 & segment) noexcept -> Segment2u16
         {
-            if (segment.a > segment.b)
-            {
-                return { segment.b, segment.a, true };
-            }
-            return { segment.a, segment.b, false };
+            return { std::min(segment.a, segment.b), std::max(segment.a, segment.b) };
         });
     return segment_it->a > segment_it->b;
 }
@@ -176,7 +165,7 @@ void find_cuts(
     // We check the orientation of the contours to see if the polygon contains the entire tile boundary.
     if (touching_segments.empty())
     {
-        if (outermost_countour_is_inner(segments))
+        if (outermost_contour_is_inner(segments))
         {
             add_cut(tile_size, result, 0, tile_size * 4);
         }
