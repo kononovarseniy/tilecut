@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(ka_tilecut REQUIRED COMPONENTS exact geometry_types tilecut)
 
-add_executable(example main.cpp)
+add_executable(example main.cpp embedded_grid.hpp)
 target_link_libraries(example
     PRIVATE
         ka::exact

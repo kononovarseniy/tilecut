@@ -7,12 +7,13 @@
 namespace ka
 {
 
-void HotPixelCollector::init(const f64 grid_step, const u16 tile_step) noexcept
+void HotPixelCollector::init(const GridParameters & grid, const u16 tile_step) noexcept
 {
-    AR_PRE(grid_step > 0.0);
+    AR_PRE(grid.desired_cell_size > 0.0);
+    AR_PRE(grid.cell_size >= grid.desired_cell_size);
     AR_PRE(tile_step > 0);
 
-    grid_step_ = grid_step;
+    grid_ = grid;
     tile_step_ = tile_step;
     prev_vertex_.reset();
     hot_pixels_.clear();
@@ -20,17 +21,21 @@ void HotPixelCollector::init(const f64 grid_step, const u16 tile_step) noexcept
 
 void HotPixelCollector::new_contour() noexcept
 {
-    AR_PRE(grid_step_ > 0.0);
+    AR_PRE(grid_.has_value());
+    AR_PRE(tile_step_ > 0);
+
     prev_vertex_.reset();
 }
 
 template <GridRounding rounding>
 void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcept
 {
-    AR_PRE(grid_step_ > 0.0);
+    AR_PRE(grid_.has_value());
+    AR_PRE(tile_step_ > 0);
+
     const auto pixel = hot_pixels_.emplace_back(
-        column_containing_position<rounding>(vertex.x, grid_step_),
-        column_containing_position<rounding>(vertex.y, grid_step_));
+        column_containing_position<rounding>(*grid_, vertex.x),
+        column_containing_position<rounding>(*grid_, vertex.y));
     if (prev_vertex_.has_value())
     {
         AR_ASSERT(prev_pixel_.has_value());
@@ -63,15 +68,15 @@ void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcep
         {
             for (auto x = min_x; x <= max_x; x += tile_step_)
             {
-                if (border_between_coordinates(prev_vertex_->x, vertex.x, grid_step_, x))
+                if (border_between_coordinates(*grid_, prev_vertex_->x, vertex.x, x))
                 {
                     // clang-format off
                     const auto y = column_border_intersection<rounding>(
+                        *grid_,
                         prev_vertex_->x,
                         prev_vertex_->y,
                         vertex.x,
                         vertex.y,
-                        grid_step_,
                         x);
                     // clang-format on
                     hot_pixels_.emplace_back(x, y);
@@ -82,15 +87,15 @@ void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcep
         {
             for (auto y = min_y; y <= max_y; y += tile_step_)
             {
-                if (border_between_coordinates(prev_vertex_->y, vertex.y, grid_step_, y))
+                if (border_between_coordinates(*grid_, prev_vertex_->y, vertex.y, y))
                 {
                     // clang-format off
                     const auto x = row_border_intersection<rounding>(
+                        *grid_,
                         prev_vertex_->x,
                         prev_vertex_->y,
                         vertex.x,
                         vertex.y,
-                        grid_step_,
                         y);
                     // clang-format on
                     hot_pixels_.emplace_back(x, y);
@@ -107,14 +112,15 @@ template void HotPixelCollector::add_vertex_and_tile_cuts<GridRounding::NearestN
 
 const HotPixelIndex & HotPixelCollector::build_index() noexcept
 {
-    AR_PRE(grid_step_ > 0.0);
+    AR_PRE(grid_.has_value());
+    AR_PRE(tile_step_ > 0);
     AR_PRE(!hot_pixels_.empty());
 
     std::ranges::sort(hot_pixels_);
     const auto to_remove = std::ranges::unique(hot_pixels_);
     hot_pixels_.erase(to_remove.begin(), to_remove.end());
 
-    index_.grid_step_ = grid_step_;
+    index_.grid_ = &*grid_;
     index_.columns_.clear();
 
     size_t span_start = 0;

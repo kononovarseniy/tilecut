@@ -3,6 +3,7 @@
 #include <optional>
 #include <vector>
 
+#include <ka/exact/GridParameters.hpp>
 #include <ka/exact/GridRounding.hpp>
 #include <ka/exact/HotPixelIndex.hpp>
 #include <ka/geometry_types/Vec2.hpp>
@@ -15,7 +16,7 @@ class HotPixelCollector final
 {
 public:
     //! Reset state and set grid parameters.
-    void init(f64 grid_step, u16 tile_step) noexcept;
+    void init(const GridParameters & grid, u16 tile_step) noexcept;
 
     //! Start new contour.
     void new_contour() noexcept;
@@ -29,7 +30,7 @@ public:
     [[nodiscard]] const HotPixelIndex & build_index() noexcept;
 
 private:
-    f64 grid_step_ = 0.0;
+    std::optional<GridParameters> grid_;
     u16 tile_step_ = 0;
     std::optional<Vec2f64> prev_vertex_;
     std::optional<Vec2s64> prev_pixel_;

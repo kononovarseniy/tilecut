@@ -188,11 +188,11 @@ template <GridRounding rounding>
 
 template <GridRounding rounding>
 bool line_intersects_cell(
+    const GridParameters & grid,
     const f64 a_x,
     const f64 a_y,
     const f64 b_x,
     const f64 b_y,
-    const f64 size,
     const s64 c_x,
     const s64 c_y) noexcept
 {
@@ -205,7 +205,7 @@ bool line_intersects_cell(
 
     const auto node = line_cell_intersection::main_cell_node<rounding>(main_diagonal, c_x, c_y);
     const auto cell_dependent_term =
-        line_cell_intersection::cell_dependent_term(node.x, node.y, node.size_multiplier * size, dx, dy);
+        line_cell_intersection::cell_dependent_term(node.x, node.y, node.size_multiplier * grid.cell_size, dx, dy);
 
     const auto first_sign = line_cell_intersection::first_determinant_sign(common_term, cell_dependent_term);
     if (main_diagonal && first_sign == 0)
@@ -217,14 +217,15 @@ bool line_intersects_cell(
         return false;
     }
 
-    const auto difference_term = line_cell_intersection::difference_term(main_diagonal, size, dx, dy);
+    const auto difference_term = line_cell_intersection::difference_term(main_diagonal, grid.cell_size, dx, dy);
     const auto second_sign =
         line_cell_intersection::second_determinant_sign(common_term, difference_term, cell_dependent_term);
     return line_cell_intersection::good_second_sign(invert_signs, second_sign);
 }
 
-template bool line_intersects_cell<GridRounding::Cell>(f64 a_x, f64 a_y, f64 b_x, f64 b_y, f64 size, s64 c_x, s64 c_y);
 template bool line_intersects_cell<
-    GridRounding::NearestNode>(f64 a_x, f64 a_y, f64 b_x, f64 b_y, f64 size, s64 c_x, s64 c_y);
+    GridRounding::Cell>(const GridParameters & grid, f64 a_x, f64 a_y, f64 b_x, f64 b_y, s64 c_x, s64 c_y);
+template bool line_intersects_cell<
+    GridRounding::NearestNode>(const GridParameters & grid, f64 a_x, f64 a_y, f64 b_x, f64 b_y, s64 c_x, s64 c_y);
 
 } // namespace ka

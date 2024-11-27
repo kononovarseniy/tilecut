@@ -13,6 +13,9 @@ struct GridParameters final
     /// @brief Size of a grid cell.
     f64 cell_size;
 
+    /// @brief The size of the grid cell that was used to calculate the parameters.
+    f64 desired_cell_size;
+
     /// @brief Minimal allowed absolute value of input coordinates.
     f64 min_input;
 

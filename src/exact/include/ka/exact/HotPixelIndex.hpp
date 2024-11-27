@@ -22,9 +22,9 @@ class HotPixelIndex final
     friend class HotPixelCollector;
 
 public:
-    [[nodiscard]] f64 grid_step() const noexcept
+    [[nodiscard]] const GridParameters & grid() const noexcept
     {
-        return grid_step_;
+        return *grid_;
     }
 
     template <HotPixelOrder horizontal_order, HotPixelOrder vertical_order, std::output_iterator<Vec2s64> Out>
@@ -124,7 +124,7 @@ private:
     };
 
 private:
-    f64 grid_step_;
+    const GridParameters * grid_;
     //! Contains x-ordered columns, each containing y-ordered hot pixels. Populated by HotPixelCollector.
     std::vector<Column> columns_;
 };

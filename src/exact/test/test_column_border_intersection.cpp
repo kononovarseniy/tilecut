@@ -54,6 +54,9 @@ TEST(ColumnBorderIntersectionTest, combinations_of_dangerous_values)
     size_t case_index = 0;
     for (const auto size : { g_embedded_grid.cell_size, 2.0 * g_embedded_grid.cell_size })
     {
+        auto grid = g_embedded_grid;
+        grid.cell_size = size;
+
         for (const auto a_x : coordinates)
         {
             for (const auto b_x : coordinates)
@@ -82,8 +85,8 @@ TEST(ColumnBorderIntersectionTest, combinations_of_dangerous_values)
                             }
                             prev_c_x = c_x;
                             const auto c_y =
-                                column_border_intersection<GridRounding::Cell>(a_x, a_y, b_x, b_y, size, c_x);
-                            ASSERT_TRUE(check_column_border_intersecion(a_x, a_y, b_x, b_y, size, c_x, c_y))
+                                column_border_intersection<GridRounding::Cell>(grid, a_x, a_y, b_x, b_y, c_x);
+                            ASSERT_TRUE(check_column_border_intersecion(a_x, a_y, b_x, b_y, grid.cell_size, c_x, c_y))
                                 << std::format(
                                        "#{})s: {}; a: {}, {}; b: {}, {}; c: {}, {}",
                                        case_index,

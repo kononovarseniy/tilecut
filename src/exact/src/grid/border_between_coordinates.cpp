@@ -3,6 +3,7 @@
 #include <ka/common/assert.hpp>
 #include <ka/common/cast.hpp>
 #include <ka/common/fixed.hpp>
+#include <ka/exact/grid.hpp>
 
 #include "../expansion.hpp"
 #include "common.hpp"
@@ -10,7 +11,7 @@
 namespace ka
 {
 
-bool border_between_coordinates(const f64 a, const f64 b, const f64 size, const s64 x) noexcept
+bool border_between_coordinates(const GridParameters & grid, const f64 a, const f64 b, const s64 x) noexcept
 {
     AR_PRE(a != b);
     const auto compare_border_and_coordinate = [](const f64 s, const s64 n, const f64 x, const auto cmp)
@@ -22,13 +23,13 @@ bool border_between_coordinates(const f64 a, const f64 b, const f64 size, const 
     };
     if (a < b)
     {
-        return compare_border_and_coordinate(size, x, a, std::greater_equal<f64> {}) &&
-               compare_border_and_coordinate(size, x, b, std::less_equal<f64> {});
+        return compare_border_and_coordinate(grid.cell_size, x, a, std::greater_equal<f64> {}) &&
+               compare_border_and_coordinate(grid.cell_size, x, b, std::less_equal<f64> {});
     }
     else
     {
-        return compare_border_and_coordinate(size, x, a, std::less_equal<f64> {}) &&
-               compare_border_and_coordinate(size, x, b, std::greater_equal<f64> {});
+        return compare_border_and_coordinate(grid.cell_size, x, a, std::less_equal<f64> {}) &&
+               compare_border_and_coordinate(grid.cell_size, x, b, std::greater_equal<f64> {});
     }
 }
 

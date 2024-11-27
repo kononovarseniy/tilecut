@@ -20,8 +20,8 @@ Out snap_round(const HotPixelIndex & hot_pixels, In && line, Out output)
     for (const auto & vertex : line)
     {
         const Vec2s64 pixel = {
-            .x = column_containing_position<rounding>(vertex.x, hot_pixels.grid_step()),
-            .y = row_containing_position<rounding>(vertex.y, hot_pixels.grid_step()),
+            .x = column_containing_position<rounding>(hot_pixels.grid(), vertex.x),
+            .y = row_containing_position<rounding>(hot_pixels.grid(), vertex.y),
         };
         if (first)
         {
@@ -45,11 +45,11 @@ Out snap_round(const HotPixelIndex & hot_pixels, In && line, Out output)
                 return false;
             }
             return line_intersects_cell<rounding>(
+                hot_pixels.grid(),
                 prev_vertex.x,
                 prev_vertex.y,
                 vertex.x,
                 vertex.y,
-                hot_pixels.grid_step(),
                 hot_pixel.x,
                 hot_pixel.y);
         };

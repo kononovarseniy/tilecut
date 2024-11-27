@@ -103,6 +103,7 @@ void generate_constants_cpp(const std::filesystem::path & output_file)
     write();
     write("constexpr GridParameters g_embedded_grid = {{");
     write("    .cell_size = {},", constants.min_grid_step);
+    write("    .desired_cell_size = {},", constants.min_grid_step);
     write("    .min_input = {},", to_hex(g_min_regular_grid_input_coordinate));
     write("    .max_input = {},", to_hex(g_max_regular_grid_input_coordinate));
     write("    .column_border_intersecion = {{");

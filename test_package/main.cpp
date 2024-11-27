@@ -10,9 +10,12 @@
 #include <ka/tilecut/filter_segments.hpp>
 #include <ka/tilecut/find_cuts.hpp>
 
+#include "embedded_grid.hpp"
+
 int main(int argc, char * argv[])
 {
-    const auto cell_size = 1.0;
+    auto grid = ka::test::g_embedded_grid;
+    grid.cell_size = 1.0;
     const auto tile_size = 10000;
 
     // Input geometry.
@@ -23,7 +26,7 @@ int main(int argc, char * argv[])
 
     // Collect all relevant hot pixels.
     ka::HotPixelCollector hot_pixel_collector;
-    hot_pixel_collector.init(cell_size, tile_size);
+    hot_pixel_collector.init(grid, tile_size);
 
     for (const auto & contour : contours)
     {

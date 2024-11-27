@@ -3,7 +3,6 @@
 #include <ka/common/assert.hpp>
 #include <ka/common/cast.hpp>
 #include <ka/common/fixed.hpp>
-#include <ka/exact/generated/embedded_grid.hpp>
 #include <ka/exact/grid.hpp>
 
 #include "../expansion.hpp"
@@ -12,10 +11,12 @@
 namespace ka
 {
 
-s64 column_containing_position_impl(const f64 x, const f64 size) noexcept
+/// Size is used to override grid.cell_size without modifying struct.
+s64 column_containing_position_impl([[maybe_unused]] const GridParameters & grid, const f64 size, const f64 x) noexcept
 {
-    AR_PRE(std::abs(x) <= g_embedded_grid.max_input);
-    AR_PRE(size >= g_embedded_grid.cell_size);
+    AR_PRE(std::abs(x) <= grid.max_input);
+    AR_PRE(grid.desired_cell_size > 0.0);
+    AR_PRE(size >= grid.desired_cell_size);
 
     const auto quotient = x / size;
     const auto candidate = std::floor(quotient);
@@ -36,28 +37,28 @@ s64 column_containing_position_impl(const f64 x, const f64 size) noexcept
 }
 
 template <GridRounding rounding>
-s64 column_containing_position(const f64 x, const f64 size) noexcept
+s64 column_containing_position(const GridParameters & grid, const f64 x) noexcept
 {
     switch (rounding)
     {
     case GridRounding::Cell:
-        return column_containing_position_impl(x, size);
+        return column_containing_position_impl(grid, grid.cell_size, x);
     case GridRounding::NearestNode:
-        return half_cell_to_nearest_full_cell(column_containing_position_impl(x, size / 2.0));
+        return half_cell_to_nearest_full_cell(column_containing_position_impl(grid, grid.cell_size / 2.0, x));
     }
     AR_UNREACHABLE;
 }
 
-template s64 column_containing_position<GridRounding::Cell>(f64 x, f64 size);
-template s64 column_containing_position<GridRounding::NearestNode>(f64 x, f64 size);
+template s64 column_containing_position<GridRounding::Cell>(const GridParameters & grid, f64 x);
+template s64 column_containing_position<GridRounding::NearestNode>(const GridParameters & grid, f64 x);
 
 template <GridRounding rounding>
-s64 row_containing_position(const f64 y, const f64 size) noexcept
+s64 row_containing_position(const GridParameters & grid, const f64 y) noexcept
 {
-    return column_containing_position<rounding>(y, size);
+    return column_containing_position<rounding>(grid, y);
 }
 
-template s64 row_containing_position<GridRounding::Cell>(f64 y, f64 size);
-template s64 row_containing_position<GridRounding::NearestNode>(f64 y, f64 size);
+template s64 row_containing_position<GridRounding::Cell>(const GridParameters & grid, f64 y);
+template s64 row_containing_position<GridRounding::NearestNode>(const GridParameters & grid, f64 y);
 
 } // namespace ka

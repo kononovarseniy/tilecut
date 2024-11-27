@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <ka/exact/HotPixelCollector.hpp>
+#include <ka/exact/generated/embedded_grid.hpp>
 #include <ka/exact/snap_round.hpp>
 #include <ka/geometry_types/Vec2.hpp>
 
@@ -36,15 +37,16 @@ std::ostream & operator<<(std::ostream & stream, const Vec2<T> & point)
 
 TEST(SnapRoundingTest, distorted_square)
 {
-    constexpr auto gird_step = 1.1;
+    auto grid = g_embedded_grid;
+    grid.cell_size = 1.1;
     constexpr auto tile_step = 8;
 
     const std::array<Vec2f64, 5> geometry { {
-        { prev_float(gird_step * -4), gird_step * -4 },
-        { next_float(gird_step * +4), prev_float(gird_step * -4) },
-        { prev_float(gird_step * +4), next_float(gird_step * +4) },
-        { gird_step * -4, gird_step * +4 },
-        { prev_float(gird_step * -4), gird_step * -4 },
+        { prev_float(grid.cell_size * -4), grid.cell_size * -4 },
+        { next_float(grid.cell_size * +4), prev_float(grid.cell_size * -4) },
+        { prev_float(grid.cell_size * +4), next_float(grid.cell_size * +4) },
+        { grid.cell_size * -4, grid.cell_size * +4 },
+        { prev_float(grid.cell_size * -4), grid.cell_size * -4 },
     } };
 
     // clang-format off
@@ -62,7 +64,7 @@ TEST(SnapRoundingTest, distorted_square)
     // clang-format on
 
     HotPixelCollector collector;
-    collector.init(gird_step, tile_step);
+    collector.init(grid, tile_step);
     collector.new_contour();
     for (const auto & vertex : geometry)
     {
@@ -78,15 +80,16 @@ TEST(SnapRoundingTest, distorted_square)
 
 TEST(SnapRoundingTest, perfect_square)
 {
-    constexpr auto gird_step = 1.1;
+    auto grid = g_embedded_grid;
+    grid.cell_size = 1.1;
     constexpr auto tile_step = 8;
 
     const std::array<Vec2f64, 5> geometry { {
-        { gird_step * -4, gird_step * -4 },
-        { gird_step * +4, gird_step * -4 },
-        { gird_step * +4, gird_step * +4 },
-        { gird_step * -4, gird_step * +4 },
-        { gird_step * -4, gird_step * -4 },
+        { grid.cell_size * -4, grid.cell_size * -4 },
+        { grid.cell_size * +4, grid.cell_size * -4 },
+        { grid.cell_size * +4, grid.cell_size * +4 },
+        { grid.cell_size * -4, grid.cell_size * +4 },
+        { grid.cell_size * -4, grid.cell_size * -4 },
     } };
 
     // clang-format off
@@ -104,7 +107,7 @@ TEST(SnapRoundingTest, perfect_square)
     // clang-format on
 
     HotPixelCollector collector;
-    collector.init(gird_step, tile_step);
+    collector.init(grid, tile_step);
     collector.new_contour();
     for (const auto & vertex : geometry)
     {
@@ -120,7 +123,8 @@ TEST(SnapRoundingTest, perfect_square)
 
 TEST(SnapRoundingTest, half_integer_perfect_square)
 {
-    constexpr auto gird_step = 1;
+    auto grid = g_embedded_grid;
+    grid.cell_size = 1;
     constexpr auto tile_step = 8;
 
     // clang-format off
@@ -146,7 +150,7 @@ TEST(SnapRoundingTest, half_integer_perfect_square)
     // clang-format on
 
     HotPixelCollector collector;
-    collector.init(gird_step, tile_step);
+    collector.init(grid, tile_step);
     collector.new_contour();
     for (const auto & vertex : geometry)
     {
