@@ -5,7 +5,12 @@ project(example)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(ka_tilecut REQUIRED)
+find_package(ka_tilecut REQUIRED COMPONENTS exact geometry_types tilecut)
 
 add_executable(example main.cpp)
-target_link_libraries(example PRIVATE ka::tilecut)
+target_link_libraries(example
+    PRIVATE
+        ka::exact
+        ka::geometry_types
+        ka::tilecut
+)

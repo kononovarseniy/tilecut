@@ -75,5 +75,12 @@ class TilecutRecipe(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["ka_tilecut"]
-        self.cpp_info.set_property("cmake_target_name", "ka::tilecut")
+        self.cpp_info.components["ka_exact"].libs = ["ka_exact"]
+        self.cpp_info.components["ka_exact"].set_property("cmake_target_name", "ka::exact")
+
+        self.cpp_info.components["ka_geometry_types"].bindirs = []
+        self.cpp_info.components["ka_geometry_types"].libdirs = []
+        self.cpp_info.components["ka_geometry_types"].set_property("cmake_target_name", "ka::geometry_types")
+
+        self.cpp_info.components["ka_tilecut"].libs = ["ka_tilecut"]
+        self.cpp_info.components["ka_tilecut"].set_property("cmake_target_name", "ka::tilecut")
