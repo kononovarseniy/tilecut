@@ -9,12 +9,11 @@
 #include <ka/tilecut/collect_tiles.hpp>
 #include <ka/tilecut/filter_segments.hpp>
 #include <ka/tilecut/find_cuts.hpp>
-
-#include "embedded_grid.hpp"
+#include <ka_test/grid.hpp>
 
 int main(int argc, char * argv[])
 {
-    auto grid = ka::test::g_embedded_grid;
+    auto grid = ka::g_embedded_grid;
     grid.cell_size = 1.0;
     const auto tile_size = 10000;
 

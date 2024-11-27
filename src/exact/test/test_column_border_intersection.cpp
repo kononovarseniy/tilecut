@@ -8,10 +8,10 @@
 #include <mpfr.h>
 
 #include <ka/common/fixed.hpp>
-#include <ka/exact/generated/embedded_grid.hpp>
 #include <ka/exact/grid.hpp>
 
 #include "check_column_border_intersection.hpp"
+#include "mock_grid_parameters.hpp"
 
 namespace ka
 {

@@ -1,5 +1,3 @@
-add_subdirectory(gen)
-
 set(module_name exact)
 
 add_library(ka_${module_name})
@@ -34,7 +32,6 @@ target_enable_warnings(ka_${module_name})
 target_link_libraries(ka_${module_name}
     PUBLIC
         ka::common
-        ka::exact_generated
         ka::geometry_types
 )
 
@@ -51,6 +48,7 @@ if(BUILD_TESTS)
     add_executable(ka_${module_name}_test
         test/check_column_border_intersection.cpp
         test/check_column_border_intersection.hpp
+        test/mock_grid_parameters.hpp
         test/test_check_column_border_intersection.cpp
         test/test_column_border_intersection.cpp
         test/test_snap_rounding.cpp

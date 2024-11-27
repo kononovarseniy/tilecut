@@ -9,9 +9,10 @@
 #include <vector>
 
 #include <ka/exact/HotPixelCollector.hpp>
-#include <ka/exact/generated/embedded_grid.hpp>
 #include <ka/exact/snap_round.hpp>
 #include <ka/geometry_types/Vec2.hpp>
+
+#include "mock_grid_parameters.hpp"
 
 namespace ka
 {

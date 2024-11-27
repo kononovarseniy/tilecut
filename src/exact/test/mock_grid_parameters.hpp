@@ -4,7 +4,7 @@
 
 #include <ka/exact/GridParameters.hpp>
 
-namespace ka::test
+namespace ka
 {
 
 constexpr GridParameters g_embedded_grid = {

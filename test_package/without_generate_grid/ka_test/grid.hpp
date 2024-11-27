@@ -18,4 +18,4 @@ constexpr GridParameters g_embedded_grid = {
     },
 };
 
-} // namespace ka
+} // namespace ka::test

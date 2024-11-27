@@ -19,24 +19,18 @@ class TilecutRecipe(ConanFile):
 
     options = {
         "build_tests": [True, False],
-        "generate_grid": [True, False],
+        "build_generate_grid": [True, False],
     }
 
     default_options = {
         "build_tests": True,
-        "generate_grid": True,
+        "build_generate_grid": True,
     }
 
     def export_sources(self):
         copy(self, "CMakeLists.txt", self.recipe_folder, self.export_sources_folder)
         copy(self, "kononovarseniy/*", self.recipe_folder, self.export_sources_folder)
         copy(self, "src/*", self.recipe_folder, self.export_sources_folder)
-        copy(
-            self,
-            "embedded_grid.hpp",
-            self.recipe_folder,
-            os.path.join(self.export_sources_folder, "src", "exact", "include", "ka", "exact", "generated"),
-        )
 
     def validate(self):
         check_min_cppstd(self, "20")
@@ -47,9 +41,9 @@ class TilecutRecipe(ConanFile):
     def build_requirements(self):
         if self.options.build_tests:
             self.test_requires("gtest/1.15.0")
-        if self.options.generate_grid:
+        if self.options.build_generate_grid:
             self.requires("boost/1.86.0")
-        if self.options.build_tests or self.options.generate_grid:
+        if self.options.build_tests or self.options.build_generate_grid:
             self.requires("mpfr/4.2.1")
 
     def layout(self):
@@ -60,7 +54,7 @@ class TilecutRecipe(ConanFile):
         deps.generate()
         toolchain = CMakeToolchain(self)
         toolchain.variables["BUILD_TESTS"] = bool(self.options.build_tests)
-        toolchain.variables["GENERATE_GRID"] = bool(self.options.generate_grid)
+        toolchain.variables["BUILD_GENERATE_GRID"] = bool(self.options.build_generate_grid)
         toolchain.generate()
 
     def build(self):
@@ -84,3 +78,6 @@ class TilecutRecipe(ConanFile):
 
         self.cpp_info.components["ka_tilecut"].libs = ["ka_tilecut"]
         self.cpp_info.components["ka_tilecut"].set_property("cmake_target_name", "ka::tilecut")
+
+        if self.options.build_generate_grid:
+            self.cpp_info.components["ka_generate_grid"].set_property("cmake_target_name", "ka::generate_grid")
