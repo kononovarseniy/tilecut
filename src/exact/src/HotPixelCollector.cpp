@@ -33,9 +33,10 @@ void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcep
     AR_PRE(grid_.has_value());
     AR_PRE(tile_step_ > 0);
 
-    const auto pixel = hot_pixels_.emplace_back(
+    const auto pixel = hot_pixels_.emplace_back(Vec2s64 {
         column_containing_position<rounding>(*grid_, vertex.x),
-        column_containing_position<rounding>(*grid_, vertex.y));
+        column_containing_position<rounding>(*grid_, vertex.y),
+    });
     if (prev_vertex_.has_value())
     {
         AR_ASSERT(prev_pixel_.has_value());
@@ -79,7 +80,7 @@ void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcep
                         vertex.y,
                         x);
                     // clang-format on
-                    hot_pixels_.emplace_back(x, y);
+                    hot_pixels_.push_back({ x, y });
                 }
             }
         }
@@ -98,7 +99,7 @@ void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcep
                         vertex.y,
                         y);
                     // clang-format on
-                    hot_pixels_.emplace_back(x, y);
+                    hot_pixels_.push_back({ x, y });
                 }
             }
         }
@@ -129,12 +130,12 @@ const HotPixelIndex & HotPixelCollector::build_index() noexcept
     {
         if (hot_pixels_[i].x != current_x)
         {
-            index_.columns_.emplace_back(current_x, std::span(hot_pixels_).subspan(span_start, i - span_start));
+            index_.columns_.push_back({ current_x, std::span(hot_pixels_).subspan(span_start, i - span_start) });
             current_x = hot_pixels_[i].x;
             span_start = i;
         }
     }
-    index_.columns_.emplace_back(current_x, std::span(hot_pixels_).subspan(span_start));
+    index_.columns_.push_back({ current_x, std::span(hot_pixels_).subspan(span_start) });
     return index_;
 }
 

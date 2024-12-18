@@ -86,14 +86,14 @@ void add_cut(
     {
         const auto corner = make_point(tile_size, corner_parameter);
         AR_POST(prev != corner);
-        result.emplace_back(prev, corner);
+        result.push_back({ prev, corner });
         AR_POST(
             (prev.x == corner.x && (prev.x == 0 || prev.x == tile_size)) ||
             (prev.y == corner.y && (prev.y == 0 || prev.y == tile_size)));
         prev = corner;
     }
     const auto end = make_point(tile_size, to_parameter);
-    result.emplace_back(prev, end);
+    result.push_back({ prev, end });
     AR_POST(prev != end);
     AR_POST(
         (prev.x == end.x && (prev.x == 0 || prev.x == tile_size)) ||
@@ -151,11 +151,11 @@ void find_cuts(
 
         if (begin_param.has_value())
         {
-            touching_segments.emplace_back(*begin_param, segment.a, segment.b, false);
+            touching_segments.push_back({ *begin_param, segment.a, segment.b, false });
         }
         if (end_param.has_value())
         {
-            touching_segments.emplace_back(*end_param, segment.b, segment.a, true);
+            touching_segments.push_back({ *end_param, segment.b, segment.a, true });
         }
     }
 

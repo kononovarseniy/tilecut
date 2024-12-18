@@ -47,7 +47,7 @@ int main(int argc, char * argv[])
         auto prev = coarse_points.front();
         for (auto it = std::next(coarse_points.begin()); it != coarse_points.end(); prev = *it++)
         {
-            segments.emplace_back(prev, *it);
+            segments.push_back({ prev, *it });
         }
     }
 
