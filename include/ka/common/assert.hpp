@@ -2,13 +2,19 @@
 
 #include <ka/common/log.hpp>
 
+#if defined(__GNUC__) // GCC, Clang, ICC
+    #define _KA_UNREACHABLE __builtin_unreachable()
+#elif defined(_MSC_VER) // MSVC
+    #define _KA_UNREACHABLE __assume(false)
+#endif
+
 #ifdef NDEBUG
     #define AR_ASSERT(condition) ((void)0)
     #define AR_PRE(condition) ((void)0)
     #define AR_POST(condition) ((void)0)
     #define AR_NESTED_ASSERT(condition, assert_type, location)                                                         \
         ((void)(condition), (void)(assert_type), (void)(location))
-    #define AR_UNREACHABLE ::ka::__assert_detail::unreachable()
+    #define AR_UNREACHABLE _KA_UNREACHABLE
 #else
     #define AR_NESTED_ASSERT(condition, assert_type, location)                                                         \
         do                                                                                                             \
@@ -25,7 +31,7 @@
         do                                                                                                             \
         {                                                                                                              \
             ::ka::__assert_detail::assert_handler("Unreachable", "unreachable", std::source_location::current());      \
-            ::ka::__assert_detail::unreachable();                                                                      \
+            _KA_UNREACHABLE;                                                                                           \
         } while (false)
 #endif
 
@@ -39,20 +45,6 @@ inline void assert_handler(
 {
     log_assert(assert_type, condition, location);
     std::abort();
-}
-
-// TODO: remove in C++23
-[[noreturn]] inline void unreachable()
-{
-    // From https://en.cppreference.com/w/cpp/utility/unreachable
-    // Uses compiler specific extensions if possible.
-    // Even if no extension is used, undefined behavior is still raised by
-    // an empty function body and the noreturn attribute.
-#if defined(__GNUC__) // GCC, Clang, ICC
-    __builtin_unreachable();
-#elif defined(_MSC_VER) // MSVC
-    __assume(false);
-#endif
 }
 
 } // namespace ka::__assert_detail
