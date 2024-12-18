@@ -122,7 +122,6 @@ template <GridRounding rounding>
         AR_PRE(c_y <= (std::numeric_limits<decltype(c_y)>::max() - 1) / 2);
         return { c_x * 2 - 1, main_diagonal ? c_y * 2 - 1 : c_y * 2 + 1, 0.5 };
     }
-    AR_UNREACHABLE;
 }
 
 /// @brief The second common term of both determinants depending on the cell coordinates in the form of a 16-component

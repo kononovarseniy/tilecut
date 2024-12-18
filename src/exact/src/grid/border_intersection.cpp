@@ -127,7 +127,7 @@ s64 column_border_intersection(
             return column_border_intersecion_impl(grid, grid.cell_size, a_x, a_y, b_x, b_y, c_x);
         case GridRounding::NearestNode:
             return half_cell_to_nearest_full_cell(
-                column_border_intersecion_impl(grid, grid.cell_size / 2.0, a_x, a_y, b_x, b_y, c_x * 2.0));
+                column_border_intersecion_impl(grid, grid.cell_size / 2.0, a_x, a_y, b_x, b_y, c_x * 2));
         }
         AR_UNREACHABLE;
     }();

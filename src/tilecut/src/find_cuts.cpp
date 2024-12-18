@@ -197,14 +197,14 @@ void find_cuts(
                     // parameter value is ambiguous. This is only possible if either x or y is zero for all points. For
                     // the boundary y = 0, the most counterclockwise segment is the segment with the zero opposite
                     // point, and vice versa for the boundary x = 0.
-                    if (lhs_param == 0)
+                    if (lhs_param == 0u)
                     {
-                        AR_ASSERT(rhs_param != 0);
+                        AR_ASSERT(rhs_param != 0u);
                         return lhs.touching_point.y == 0;
                     }
-                    if (rhs_param == 0)
+                    if (rhs_param == 0u)
                     {
-                        AR_ASSERT(lhs_param != 0);
+                        AR_ASSERT(lhs_param != 0u);
                         return lhs.touching_point.y != 0;
                     }
                     return lhs_param < rhs_param;

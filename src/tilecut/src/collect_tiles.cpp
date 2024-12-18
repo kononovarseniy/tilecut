@@ -15,9 +15,9 @@ inline namespace
 {
     if (value >= 0)
     {
-        return value / tile_size;
+        return exact_cast<s32>(value / tile_size);
     }
-    return -((-value + tile_size - 1) / tile_size);
+    return exact_cast<s32>(-((-value + tile_size - 1) / tile_size));
 };
 
 [[nodiscard]] Vec2s32 segment_tile(const Segment2s64 & segment, const u16 tile_size)
