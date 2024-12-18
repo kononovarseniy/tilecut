@@ -36,7 +36,7 @@ class TilecutRecipe(ConanFile):
         check_min_cppstd(self, "20")
 
     def requirements(self):
-        pass
+        self.requires("fmt/9.1.0")
 
     def build_requirements(self):
         if self.options.build_tests:
