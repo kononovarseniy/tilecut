@@ -31,6 +31,13 @@ target_sources(ka_${module_name}
         src/log.cpp
 )
 
+find_package(fmt REQUIRED)
+
+target_link_libraries(ka_${module_name}
+    PRIVATE
+        fmt::fmt
+)
+
 target_enable_warnings(ka_${module_name})
 
 install(TARGETS ka_${module_name}

@@ -1,5 +1,13 @@
 #include <filesystem>
-#include <format>
+
+#ifdef _MSC_VER
+    #pragma warning(push)
+    #pragma warning(disable : 4996)
+    #include <fmt/format.h>
+    #pragma warning(pop)
+#else
+    #include <fmt/format.h>
+#endif
 
 #include <ka/common/log.hpp>
 
@@ -16,7 +24,7 @@ std::string format_message(
 {
     constexpr auto here = std::source_location::current().file_name();
     const auto root = std::filesystem::path(here).parent_path().parent_path().parent_path();
-    return std::format(
+    return fmt::format(
         "{} ({}:{}.{}) {}",
         type,
         std::filesystem::path(location.file_name()).lexically_proximate(root).string(),
@@ -32,7 +40,7 @@ void log_assert(
     const std::string_view condition,
     const std::source_location & location)
 {
-    log_fatal(std::format("{} failed: AR_ASSERT({})", assert_type, condition), location);
+    log_fatal(fmt::format("{} failed: AR_ASSERT({})", assert_type, condition), location);
 }
 
 } // namespace ka
