@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <cstdint>
 #include <limits>
 
@@ -16,11 +17,14 @@ using s16 = std::int16_t;
 using s32 = std::int32_t;
 using s64 = std::int64_t;
 
+template <typename T>
+concept ieee_float = std::floating_point<T> && std::numeric_limits<T>::is_iec559;
+
 using f32 = float;
 using f64 = double;
 
-static_assert(std::numeric_limits<f32>::is_iec559);
-static_assert(std::numeric_limits<f64>::is_iec559);
+static_assert(ieee_float<f32>);
+static_assert(ieee_float<f64>);
 
 static_assert(std::numeric_limits<f32>::digits == 24);
 static_assert(std::numeric_limits<f64>::digits == 53);
