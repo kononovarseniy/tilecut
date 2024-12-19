@@ -69,7 +69,7 @@ void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcep
         {
             for (auto x = min_x; x <= max_x; x += tile_step_)
             {
-                if (border_between_coordinates(*grid_, prev_vertex_->x, vertex.x, x))
+                if (border_between_coordinates(grid_->cell_size, prev_vertex_->x, vertex.x, x))
                 {
                     // clang-format off
                     const auto y = column_border_intersection<rounding>(
@@ -88,7 +88,7 @@ void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcep
         {
             for (auto y = min_y; y <= max_y; y += tile_step_)
             {
-                if (border_between_coordinates(*grid_, prev_vertex_->y, vertex.y, y))
+                if (border_between_coordinates(grid_->cell_size, prev_vertex_->y, vertex.y, y))
                 {
                     // clang-format off
                     const auto x = row_border_intersection<rounding>(

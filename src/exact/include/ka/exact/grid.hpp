@@ -38,7 +38,7 @@ template <GridRounding rounding>
 
 /// @brief Checks that the main boundary of a column or row lies between coordinates.
 /// @return a <= size * n <= b.
-[[nodiscard]] bool border_between_coordinates(const GridParameters & grid, f64 a, f64 b, s64 x) noexcept;
+[[nodiscard]] bool border_between_coordinates(const f64 cell_size, f64 a, f64 b, s64 x) noexcept;
 
 /// @brief Finds the row containing the intersection point
 /// of a given line and the left border of a regular grid column.

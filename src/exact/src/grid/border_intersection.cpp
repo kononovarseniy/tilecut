@@ -22,7 +22,7 @@ s64 column_border_intersecion_impl(
     const s64 c_x) noexcept
 {
     AR_PRE(a_x != b_x);
-    AR_PRE(border_between_coordinates(grid, a_x, b_x, c_x));
+    AR_PRE(border_between_coordinates(size, a_x, b_x, c_x));
     AR_PRE(a_x == 0.0 || std::abs(a_x) >= grid.min_input);
     AR_PRE(a_y == 0.0 || std::abs(a_y) >= grid.min_input);
     AR_PRE(b_x == 0.0 || std::abs(b_x) >= grid.min_input);
