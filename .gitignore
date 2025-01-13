@@ -11,3 +11,4 @@
 /CMakeUserPresets.json
 
 .mypy_cache
+.venv/
