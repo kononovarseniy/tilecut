@@ -1,5 +1,6 @@
 set(module_name generate_grid)
 
+find_package(fmt REQUIRED)
 find_package(Boost REQUIRED)
 find_package(mpfr REQUIRED)
 
@@ -9,6 +10,7 @@ add_executable(ka::${module_name} ALIAS ka_${module_name})
 target_sources(ka_${module_name}
     PRIVATE
         src/main.cpp
+        src/MPFRDouble.hpp
 )
 
 target_enable_warnings(ka_${module_name})
@@ -16,6 +18,7 @@ target_enable_warnings(ka_${module_name})
 target_link_libraries(ka_${module_name}
     PRIVATE
         ka::common
+        fmt::fmt
         Boost::program_options
         mpfr::mpfr
 )
