@@ -1,0 +1,10 @@
+#pragma once
+
+#include <ka/exact/GridParameters.hpp>
+
+namespace ka
+{
+
+${GENERATED_EMBEDDED_GRID}
+
+} // namespace ka::test
