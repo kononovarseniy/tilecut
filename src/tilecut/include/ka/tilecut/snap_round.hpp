@@ -2,9 +2,9 @@
 
 #include <ranges>
 
-#include <ka/exact/HotPixelIndex.hpp>
 #include <ka/exact/grid.hpp>
 #include <ka/geometry_types/Vec2.hpp>
+#include <ka/tilecut/HotPixelIndex.hpp>
 
 namespace ka
 {

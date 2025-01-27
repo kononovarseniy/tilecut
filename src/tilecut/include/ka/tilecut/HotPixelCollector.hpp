@@ -5,8 +5,8 @@
 
 #include <ka/exact/GridParameters.hpp>
 #include <ka/exact/GridRounding.hpp>
-#include <ka/exact/HotPixelIndex.hpp>
 #include <ka/geometry_types/Vec2.hpp>
+#include <ka/tilecut/HotPixelIndex.hpp>
 
 namespace ka
 {

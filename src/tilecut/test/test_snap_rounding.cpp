@@ -8,9 +8,9 @@
 #include <iterator>
 #include <vector>
 
-#include <ka/exact/HotPixelCollector.hpp>
-#include <ka/exact/snap_round.hpp>
 #include <ka/geometry_types/Vec2.hpp>
+#include <ka/tilecut/HotPixelCollector.hpp>
+#include <ka/tilecut/snap_round.hpp>
 
 #include "mock_grid_parameters.hpp"
 

@@ -9,8 +9,8 @@
 
 #include <ka/common/assert.hpp>
 #include <ka/common/fixed.hpp>
-#include <ka/exact/HotPixelOrder.hpp>
 #include <ka/geometry_types/Vec2.hpp>
+#include <ka/tilecut/HotPixelOrder.hpp>
 
 namespace ka
 {
