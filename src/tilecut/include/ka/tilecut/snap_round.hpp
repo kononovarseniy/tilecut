@@ -5,6 +5,7 @@
 #include <ka/exact/grid.hpp>
 #include <ka/geometry_types/Vec2.hpp>
 #include <ka/tilecut/HotPixelIndex.hpp>
+#include <ka/tilecut/find_hot_pixels.hpp>
 
 namespace ka
 {
@@ -19,10 +20,7 @@ Out snap_round(const HotPixelIndex & hot_pixels, In && line, Out output)
     bool first = true;
     for (const auto & vertex : line)
     {
-        const Vec2s64 pixel = {
-            .x = column_containing_position<rounding>(hot_pixels.grid(), vertex.x),
-            .y = row_containing_position<rounding>(hot_pixels.grid(), vertex.y),
-        };
+        const Vec2s64 pixel = find_point_hot_pixel<rounding>(hot_pixels.grid(), vertex);
         if (first)
         {
             *output++ = pixel;

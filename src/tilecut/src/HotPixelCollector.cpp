@@ -1,8 +1,10 @@
 #include <algorithm>
+#include <iterator>
 
 #include <ka/common/assert.hpp>
 #include <ka/exact/grid.hpp>
 #include <ka/tilecut/HotPixelCollector.hpp>
+#include <ka/tilecut/find_hot_pixels.hpp>
 
 namespace ka
 {
@@ -33,76 +35,21 @@ void HotPixelCollector::add_vertex_and_tile_cuts(const Vec2f64 & vertex) noexcep
     AR_PRE(grid_.has_value());
     AR_PRE(tile_step_ > 0);
 
-    const auto pixel = hot_pixels_.emplace_back(Vec2s64 {
-        column_containing_position<rounding>(*grid_, vertex.x),
-        column_containing_position<rounding>(*grid_, vertex.y),
-    });
+    const auto pixel = hot_pixels_.emplace_back(find_point_hot_pixel<rounding>(*grid_, vertex));
     if (prev_vertex_.has_value())
     {
         AR_ASSERT(prev_pixel_.has_value());
 
-        const auto min_tile = [this](const s64 a, const s64 b)
-        {
-            const auto value = std::min(a, b);
-            if (value >= 0)
-            {
-                return ((value + tile_step_ - 1) / tile_step_) * tile_step_;
-            }
-            return -(-value / tile_step_) * tile_step_;
-        };
-        const auto max_tile = [this](const s64 a, const s64 b)
-        {
-            const auto value = std::max(a, b);
-            if (value >= 0)
-            {
-                return (value / tile_step_) * tile_step_;
-            }
-            return -((-value + tile_step_ - 1) / tile_step_) * tile_step_;
-        };
-
-        const auto min_x = min_tile(prev_pixel_->x, pixel.x);
-        const auto max_x = max_tile(prev_pixel_->x, pixel.x);
-        const auto min_y = min_tile(prev_pixel_->y, pixel.y);
-        const auto max_y = max_tile(prev_pixel_->y, pixel.y);
-
-        if (prev_vertex_->x != vertex.x)
-        {
-            for (auto x = min_x; x <= max_x; x += tile_step_)
-            {
-                if (border_between_coordinates(grid_->cell_size, prev_vertex_->x, vertex.x, x))
-                {
-                    // clang-format off
-                    const auto y = column_border_intersection<rounding>(
-                        *grid_,
-                        prev_vertex_->x,
-                        prev_vertex_->y,
-                        vertex.x,
-                        vertex.y,
-                        x);
-                    // clang-format on
-                    hot_pixels_.push_back({ x, y });
-                }
-            }
-        }
-        if (prev_vertex_->y != vertex.y)
-        {
-            for (auto y = min_y; y <= max_y; y += tile_step_)
-            {
-                if (border_between_coordinates(grid_->cell_size, prev_vertex_->y, vertex.y, y))
-                {
-                    // clang-format off
-                    const auto x = row_border_intersection<rounding>(
-                        *grid_,
-                        prev_vertex_->x,
-                        prev_vertex_->y,
-                        vertex.x,
-                        vertex.y,
-                        y);
-                    // clang-format on
-                    hot_pixels_.push_back({ x, y });
-                }
-            }
-        }
+        // clang-format off
+        find_tile_bounds_hot_pixels<rounding>(
+            *grid_,
+            tile_step_,
+            *prev_vertex_,
+            *prev_pixel_,
+            vertex,
+            pixel,
+            std::back_inserter(hot_pixels_));
+        // clang-format on
     }
     prev_vertex_ = vertex;
     prev_pixel_ = pixel;
