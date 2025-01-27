@@ -1,8 +1,8 @@
 #include <algorithm>
 
 #include <ka/common/assert.hpp>
-#include <ka/exact/HotPixelCollector.hpp>
 #include <ka/exact/grid.hpp>
+#include <ka/tilecut/HotPixelCollector.hpp>
 
 namespace ka
 {

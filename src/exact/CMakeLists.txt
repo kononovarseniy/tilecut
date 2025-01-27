@@ -11,10 +11,6 @@ target_sources(ka_${module_name}
         include/ka/exact/grid.hpp
         include/ka/exact/GridParameters.hpp
         include/ka/exact/GridRounding.hpp
-        include/ka/exact/HotPixelCollector.hpp
-        include/ka/exact/HotPixelIndex.hpp
-        include/ka/exact/HotPixelOrder.hpp
-        include/ka/exact/snap_round.hpp
 
     PRIVATE
         src/grid/border_between_coordinates.cpp
@@ -24,7 +20,6 @@ target_sources(ka_${module_name}
         src/grid/line_intersects_cell.cpp
 
         src/expansion.hpp
-        src/HotPixelCollector.cpp
 )
 
 target_enable_warnings(ka_${module_name})
@@ -51,7 +46,6 @@ if(BUILD_TESTS)
         test/mock_grid_parameters.hpp
         test/test_check_column_border_intersection.cpp
         test/test_column_border_intersection.cpp
-        test/test_snap_rounding.cpp
     )
     target_enable_warnings(ka_${module_name}_test)
     target_link_libraries(ka_${module_name}_test
