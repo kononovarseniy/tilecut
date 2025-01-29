@@ -12,10 +12,12 @@ target_sources(ka_${module_name}
         include/ka/tilecut/filter_segments.hpp
         include/ka/tilecut/find_cuts.hpp
         include/ka/tilecut/find_hot_pixels.hpp
+        include/ka/tilecut/hot_pixel_less.hpp
         include/ka/tilecut/HotPixelCollector.hpp
         include/ka/tilecut/HotPixelIndex.hpp
         include/ka/tilecut/HotPixelOrder.hpp
         include/ka/tilecut/snap_round.hpp
+        include/ka/tilecut/sort_hot_pixels_along_segment.hpp
 
     PRIVATE
         src/collect_tiles.cpp
@@ -47,6 +49,7 @@ if(BUILD_TESTS)
     add_executable(ka_${module_name}_test
         test/mock_grid_parameters.hpp
         test/test_snap_rounding.cpp
+        test/test_sort_hot_pixels_along_segment.cpp
     )
     target_enable_warnings(ka_${module_name}_test)
     target_link_libraries(ka_${module_name}_test

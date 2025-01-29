@@ -27,6 +27,8 @@ public:
         return *grid_;
     }
 
+    /// @brief Retrieves all hot_pixels within the given rectangle.
+    /// Pixels are returned in the order defined by ka::hot_pixel_less<horizontal_order, vertical_order>.
     template <HotPixelOrder horizontal_order, HotPixelOrder vertical_order, std::output_iterator<Vec2s64> Out>
     [[nodiscard]] Out find_if(
         const s64 min_x,
