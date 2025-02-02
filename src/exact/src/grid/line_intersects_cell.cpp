@@ -133,8 +133,8 @@ template <GridRounding rounding>
     const std::span<const f64, 2> dx,
     const std::span<const f64, 2> dy) noexcept
 {
-    const auto n = exact_cast_int<f64>(node_x);
-    const auto m = exact_cast_int<f64>(node_y);
+    const auto n = exact_cast<f64>(node_x);
+    const auto m = exact_cast<f64>(node_y);
 
     std::array<f64, 16> term;
     std::array<f64, 4> ndy;

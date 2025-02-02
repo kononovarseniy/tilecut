@@ -30,10 +30,10 @@ s64 column_containing_position_impl([[maybe_unused]] const GridParameters & grid
         // candidate * size > x
         if (sign > 0.0)
         {
-            return exact_cast_float<s64>(candidate) - 1;
+            return exact_cast<s64>(candidate) - 1;
         }
     }
-    return exact_cast_float<s64>(candidate);
+    return exact_cast<s64>(candidate);
 }
 
 template <GridRounding rounding>

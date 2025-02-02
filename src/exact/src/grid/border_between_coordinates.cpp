@@ -17,7 +17,7 @@ bool border_between_coordinates(const f64 cell_size, const f64 a, const f64 b, c
     const auto compare_border_and_coordinate = [](const f64 s, const s64 n, const f64 x, const auto cmp)
     {
         std::array<f64, 3> fms;
-        const auto tmp = two_product(exact_cast_int<f64>(n), s);
+        const auto tmp = two_product(exact_cast<f64>(n), s);
         grow_expansion(const_span(tmp), -x, span(fms));
         return cmp(expansion_approx(const_span(fms)), 0.0);
     };

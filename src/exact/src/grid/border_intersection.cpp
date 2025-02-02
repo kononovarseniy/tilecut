@@ -54,7 +54,7 @@ s64 column_border_intersecion_impl(
         scale_expansion(const_span(two_diff(b_y, a_y)), size, span(size_dy));
         /// c_x * size * (b_y - a_y)
         std::array<f64, 8> numerator_2;
-        scale_expansion(const_span(size_dy), exact_cast_int<f64>(c_x), span(numerator_2));
+        scale_expansion(const_span(size_dy), exact_cast<f64>(c_x), span(numerator_2));
 
         std::array<f64, 12> numerator;
         // TODO: fast_expansion_sum
@@ -81,7 +81,7 @@ s64 column_border_intersecion_impl(
     // so we can't avoid branching based on the sign of the value using std::floor.
     f64 integral_part;
     const auto fractional_part = std::abs(std::modf(intersection, &integral_part));
-    s64 truncated = exact_cast_float<s64>(integral_part);
+    s64 truncated = exact_cast<s64>(integral_part);
 
     if (intersection >= 0.0)
     {
