@@ -15,6 +15,13 @@ struct Tile final
     std::span<const Segment2u16> segments;
 };
 
+/// @brief Groups segments by tile coordinates and abtains the sorted list of tile coordinates.
+/// @note Vector unique_segments is modified by grouping segments by tile coordinates.
+/// @param unique_segments unique segments of multipolygon.
+/// @param tile_segments container for segments in tile coordinates. Subranges of `tile_segments` are referenced by
+/// items of `tiles` container.
+/// @param tiles container for found tiles. Tiles are sorted by coordinates.
+/// @param tile_size size of the tile.
 void collect_tiles(
     std::vector<Segment2s64> & unique_segments,
     std::vector<Segment2u16> & tile_segments,
