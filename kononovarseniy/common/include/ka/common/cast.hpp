@@ -13,92 +13,6 @@
 namespace ka
 {
 
-template <std::integral I, ieee_float F>
-[[nodiscard]] consteval F max_common_representable_number() noexcept
-{
-    constexpr auto extra_int_digits = std::numeric_limits<I>::digits - std::numeric_limits<F>::digits;
-    static_assert(extra_int_digits > 0, "This is not the function you are looking for");
-
-    constexpr I int_one = 1;
-    constexpr I result = std::numeric_limits<I>::max() - ((int_one << extra_int_digits) - int_one);
-
-    static_assert(static_cast<I>(static_cast<F>(result) == result));
-
-    return static_cast<F>(result);
-}
-
-template <std::signed_integral I, ieee_float F>
-[[nodiscard]] consteval F min_common_representable_number() noexcept
-{
-    constexpr auto result = std::numeric_limits<I>::min();
-    return static_cast<F>(result);
-}
-
-template <std::unsigned_integral Target, ieee_float Source>
-[[nodiscard]] constexpr bool in_exact_range(const Source value)
-{
-    return Target {} <= value && value <= max_common_representable_number<Target, Source>();
-}
-
-template <std::signed_integral Target, ieee_float Source>
-[[nodiscard]] constexpr bool in_exact_range(const Source value)
-{
-    return value >= min_common_representable_number<Target, Source>() &&
-           value <= max_common_representable_number<Target, Source>();
-}
-
-template <std::integral Target, std::integral Source>
-[[nodiscard]] constexpr bool in_exact_range(const Source value)
-{
-    return std::in_range<Target>(value);
-}
-
-template <std::integral T, ieee_float S>
-[[nodiscard]] constexpr T exact_cast_float(
-    const S & value,
-    const std::source_location & location = std::source_location::current()) noexcept
-{
-    constexpr auto assert_type = "exact_cast float -> int";
-    AR_NESTED_ASSERT(in_exact_range<T>(value), assert_type, location);
-    AR_NESTED_ASSERT(static_cast<S>(static_cast<T>(value)) == value, assert_type, location);
-    return static_cast<T>(value);
-}
-
-template <ieee_float T, std::integral S>
-[[nodiscard]] constexpr T exact_cast_int(
-    const S & value,
-    const std::source_location & location = std::source_location::current()) noexcept
-{
-    constexpr auto assert_type = "exact_cast int -> float";
-
-    static_assert(std::numeric_limits<S>::max() <= std::numeric_limits<T>::max());
-    static_assert(std::numeric_limits<S>::min() >= std::numeric_limits<T>::lowest());
-
-    AR_NESTED_ASSERT(static_cast<S>(static_cast<T>(value)) == value, assert_type, location);
-    return static_cast<T>(value);
-}
-
-template <ieee_float T, ieee_float S>
-[[nodiscard]] constexpr T exact_cast(
-    const S & value,
-    const std::source_location & location = std::source_location::current()) noexcept
-{
-    constexpr auto assert_type = "exact_cast float -> float";
-    AR_NESTED_ASSERT(value >= std::numeric_limits<T>::lowest(), assert_type, location);
-    AR_NESTED_ASSERT(value <= std::numeric_limits<T>::max(), assert_type, location);
-    AR_NESTED_ASSERT(static_cast<S>(static_cast<T>(value)) == value, assert_type, location);
-    return static_cast<T>(value);
-}
-
-template <std::integral T, std::integral S>
-[[nodiscard]] constexpr T exact_cast(
-    const S & value,
-    const std::source_location & location = std::source_location::current()) noexcept
-{
-    AR_NESTED_ASSERT(in_exact_range<T>(value), "exact_cast int -> int", location);
-    return static_cast<T>(value);
-}
-
 template <std::integral T, std::integral S>
 [[nodiscard]] constexpr T safe_cast(const S & value) noexcept
     requires(
@@ -168,5 +82,111 @@ static_assert(!SafelyCastableTo<f64, s64>);
 
 static_assert(SafelyCastableTo<f64, f32>);
 static_assert(!SafelyCastableTo<f32, f64>);
+
+template <std::integral I, ieee_float F>
+[[nodiscard]] consteval F max_common_representable_number() noexcept
+{
+    constexpr auto extra_int_digits = std::numeric_limits<I>::digits - std::numeric_limits<F>::digits;
+    if constexpr (extra_int_digits < 0)
+    {
+        return std::numeric_limits<I>::max();
+    }
+    else
+    {
+        constexpr I int_one = 1;
+        constexpr I result = std::numeric_limits<I>::max() - ((int_one << extra_int_digits) - int_one);
+
+        static_assert(static_cast<I>(static_cast<F>(result) == result));
+
+        return static_cast<F>(result);
+    }
+}
+
+template <std::signed_integral I, ieee_float F>
+[[nodiscard]] consteval F min_common_representable_number() noexcept
+{
+    constexpr auto result = std::numeric_limits<I>::min();
+    return static_cast<F>(result);
+}
+
+template <std::unsigned_integral Target, ieee_float Source>
+[[nodiscard]] constexpr bool in_exact_range(const Source value)
+{
+    return Target {} <= value && value <= max_common_representable_number<Target, Source>();
+}
+
+template <std::signed_integral Target, ieee_float Source>
+[[nodiscard]] constexpr bool in_exact_range(const Source value)
+{
+    return value >= min_common_representable_number<Target, Source>() &&
+           value <= max_common_representable_number<Target, Source>();
+}
+
+template <std::integral Target, std::integral Source>
+[[nodiscard]] constexpr bool in_exact_range(const Source value)
+{
+    return std::in_range<Target>(value);
+}
+
+template <std::integral T, ieee_float S>
+[[nodiscard]] constexpr T exact_cast(
+    const S & value,
+    const std::source_location & location = std::source_location::current()) noexcept
+{
+    constexpr auto assert_type = "exact_cast float -> int";
+    AR_NESTED_ASSERT(in_exact_range<T>(value), assert_type, location);
+    AR_NESTED_ASSERT(static_cast<S>(static_cast<T>(value)) == value, assert_type, location);
+    return static_cast<T>(value);
+}
+
+template <ieee_float T, std::integral S>
+[[nodiscard]] constexpr T exact_cast(
+    const S & value,
+    const std::source_location & location = std::source_location::current()) noexcept
+{
+    if constexpr (SafelyCastableTo<T, S>)
+    {
+        return safe_cast<T>(value);
+    }
+
+    constexpr auto assert_type = "exact_cast int -> float";
+
+    static_assert(std::numeric_limits<S>::max() <= std::numeric_limits<T>::max());
+    static_assert(std::numeric_limits<S>::min() >= std::numeric_limits<T>::lowest());
+
+    AR_NESTED_ASSERT(static_cast<S>(static_cast<T>(value)) == value, assert_type, location);
+    return static_cast<T>(value);
+}
+
+template <ieee_float T, ieee_float S>
+[[nodiscard]] constexpr T exact_cast(
+    const S & value,
+    const std::source_location & location = std::source_location::current()) noexcept
+{
+    if constexpr (SafelyCastableTo<T, S>)
+    {
+        return safe_cast<T>(value);
+    }
+
+    constexpr auto assert_type = "exact_cast float -> float";
+    AR_NESTED_ASSERT(value >= std::numeric_limits<T>::lowest(), assert_type, location);
+    AR_NESTED_ASSERT(value <= std::numeric_limits<T>::max(), assert_type, location);
+    AR_NESTED_ASSERT(static_cast<S>(static_cast<T>(value)) == value, assert_type, location);
+    return static_cast<T>(value);
+}
+
+template <std::integral T, std::integral S>
+[[nodiscard]] constexpr T exact_cast(
+    const S & value,
+    const std::source_location & location = std::source_location::current()) noexcept
+{
+    if constexpr (SafelyCastableTo<T, S>)
+    {
+        return safe_cast<T>(value);
+    }
+
+    AR_NESTED_ASSERT(in_exact_range<T>(value), "exact_cast int -> int", location);
+    return static_cast<T>(value);
+}
 
 } // namespace ka
