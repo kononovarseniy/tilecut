@@ -4,7 +4,6 @@
 #include <array>
 #include <cmath>
 #include <concepts>
-#include <format>
 #include <iterator>
 #include <vector>
 
@@ -12,19 +11,13 @@
 #include <ka/tilecut/HotPixelCollector.hpp>
 #include <ka/tilecut/snap_round.hpp>
 
+#include "debug_output.hpp"
 #include "mock_grid_parameters.hpp"
 
 namespace ka
 {
 
 using ::testing::ElementsAreArray;
-
-template <typename T>
-std::ostream & operator<<(std::ostream & stream, const Vec2<T> & point)
-{
-    stream << std::format("({}, {})", point.x, point.y);
-    return stream;
-}
 
 [[nodiscard]] auto next_float(const std::floating_point auto value)
 {

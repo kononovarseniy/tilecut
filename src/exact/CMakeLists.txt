@@ -38,6 +38,7 @@ install(TARGETS ka_${module_name}
 )
 
 if(BUILD_TESTS)
+    find_package(fmt REQUIRED)
     find_package(mpfr REQUIRED)
 
     add_executable(ka_${module_name}_test
@@ -53,6 +54,7 @@ if(BUILD_TESTS)
             ka::common
             ka::exact
             ka::geometry_types
+            fmt::fmt
             gtest::gtest
             mpfr::mpfr
     )

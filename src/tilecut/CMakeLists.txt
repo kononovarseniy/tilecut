@@ -44,9 +44,11 @@ install(TARGETS ka_${module_name}
 )
 
 if(BUILD_TESTS)
+    find_package(fmt REQUIRED)
     find_package(mpfr REQUIRED)
 
     add_executable(ka_${module_name}_test
+        test/debug_output.hpp
         test/mock_grid_parameters.hpp
         test/test_snap_rounding.cpp
         test/test_sort_hot_pixels_along_segment.cpp
@@ -57,6 +59,7 @@ if(BUILD_TESTS)
             ka::common
             ka::geometry_types
             ka::tilecut
+            fmt::fmt
             gtest::gtest
     )
 

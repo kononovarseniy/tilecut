@@ -2,8 +2,9 @@
 
 #include <array>
 #include <cmath>
-#include <format>
 #include <optional>
+
+#include <fmt/format.h>
 
 #include <mpfr.h>
 
@@ -87,7 +88,7 @@ TEST(ColumnBorderIntersectionTest, combinations_of_dangerous_values)
                             const auto c_y =
                                 column_border_intersection<GridRounding::Cell>(grid, a_x, a_y, b_x, b_y, c_x);
                             ASSERT_TRUE(check_column_border_intersecion(a_x, a_y, b_x, b_y, grid.cell_size, c_x, c_y))
-                                << std::format(
+                                << fmt::format(
                                        "#{})s: {}; a: {}, {}; b: {}, {}; c: {}, {}",
                                        case_index,
                                        size,
