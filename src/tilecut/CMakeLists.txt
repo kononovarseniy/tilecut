@@ -17,6 +17,8 @@ target_sources(ka_${module_name}
         include/ka/tilecut/HotPixelIndex.hpp
         include/ka/tilecut/HotPixelOrder.hpp
         include/ka/tilecut/lerp_along_segment.hpp
+        include/ka/tilecut/LineSnapper.hpp
+        include/ka/tilecut/LineSnapperCoordinateHandler.hpp
         include/ka/tilecut/snap_round.hpp
         include/ka/tilecut/sort_hot_pixels_along_segment.hpp
 
@@ -52,6 +54,7 @@ if(BUILD_TESTS)
         test/debug_output.hpp
         test/mock_grid_parameters.hpp
         test/test_lerp_along_segment.cpp
+        test/test_line_snapper.cpp
         test/test_snap_rounding.cpp
         test/test_sort_hot_pixels_along_segment.cpp
     )
