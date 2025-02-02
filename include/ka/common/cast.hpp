@@ -54,7 +54,7 @@ template <std::integral Target, std::integral Source>
 }
 
 template <std::integral T, ieee_float S>
-[[nodiscard]] constexpr T exact_cast_float(
+[[nodiscard]] constexpr T exact_cast(
     const S & value,
     const std::source_location & location = std::source_location::current()) noexcept
 {
@@ -65,7 +65,7 @@ template <std::integral T, ieee_float S>
 }
 
 template <ieee_float T, std::integral S>
-[[nodiscard]] constexpr T exact_cast_int(
+[[nodiscard]] constexpr T exact_cast(
     const S & value,
     const std::source_location & location = std::source_location::current()) noexcept
 {
