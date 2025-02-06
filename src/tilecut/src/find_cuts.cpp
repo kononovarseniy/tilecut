@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <optional>
+#include <utility>
 
 #include <ka/common/assert.hpp>
 #include <ka/common/cast.hpp>
@@ -37,13 +38,6 @@ inline namespace
         return tile_size * 3 + (tile_size - point.y);
     }
     return std::nullopt;
-}
-
-/// @brief Checks that both points of the segment lie on the same side of tile.
-[[nodiscard]] bool segment_on_boundary(const u16 tile_size, const Segment2u16 segment) noexcept
-{
-    return (segment.a.x == 0 && segment.b.x == 0) || (segment.a.x == tile_size && segment.b.x == tile_size) ||
-           (segment.a.y == 0 && segment.b.y == 0) || (segment.a.y == tile_size && segment.b.y == tile_size);
 }
 
 /// @brief Converts parameter value to coresponding point.
@@ -105,6 +99,7 @@ void add_cut(
 /// that form a set of contours.
 [[nodiscard]] bool outermost_contour_is_inner(const std::span<const Segment2u16> segments) noexcept
 {
+    AR_PRE(!segments.empty());
     const auto segment_it = std::ranges::min_element(
         segments,
         [](const auto & lhs, const auto & rhs) noexcept
@@ -119,7 +114,55 @@ void add_cut(
         {
             return { std::min(segment.a, segment.b), std::max(segment.a, segment.b) };
         });
+    AR_ASSERT(segment_it != segments.end());
     return segment_it->a > segment_it->b;
+}
+
+struct TouchingSegment final
+{
+    /// Parameter of the touching_point.
+    u32 parameter;
+    /// Position of the point on the tile boundary.
+    Vec2u16 touching_point;
+    /// Position of the point opposite to one located on the tile boundary.
+    Vec2u16 opposite_point;
+    /// If true, the second point of the original segment is located on the tile boundary.
+    /// This means that some part of the boundary clockwise from the touch point is to the right of the segment,
+    /// or that the segment lies entirely on the boundary.
+    /// For many simple geometries, this means that the next segment of the contour belongs to a different tile,
+    /// hence the name
+    bool outgoing;
+};
+
+/// @brief Checks the precondition of the orientation of segments on the boundary.
+[[nodiscard]] [[maybe_unused]] bool check_orientation_if_on_boundary(
+    const u16 tile_size,
+    const TouchingSegment & touching_segment) noexcept
+{
+    auto a = touching_segment.touching_point;
+    auto b = touching_segment.opposite_point;
+    AR_PRE(a != b);
+    if (touching_segment.outgoing)
+    {
+        std::swap(a, b);
+    }
+    if (a.x == 0 && b.x == 0 && a.y < b.y)
+    {
+        return false;
+    }
+    if (a.x == tile_size && b.x == tile_size && a.y > b.y)
+    {
+        return false;
+    }
+    if (a.y == 0 && b.y == 0 && a.x > b.x)
+    {
+        return false;
+    }
+    if (a.y == tile_size && b.y == tile_size && a.x < b.x)
+    {
+        return false;
+    }
+    return true;
 }
 
 } // namespace
@@ -129,18 +172,11 @@ void find_cuts(
     std::vector<Segment2u16> & result,
     const u16 tile_size) noexcept
 {
-    struct TouchingSegment final
+    AR_PRE(tile_size > 0);
+    if (segments.empty())
     {
-        /// Parameter of the touching_point.
-        u32 parameter;
-        /// Position of the point on the tile boundary.
-        Vec2u16 touching_point;
-        /// Position of the point opposite to one located on the tile boundary.
-        Vec2u16 opposite_point;
-        /// If true, the second point of the segment is located on the tile boundary.
-        bool outgoing;
-    };
-
+        return;
+    }
     // TODO: Reuse vector.
     std::vector<TouchingSegment> touching_segments;
     touching_segments.reserve(segments.size() * 2);
@@ -185,6 +221,7 @@ void find_cuts(
                     return lhs.parameter < rhs.parameter;
                 }
                 AR_ASSERT(lhs.touching_point == rhs.touching_point);
+                AR_ASSERT(lhs.opposite_point != rhs.opposite_point);
                 const PointOrder order { lhs.touching_point, lhs.opposite_point, rhs.opposite_point };
                 // If both points lie on the same side of the tile boundary, the orientation check is insufficient.
                 // The most counter-clockwise segment is the segment with the smaller parameter of the opposite point
@@ -215,9 +252,15 @@ void find_cuts(
         std::optional<u32> prev_point;
         const auto process_bunch = [&](const TouchingSegment & cw_segment, const bool repeated_first)
         {
-            const auto previous_boundary_part_is_cut =
-                !cw_segment.outgoing &&
-                !segment_on_boundary(tile_size, { cw_segment.touching_point, cw_segment.opposite_point });
+            AR_PRE(check_orientation_if_on_boundary(tile_size, cw_segment));
+            /// The most clockwise segment of the bunch determines whether the previous part of the boundary
+            /// belongs to the multipolygon.
+            /// When the segment is not on the boundary, the previous part of the boundary is to the right of it and
+            /// therefore does not belong to the polygon.
+            /// When the segment is on the boundary, the precondition above ensures that the outgoing segment lies on
+            /// the previous part of the boundary (which is not a cut since it coincides with the existing segment),
+            /// and the non-outgoing segment lies on the unprocessed part of the boundary.
+            const auto previous_boundary_part_is_cut = !cw_segment.outgoing;
             if (previous_boundary_part_is_cut)
             {
                 if (prev_point.has_value())

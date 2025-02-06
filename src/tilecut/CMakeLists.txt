@@ -53,6 +53,7 @@ if(BUILD_TESTS)
     add_executable(ka_${module_name}_test
         test/debug_output.hpp
         test/mock_grid_parameters.hpp
+        test/test_find_cuts.cpp
         test/test_lerp_along_segment.cpp
         test/test_line_snapper.cpp
         test/test_snap_rounding.cpp

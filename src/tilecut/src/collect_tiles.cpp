@@ -20,11 +20,13 @@ inline namespace
     return exact_cast<s32>(-((-value + tile_size - 1) / tile_size));
 };
 
+/// Returns the coordinates of the tile to which the segment belongs.
 [[nodiscard]] Vec2s32 segment_tile(const Segment2s64 & segment, const u16 tile_size)
 {
     AR_PRE(segment.a != segment.b);
     const auto tile_x = std::min(coordinate_tile(segment.a.x, tile_size), coordinate_tile(segment.b.x, tile_size));
     const auto tile_y = std::min(coordinate_tile(segment.a.y, tile_size), coordinate_tile(segment.b.y, tile_size));
+    // See note in the description of the collect_tiles function.
     if (segment.a.x == segment.b.x && segment.a.x == tile_x * tile_size)
     {
         return {
