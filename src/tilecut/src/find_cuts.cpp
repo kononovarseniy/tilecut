@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <optional>
+#include <utility>
 
 #include <ka/common/assert.hpp>
 #include <ka/common/cast.hpp>
@@ -98,6 +99,7 @@ void add_cut(
 /// that form a set of contours.
 [[nodiscard]] bool outermost_contour_is_inner(const std::span<const Segment2u16> segments) noexcept
 {
+    AR_PRE(!segments.empty());
     const auto segment_it = std::ranges::min_element(
         segments,
         [](const auto & lhs, const auto & rhs) noexcept
@@ -112,6 +114,7 @@ void add_cut(
         {
             return { std::min(segment.a, segment.b), std::max(segment.a, segment.b) };
         });
+    AR_ASSERT(segment_it != segments.end());
     return segment_it->a > segment_it->b;
 }
 
@@ -169,6 +172,11 @@ void find_cuts(
     std::vector<Segment2u16> & result,
     const u16 tile_size) noexcept
 {
+    AR_PRE(tile_size > 0);
+    if (segments.empty())
+    {
+        return;
+    }
     // TODO: Reuse vector.
     std::vector<TouchingSegment> touching_segments;
     touching_segments.reserve(segments.size() * 2);
@@ -213,6 +221,7 @@ void find_cuts(
                     return lhs.parameter < rhs.parameter;
                 }
                 AR_ASSERT(lhs.touching_point == rhs.touching_point);
+                AR_ASSERT(lhs.opposite_point != rhs.opposite_point);
                 const PointOrder order { lhs.touching_point, lhs.opposite_point, rhs.opposite_point };
                 // If both points lie on the same side of the tile boundary, the orientation check is insufficient.
                 // The most counter-clockwise segment is the segment with the smaller parameter of the opposite point
