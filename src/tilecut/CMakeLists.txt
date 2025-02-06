@@ -33,3 +33,24 @@ install(TARGETS ka_${module_name}
     RUNTIME DESTINATION bin
     FILE_SET HEADERS DESTINATION include
 )
+
+if(BUILD_TESTS)
+    find_package(fmt REQUIRED)
+    find_package(mpfr REQUIRED)
+
+    add_executable(ka_${module_name}_test
+        test/debug_output.hpp
+        test/test_find_cuts.cpp
+    )
+    target_enable_warnings(ka_${module_name}_test)
+    target_link_libraries(ka_${module_name}_test
+        PRIVATE
+            ka::common
+            ka::geometry_types
+            ka::tilecut
+            fmt::fmt
+            gtest::gtest
+    )
+
+    gtest_discover_tests(ka_${module_name}_test)
+endif()
