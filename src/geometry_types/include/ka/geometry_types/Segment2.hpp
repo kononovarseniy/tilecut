@@ -35,6 +35,7 @@ struct Segment2 final
     }
 };
 
+using Segment2f64 = Segment2<f64>;
 using Segment2s64 = Segment2<s64>;
 using Segment2u16 = Segment2<u16>;
 
