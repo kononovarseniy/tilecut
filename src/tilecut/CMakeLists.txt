@@ -21,6 +21,7 @@ target_sources(ka_${module_name}
         include/ka/tilecut/LineSnapperCoordinateHandler.hpp
         include/ka/tilecut/snap_round.hpp
         include/ka/tilecut/sort_hot_pixels_along_segment.hpp
+        include/ka/tilecut/TileGrid.hpp
 
     PRIVATE
         src/collect_tiles.cpp
@@ -58,6 +59,7 @@ if(BUILD_TESTS)
         test/test_line_snapper.cpp
         test/test_snap_rounding.cpp
         test/test_sort_hot_pixels_along_segment.cpp
+        test/test_tile_grid.cpp
     )
     target_enable_warnings(ka_${module_name}_test)
     target_link_libraries(ka_${module_name}_test
