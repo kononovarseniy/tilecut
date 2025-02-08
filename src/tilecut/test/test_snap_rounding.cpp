@@ -9,6 +9,7 @@
 
 #include <ka/geometry_types/Vec2.hpp>
 #include <ka/tilecut/HotPixelCollector.hpp>
+#include <ka/tilecut/TileCellGrid.hpp>
 #include <ka/tilecut/snap_round.hpp>
 
 #include "debug_output.hpp"
@@ -31,16 +32,14 @@ using ::testing::ElementsAreArray;
 
 TEST(SnapRoundingTest, distorted_square)
 {
-    auto grid = g_embedded_grid;
-    grid.cell_size = 1.1;
-    constexpr auto tile_step = 8;
+    const auto grid = make_grid<GridRounding::Cell>(1.1, 8);
 
     const std::array<Vec2f64, 5> geometry { {
-        { prev_float(grid.cell_size * -4), grid.cell_size * -4 },
-        { next_float(grid.cell_size * +4), prev_float(grid.cell_size * -4) },
-        { prev_float(grid.cell_size * +4), next_float(grid.cell_size * +4) },
-        { grid.cell_size * -4, grid.cell_size * +4 },
-        { prev_float(grid.cell_size * -4), grid.cell_size * -4 },
+        { prev_float(grid.cell_size() * -4), grid.cell_size() * -4 },
+        { next_float(grid.cell_size() * +4), prev_float(grid.cell_size() * -4) },
+        { prev_float(grid.cell_size() * +4), next_float(grid.cell_size() * +4) },
+        { grid.cell_size() * -4, grid.cell_size() * +4 },
+        { prev_float(grid.cell_size() * -4), grid.cell_size() * -4 },
     } };
 
     // clang-format off
@@ -58,32 +57,25 @@ TEST(SnapRoundingTest, distorted_square)
     // clang-format on
 
     HotPixelCollector collector;
-    collector.init(grid, tile_step);
-    collector.new_contour();
-    for (const auto & vertex : geometry)
-    {
-        collector.add_vertex_and_tile_cuts<GridRounding::Cell>(vertex);
-    }
+    collector.add_tile_snapped_contour(grid, geometry);
     const auto & hot_pixels = collector.build_index();
 
     std::vector<Vec2s64> result;
-    snap_round<GridRounding::Cell>(hot_pixels, geometry, std::back_inserter(result));
+    snap_round(grid, hot_pixels, geometry, std::back_inserter(result));
 
     EXPECT_THAT(result, ElementsAreArray(expected));
 }
 
 TEST(SnapRoundingTest, perfect_square)
 {
-    auto grid = g_embedded_grid;
-    grid.cell_size = 1.1;
-    constexpr auto tile_step = 8;
+    const auto grid = make_grid<GridRounding::Cell>(1.1, 8);
 
     const std::array<Vec2f64, 5> geometry { {
-        { grid.cell_size * -4, grid.cell_size * -4 },
-        { grid.cell_size * +4, grid.cell_size * -4 },
-        { grid.cell_size * +4, grid.cell_size * +4 },
-        { grid.cell_size * -4, grid.cell_size * +4 },
-        { grid.cell_size * -4, grid.cell_size * -4 },
+        { grid.cell_size() * -4, grid.cell_size() * -4 },
+        { grid.cell_size() * +4, grid.cell_size() * -4 },
+        { grid.cell_size() * +4, grid.cell_size() * +4 },
+        { grid.cell_size() * -4, grid.cell_size() * +4 },
+        { grid.cell_size() * -4, grid.cell_size() * -4 },
     } };
 
     // clang-format off
@@ -101,25 +93,18 @@ TEST(SnapRoundingTest, perfect_square)
     // clang-format on
 
     HotPixelCollector collector;
-    collector.init(grid, tile_step);
-    collector.new_contour();
-    for (const auto & vertex : geometry)
-    {
-        collector.add_vertex_and_tile_cuts<GridRounding::Cell>(vertex);
-    }
+    collector.add_tile_snapped_contour(grid, geometry);
     const auto & hot_pixels = collector.build_index();
 
     std::vector<Vec2s64> result;
-    snap_round<GridRounding::Cell>(hot_pixels, geometry, std::back_inserter(result));
+    snap_round(grid, hot_pixels, geometry, std::back_inserter(result));
 
     EXPECT_THAT(result, ElementsAreArray(expected));
 }
 
 TEST(SnapRoundingTest, half_integer_perfect_square)
 {
-    auto grid = g_embedded_grid;
-    grid.cell_size = 1;
-    constexpr auto tile_step = 8;
+    const auto grid = make_grid<GridRounding::Cell>(1, 8);
 
     // clang-format off
     const std::array<Vec2f64, 5> geometry { {
@@ -144,16 +129,11 @@ TEST(SnapRoundingTest, half_integer_perfect_square)
     // clang-format on
 
     HotPixelCollector collector;
-    collector.init(grid, tile_step);
-    collector.new_contour();
-    for (const auto & vertex : geometry)
-    {
-        collector.add_vertex_and_tile_cuts<GridRounding::Cell>(vertex);
-    }
+    collector.add_tile_snapped_contour(grid, geometry);
     const auto & hot_pixels = collector.build_index();
 
     std::vector<Vec2s64> result;
-    snap_round<GridRounding::Cell>(hot_pixels, geometry, std::back_inserter(result));
+    snap_round(grid, hot_pixels, geometry, std::back_inserter(result));
 
     EXPECT_THAT(result, ElementsAreArray(expected));
 }

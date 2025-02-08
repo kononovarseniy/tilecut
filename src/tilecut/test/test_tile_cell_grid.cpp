@@ -20,20 +20,19 @@ namespace ka
 
 using ::testing::ElementsAreArray;
 
+inline namespace
+{
+
+constexpr f64 g_cell_size = 1.0;
 constexpr u16 g_tile_size = 100;
 
-[[nodiscard]] TileCellGrid<GridRounding::NearestNode> make_grid() noexcept
-{
-    auto grid = g_embedded_grid;
-    grid.cell_size = 1.0;
-    return { grid, g_tile_size };
-}
+} // namespace
 
 static_assert(TileCellGrid<GridRounding::NearestNode>::rounding == GridRounding::NearestNode);
 
 TEST(TileCellGridTest, cell_of)
 {
-    const auto grid = make_grid();
+    const auto grid = make_grid<GridRounding::NearestNode>(g_cell_size, g_tile_size);
     const Vec2f64 point { 3456.3546, 28.0 };
     const Vec2s64 expected { 3456, 28 };
 
@@ -42,7 +41,7 @@ TEST(TileCellGridTest, cell_of)
 
 TEST(TileCellGridTest, tile_boundary_intersection_cells)
 {
-    const auto grid = make_grid();
+    const auto grid = make_grid<GridRounding::NearestNode>(g_cell_size, g_tile_size);
     const Segment2f64 segment {
         { -0.49, 1 },
         { 2.49, 196 },

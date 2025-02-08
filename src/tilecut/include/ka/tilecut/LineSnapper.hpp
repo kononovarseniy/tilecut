@@ -7,11 +7,10 @@
 #include <vector>
 
 #include <ka/common/fixed.hpp>
-#include <ka/exact/GridParameters.hpp>
 #include <ka/exact/GridRounding.hpp>
 #include <ka/geometry_types/Vec2.hpp>
 #include <ka/tilecut/LineSnapperCoordinateHandler.hpp>
-#include <ka/tilecut/find_hot_pixels.hpp>
+#include <ka/tilecut/TileCellGrid.hpp>
 #include <ka/tilecut/lerp_along_segment.hpp>
 #include <ka/tilecut/sort_hot_pixels_along_segment.hpp>
 
@@ -27,7 +26,7 @@ public:
         std::ranges::input_range In,
         std::output_iterator<typename Handler::OutputVertex> Out>
         requires std::same_as<typename Handler::InputVertex, std::ranges::range_value_t<In>>
-    void snap_line(const GridParameters & grid, const u16 tile_size, In && line, Out out, const Handler & handler)
+    void snap_line(const TileCellGrid<rounding> & grid, In && line, Out out, const Handler & handler)
     {
         bool first = true;
         Vec2f64 prev_vertex;
@@ -38,7 +37,7 @@ public:
         for (const auto & curr_input : line)
         {
             const auto curr_vertex = handler.project(curr_input);
-            const auto curr_pixel = find_point_hot_pixel<rounding>(grid, curr_vertex);
+            const auto curr_pixel = grid.cell_of(curr_vertex);
             const auto curr_output = handler.transform(curr_input, curr_pixel);
 
             if (first)
@@ -49,13 +48,9 @@ public:
             {
                 interior_pixels_.clear();
 
-                find_tile_bounds_hot_pixels<rounding>(
-                    grid,
-                    tile_size,
-                    prev_vertex,
-                    prev_pixel,
-                    curr_vertex,
-                    curr_pixel,
+                grid.tile_boundary_intersection_cells(
+                    { prev_vertex, curr_vertex },
+                    { prev_pixel, curr_pixel },
                     std::back_inserter(interior_pixels_));
 
                 sort_hot_pixels_along_segment(interior_pixels_, prev_pixel, curr_pixel);

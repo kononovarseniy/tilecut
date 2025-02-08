@@ -11,7 +11,6 @@ target_sources(ka_${module_name}
         include/ka/tilecut/collect_tiles.hpp
         include/ka/tilecut/filter_segments.hpp
         include/ka/tilecut/find_cuts.hpp
-        include/ka/tilecut/find_hot_pixels.hpp
         include/ka/tilecut/hot_pixel_less.hpp
         include/ka/tilecut/HotPixelCollector.hpp
         include/ka/tilecut/HotPixelIndex.hpp
@@ -28,7 +27,6 @@ target_sources(ka_${module_name}
         src/collect_tiles.cpp
         src/filter_segments.cpp
         src/find_cuts.cpp
-        src/HotPixelCollector.cpp
         src/orient.hpp
 )
 

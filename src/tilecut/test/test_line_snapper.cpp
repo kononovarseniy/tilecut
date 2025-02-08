@@ -106,9 +106,7 @@ static_assert(LineSnapperCoordinateHandler<TestCoordinateHandler>);
 
 TEST(LineSnapperTest, interface_test)
 {
-    constexpr u16 tile_size = 10;
-    auto grid = g_embedded_grid;
-    grid.cell_size = 1.0;
+    const auto grid = make_grid<GridRounding::NearestNode>(1.0, 10);
 
     std::vector<TestCoordinateHandler::InputVertex> vertices {
         { { -20.3, 5.0 }, -100.23 },
@@ -129,16 +127,14 @@ TEST(LineSnapperTest, interface_test)
     TestCoordinateHandler handler;
 
     LineSnapper snapper;
-    snapper.snap_line<GridRounding::NearestNode>(grid, tile_size, vertices, std::back_inserter(result), handler);
+    snapper.snap_line(grid, vertices, std::back_inserter(result), handler);
 
     EXPECT_EQ(result, expected);
 }
 
 TEST(LineSnapperTest, interface_2d_test)
 {
-    constexpr u16 tile_size = 10;
-    auto grid = g_embedded_grid;
-    grid.cell_size = 1.0;
+    const auto grid = make_grid<GridRounding::NearestNode>(1.0, 10);
 
     std::vector<Vec2f64> vertices {
         { -20.3, 5.0 },
@@ -159,14 +155,12 @@ TEST(LineSnapperTest, interface_2d_test)
     Test2DCoordinateHandler handler;
 
     LineSnapper snapper;
-    snapper.snap_line<GridRounding::NearestNode>(grid, tile_size, vertices, std::back_inserter(result), handler);
+    snapper.snap_line(grid, vertices, std::back_inserter(result), handler);
 }
 
 TEST(LineSnapperTest, empty_2d_test)
 {
-    constexpr u16 tile_size = 10;
-    auto grid = g_embedded_grid;
-    grid.cell_size = 1.0;
+    const auto grid = make_grid<GridRounding::NearestNode>(1.0, 10);
 
     std::vector<Vec2f64> vertices;
     std::vector<Vec2s64> expected;
@@ -175,7 +169,7 @@ TEST(LineSnapperTest, empty_2d_test)
     Test2DCoordinateHandler handler;
 
     LineSnapper snapper;
-    snapper.snap_line<GridRounding::NearestNode>(grid, tile_size, vertices, std::back_inserter(result), handler);
+    snapper.snap_line(grid, vertices, std::back_inserter(result), handler);
 
     EXPECT_EQ(result, expected);
 }

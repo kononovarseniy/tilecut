@@ -2,17 +2,18 @@
 
 #include <ranges>
 
+#include <ka/exact/GridRounding.hpp>
 #include <ka/exact/grid.hpp>
 #include <ka/geometry_types/Vec2.hpp>
 #include <ka/tilecut/HotPixelIndex.hpp>
-#include <ka/tilecut/find_hot_pixels.hpp>
+#include <ka/tilecut/TileCellGrid.hpp>
 
 namespace ka
 {
 
 //! Performs countour snap rounding using specified hot pixels.
 template <GridRounding rounding, std::ranges::input_range In, std::output_iterator<Vec2s64> Out>
-Out snap_round(const HotPixelIndex & hot_pixels, In && line, Out output)
+Out snap_round(const TileCellGrid<rounding> & grid, const HotPixelIndex & hot_pixels, In && line, Out output)
 {
     Vec2f64 prev_vertex;
     Vec2s64 prev_pixel;
@@ -20,7 +21,7 @@ Out snap_round(const HotPixelIndex & hot_pixels, In && line, Out output)
     bool first = true;
     for (const auto & vertex : line)
     {
-        const Vec2s64 pixel = find_point_hot_pixel<rounding>(hot_pixels.grid(), vertex);
+        const Vec2s64 pixel = grid.cell_of(vertex);
         if (first)
         {
             *output++ = pixel;
@@ -42,14 +43,7 @@ Out snap_round(const HotPixelIndex & hot_pixels, In && line, Out output)
                 // Endpoints are added explicitly to reduce the amount of pixel repetitions.
                 return false;
             }
-            return line_intersects_cell<rounding>(
-                hot_pixels.grid(),
-                prev_vertex.x,
-                prev_vertex.y,
-                vertex.x,
-                vertex.y,
-                hot_pixel.x,
-                hot_pixel.y);
+            return grid.line_intersects_cell({ prev_vertex, vertex }, hot_pixel);
         };
         const bool horizontal_ascending = prev_pixel.x <= pixel.x;
         const bool vertical_ascending = prev_pixel.y <= pixel.y;
