@@ -17,16 +17,22 @@
 namespace ka
 {
 
+/// @brief Wraps polyline snapping to avoid allocations.
 class LineSnapper final
 {
 public:
+    /// @brief Snaps a polyline to the grid at vertices and tile boundary intersections.
+    /// @param grid defines cell and tile grids.
+    /// @param handler handles coordinate transformation and interpolation.
+    /// @param line input range of polyline points.
+    /// @param out beginning of the destination points container.
     template <
         GridRounding rounding,
         LineSnapperCoordinateHandler Handler,
         std::ranges::input_range In,
         std::output_iterator<typename Handler::OutputVertex> Out>
         requires std::same_as<typename Handler::InputVertex, std::ranges::range_value_t<In>>
-    void snap_line(const TileCellGrid<rounding> & grid, In && line, Out out, const Handler & handler)
+    void snap_line(const TileCellGrid<rounding> & grid, const Handler & handler, In && line, Out out)
     {
         bool first = true;
         Vec2f64 prev_vertex;

@@ -127,7 +127,7 @@ TEST(LineSnapperTest, interface_test)
     TestCoordinateHandler handler;
 
     LineSnapper snapper;
-    snapper.snap_line(grid, vertices, std::back_inserter(result), handler);
+    snapper.snap_line(grid, handler, vertices, std::back_inserter(result));
 
     EXPECT_EQ(result, expected);
 }
@@ -155,7 +155,7 @@ TEST(LineSnapperTest, interface_2d_test)
     Test2DCoordinateHandler handler;
 
     LineSnapper snapper;
-    snapper.snap_line(grid, vertices, std::back_inserter(result), handler);
+    snapper.snap_line(grid, handler, vertices, std::back_inserter(result));
 }
 
 TEST(LineSnapperTest, empty_2d_test)
@@ -169,7 +169,7 @@ TEST(LineSnapperTest, empty_2d_test)
     Test2DCoordinateHandler handler;
 
     LineSnapper snapper;
-    snapper.snap_line(grid, vertices, std::back_inserter(result), handler);
+    snapper.snap_line(grid, handler, vertices, std::back_inserter(result));
 
     EXPECT_EQ(result, expected);
 }
