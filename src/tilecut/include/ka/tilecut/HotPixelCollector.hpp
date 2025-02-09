@@ -12,21 +12,22 @@
 namespace ka
 {
 
-//! Collects hot pixels to index.
+/// @brief Collects hot pixels to index.
 class HotPixelCollector final
 {
 public:
-    //! Add hot pixels around the endpoints of the new segment
-    //! and around the intersection points of the segment and tiles.
+    /// @brief Adds hot pixels corresponding to vertices and intersections with tile boundaries of the polyline.
+    /// @param grid defines the tile grid and cell grid sizes.
+    /// @param polyline vertices of the polyline.
     template <GridRounding rounding, std::ranges::input_range In>
         requires std::same_as<std::ranges::range_value_t<In>, Vec2f64>
-    void add_tile_snapped_contour(const TileCellGrid<rounding> & grid, In && contour) noexcept
+    void add_tile_snapped_polyline(const TileCellGrid<rounding> & grid, In && polyline) noexcept
     {
         Vec2f64 prev_vertex;
         Vec2s64 prev_pixel;
         bool first = true;
 
-        for (const auto & vertex : contour)
+        for (const auto & vertex : polyline)
         {
             const auto pixel = hot_pixels_.emplace_back(grid.cell_of(vertex));
             if (first)
@@ -45,7 +46,7 @@ public:
         }
     }
 
-    //! The index is invalidated on HotPixelCollector modifications.
+    /// @brief The index is invalidated on HotPixelCollector modifications.
     [[nodiscard]] const HotPixelIndex & build_index() noexcept
     {
         AR_PRE(!hot_pixels_.empty());
