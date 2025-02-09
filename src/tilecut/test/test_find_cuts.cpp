@@ -35,36 +35,41 @@ constexpr u16 g_tile_size = 100;
     return result;
 }
 
-[[nodiscard]] std::vector<Segment2u16> all_cuts(const u16 tile_size)
+[[nodiscard]] std::vector<Segment2u16> all_cuts(const TileGrid & tile_grid)
 {
     std::vector<Segment2u16> res;
     res.reserve(4);
-    TileGrid { tile_size }.tile_local_boundaries(std::back_inserter(res));
+    tile_grid.tile_local_boundaries(std::back_inserter(res));
     return res;
 }
 
 TEST(FindCutsTest, empty_input)
 {
+    TileGrid tile_grid { g_tile_size };
+
     const std::vector<Segment2u16> segments;
     const std::vector<Segment2u16> expected;
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, g_tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, full_tile_no_cuts)
 {
-    const auto segments = all_cuts(g_max_tile_size);
+    TileGrid tile_grid { g_max_tile_size };
+    const auto segments = all_cuts(tile_grid);
     const std::vector<Segment2u16> expected;
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, g_max_tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, square_no_cuts)
 {
+    TileGrid tile_grid { g_tile_size };
+
     // Shuffled square.
     const std::vector<Segment2u16> segments {
         { { 51, 50 }, { 51, 51 } },
@@ -75,12 +80,14 @@ TEST(FindCutsTest, square_no_cuts)
     const std::vector<Segment2u16> expected;
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, g_tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, square_all_cuts)
 {
+    TileGrid tile_grid { g_tile_size };
+
     // Shuffled inverted square.
     const std::vector<Segment2u16> segments {
         { { 51, 51 }, { 51, 50 } },
@@ -88,15 +95,17 @@ TEST(FindCutsTest, square_all_cuts)
         { { 50, 50 }, { 50, 51 } },
         { { 50, 51 }, { 51, 51 } },
     };
-    const auto expected = all_cuts(g_tile_size);
+    const auto expected = all_cuts(tile_grid);
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, g_tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, difficult_no_cuts)
 {
+    TileGrid tile_grid { g_tile_size };
+
     const std::vector<Segment2u16> segments = make_line({
         { 50, 50 },
         { 51, 49 },
@@ -109,12 +118,14 @@ TEST(FindCutsTest, difficult_no_cuts)
     const std::vector<Segment2u16> expected;
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, g_tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, difficult_all_cuts)
 {
+    TileGrid tile_grid { g_tile_size };
+
     const std::vector<Segment2u16> segments = make_line({
         { 50, 50 },
         { 90, 53 },
@@ -124,16 +135,17 @@ TEST(FindCutsTest, difficult_all_cuts)
         { 51, 49 },
         { 50, 50 },
     });
-    const auto expected = all_cuts(g_tile_size);
+    const auto expected = all_cuts(tile_grid);
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, g_tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, left_half)
 {
     const auto tile_size = g_max_tile_size;
+    TileGrid tile_grid { tile_size };
 
     const std::vector<Segment2u16> segments {
         { { tile_size / 2, 0 }, { tile_size / 2, tile_size } },
@@ -146,13 +158,14 @@ TEST(FindCutsTest, left_half)
     });
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, small_corner)
 {
     const auto tile_size = g_max_tile_size;
+    TileGrid tile_grid { tile_size };
 
     const std::vector<Segment2u16> segments {
         { { 1, 0 }, { 0, 1 } },
@@ -164,13 +177,14 @@ TEST(FindCutsTest, small_corner)
     });
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, except_small_corner)
 {
     const auto tile_size = g_max_tile_size;
+    TileGrid tile_grid { tile_size };
 
     const std::vector<Segment2u16> segments {
         { { 0, 1 }, { 1, 0 } },
@@ -184,13 +198,14 @@ TEST(FindCutsTest, except_small_corner)
     });
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, two_cuts_on_with_segment_on_boundary)
 {
     const auto tile_size = g_max_tile_size;
+    TileGrid tile_grid { tile_size };
 
     std::vector<Segment2u16> segments {
         { { tile_size, 50 }, { tile_size, 55 } },
@@ -208,13 +223,14 @@ TEST(FindCutsTest, two_cuts_on_with_segment_on_boundary)
     };
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, triangle_vertex_on_the_right_all_cuts)
 {
     const auto tile_size = g_max_tile_size;
+    TileGrid tile_grid { tile_size };
 
     const auto segments = make_line({
         { tile_size, 50 },
@@ -225,13 +241,14 @@ TEST(FindCutsTest, triangle_vertex_on_the_right_all_cuts)
     const std::vector<Segment2u16> expected;
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, inverted_triangle_vertex_on_the_right_all_cuts)
 {
     const auto tile_size = g_max_tile_size;
+    TileGrid tile_grid { tile_size };
 
     const auto segments = make_line({
         { tile_size, 50 },
@@ -249,13 +266,14 @@ TEST(FindCutsTest, inverted_triangle_vertex_on_the_right_all_cuts)
     });
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, star_vertex_on_the_right_all_cuts)
 {
     const auto tile_size = g_max_tile_size;
+    TileGrid tile_grid { tile_size };
 
     const auto segments = make_line({
         { tile_size, 50 },
@@ -272,13 +290,14 @@ TEST(FindCutsTest, star_vertex_on_the_right_all_cuts)
     const std::vector<Segment2u16> expected;
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, inverted_star_vertex_on_the_right_all_cuts)
 {
     const auto tile_size = g_max_tile_size;
+    TileGrid tile_grid { tile_size };
 
     const auto segments = make_line({
         { tile_size, 50 },
@@ -302,13 +321,14 @@ TEST(FindCutsTest, inverted_star_vertex_on_the_right_all_cuts)
     });
 
     std::vector<Segment2u16> result;
-    find_cuts(segments, result, tile_size);
+    find_cuts(tile_grid, segments, result);
     EXPECT_EQ(result, expected);
 }
 
 TEST(FindCutsTest, collinear_simple)
 {
     const auto tile_size = g_max_tile_size;
+    TileGrid tile_grid { tile_size };
 
     {
         const auto segments = make_line({
@@ -321,7 +341,7 @@ TEST(FindCutsTest, collinear_simple)
         const std::vector<Segment2u16> expected;
 
         std::vector<Segment2u16> result;
-        find_cuts(segments, result, tile_size);
+        find_cuts(tile_grid, segments, result);
         EXPECT_EQ(result, expected);
     }
 
@@ -341,7 +361,7 @@ TEST(FindCutsTest, collinear_simple)
         });
 
         std::vector<Segment2u16> result;
-        find_cuts(segments, result, tile_size);
+        find_cuts(tile_grid, segments, result);
         EXPECT_EQ(result, expected);
     }
 }
@@ -349,6 +369,7 @@ TEST(FindCutsTest, collinear_simple)
 TEST(FindCutsTest, collinear_zero_bottom)
 {
     const auto tile_size = g_max_tile_size;
+    TileGrid tile_grid { tile_size };
 
     {
         const auto segments = make_line({
@@ -361,7 +382,7 @@ TEST(FindCutsTest, collinear_zero_bottom)
         const std::vector<Segment2u16> expected;
 
         std::vector<Segment2u16> result;
-        find_cuts(segments, result, tile_size);
+        find_cuts(tile_grid, segments, result);
         EXPECT_EQ(result, expected);
     }
 
@@ -380,7 +401,7 @@ TEST(FindCutsTest, collinear_zero_bottom)
         });
 
         std::vector<Segment2u16> result;
-        find_cuts(segments, result, tile_size);
+        find_cuts(tile_grid, segments, result);
         EXPECT_EQ(result, expected);
     }
 }
@@ -388,6 +409,7 @@ TEST(FindCutsTest, collinear_zero_bottom)
 TEST(FindCutsTest, collinear_zero_left)
 {
     const auto tile_size = g_max_tile_size;
+    TileGrid tile_grid { tile_size };
 
     {
         const auto segments = make_line({
@@ -400,7 +422,7 @@ TEST(FindCutsTest, collinear_zero_left)
         const std::vector<Segment2u16> expected;
 
         std::vector<Segment2u16> result;
-        find_cuts(segments, result, tile_size);
+        find_cuts(tile_grid, segments, result);
         EXPECT_EQ(result, expected);
     }
 
@@ -419,7 +441,7 @@ TEST(FindCutsTest, collinear_zero_left)
         });
 
         std::vector<Segment2u16> result;
-        find_cuts(segments, result, tile_size);
+        find_cuts(tile_grid, segments, result);
         EXPECT_EQ(result, expected);
     }
 }

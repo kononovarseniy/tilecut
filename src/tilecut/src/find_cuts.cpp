@@ -168,11 +168,10 @@ struct TouchingSegment final
 } // namespace
 
 void find_cuts(
+    const TileGrid & tile_grid,
     const std::span<const Segment2u16> segments,
-    std::vector<Segment2u16> & result,
-    const u16 tile_size) noexcept
+    std::vector<Segment2u16> & result) noexcept
 {
-    AR_PRE(tile_size > 0);
     if (segments.empty())
     {
         return;
@@ -182,8 +181,8 @@ void find_cuts(
     touching_segments.reserve(segments.size() * 2);
     for (const auto & segment : segments)
     {
-        const auto begin_param = make_parameter(tile_size, segment.a);
-        const auto end_param = make_parameter(tile_size, segment.b);
+        const auto begin_param = make_parameter(tile_grid.tile_size(), segment.a);
+        const auto end_param = make_parameter(tile_grid.tile_size(), segment.b);
 
         if (begin_param.has_value())
         {
@@ -203,7 +202,7 @@ void find_cuts(
     {
         if (outermost_contour_is_inner(segments))
         {
-            add_cut(tile_size, result, 0, tile_size * 4);
+            add_cut(tile_grid.tile_size(), result, 0, tile_grid.tile_size() * 4);
         }
     }
     else
@@ -227,8 +226,8 @@ void find_cuts(
                 // The most counter-clockwise segment is the segment with the smaller parameter of the opposite point
                 if (order.collinear())
                 {
-                    const auto lhs_param = make_parameter(tile_size, lhs.opposite_point);
-                    const auto rhs_param = make_parameter(tile_size, rhs.opposite_point);
+                    const auto lhs_param = make_parameter(tile_grid.tile_size(), lhs.opposite_point);
+                    const auto rhs_param = make_parameter(tile_grid.tile_size(), rhs.opposite_point);
                     AR_ASSERT(lhs_param.has_value() && rhs_param.has_value());
                     // A very special case of collinear opposite points, one of which is zero. For such a point, the
                     // parameter value is ambiguous. This is only possible if either x or y is zero for all points. For
@@ -252,7 +251,7 @@ void find_cuts(
         std::optional<u32> prev_point;
         const auto process_bunch = [&](const TouchingSegment & cw_segment, const bool repeated_first)
         {
-            AR_PRE(check_orientation_if_on_boundary(tile_size, cw_segment));
+            AR_PRE(check_orientation_if_on_boundary(tile_grid.tile_size(), cw_segment));
             /// The most clockwise segment of the bunch determines whether the previous part of the boundary
             /// belongs to the multipolygon.
             /// When the segment is not on the boundary, the previous part of the boundary is to the right of it and
@@ -266,10 +265,10 @@ void find_cuts(
                 if (prev_point.has_value())
                 {
                     add_cut(
-                        tile_size,
+                        tile_grid.tile_size(),
                         result,
                         *prev_point,
-                        repeated_first ? tile_size * 4 + cw_segment.parameter : cw_segment.parameter);
+                        repeated_first ? tile_grid.tile_size() * 4 + cw_segment.parameter : cw_segment.parameter);
                 }
                 else
                 {

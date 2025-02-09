@@ -4,15 +4,19 @@
 #include <vector>
 
 #include <ka/geometry_types/Segment2.hpp>
+#include <ka/tilecut/TileGrid.hpp>
 
 namespace ka
 {
 
 /// @brief Restores cut segments, i.e. parts of the tile border that belong to the interior of the multipolygon.
+/// @param tile_grid defines the size of the tile.
 /// @param segments segments of the multipolygon inside the tile.
 /// @param result storage for result segments.
-/// @param tile_size size of the tile.
-void find_cuts(std::span<const Segment2u16> segments, std::vector<Segment2u16> & result, u16 tile_size) noexcept;
+void find_cuts(
+    const TileGrid & tile_grid,
+    std::span<const Segment2u16> segments,
+    std::vector<Segment2u16> & result) noexcept;
 
 /// @brief Checks that the interior of the tile below the current tile contains some points of the same multipolygon.
 /// One can use this info to find tiles completely covered by the multipolygon.
