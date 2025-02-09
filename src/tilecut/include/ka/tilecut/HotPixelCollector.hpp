@@ -16,6 +16,12 @@ namespace ka
 class HotPixelCollector final
 {
 public:
+    /// @brief Resets the collector to its original state. Clears all accumulated hot pixels.
+    void reset() noexcept
+    {
+        hot_pixels_.clear();
+    }
+
     /// @brief Adds hot pixels corresponding to vertices and intersections with tile boundaries of the polyline.
     /// @param grid defines the tile grid and cell grid sizes.
     /// @param polyline vertices of the polyline.

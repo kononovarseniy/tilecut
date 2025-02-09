@@ -102,6 +102,79 @@ TEST(SnapRoundingTest, perfect_square)
     EXPECT_THAT(result, ElementsAreArray(expected));
 }
 
+TEST(SnapRoundingTest, reusable_collector)
+{
+    HotPixelCollector collector;
+    const auto grid = make_grid<GridRounding::Cell>(1.1, 8);
+
+    {
+        const std::array<Vec2f64, 5> geometry { {
+            { prev_float(grid.cell_size() * -4), grid.cell_size() * -4 },
+            { next_float(grid.cell_size() * +4), prev_float(grid.cell_size() * -4) },
+            { prev_float(grid.cell_size() * +4), next_float(grid.cell_size() * +4) },
+            { grid.cell_size() * -4, grid.cell_size() * +4 },
+            { prev_float(grid.cell_size() * -4), grid.cell_size() * -4 },
+        } };
+
+        // clang-format off
+        const std::vector<Vec2s64> expected {
+            { -5, -4 },
+            {  0, -5 },
+            { +4, -5 },
+            { +4,  0 }, // Exactly at corner.
+            { +3, +4 },
+            {  0, +4 },
+            { -4, +4 },
+            { -5,  0 },
+            { -5, -4 },
+        };
+        // clang-format on
+
+        HotPixelCollector collector;
+        collector.add_tile_snapped_polyline(grid, geometry);
+        const auto & hot_pixels = collector.build_index();
+
+        std::vector<Vec2s64> result;
+        snap_round(grid, hot_pixels, geometry, std::back_inserter(result));
+
+        EXPECT_THAT(result, ElementsAreArray(expected));
+    }
+
+    collector.reset();
+
+    {
+        const std::array<Vec2f64, 5> geometry { {
+            { grid.cell_size() * -4, grid.cell_size() * -4 },
+            { grid.cell_size() * +4, grid.cell_size() * -4 },
+            { grid.cell_size() * +4, grid.cell_size() * +4 },
+            { grid.cell_size() * -4, grid.cell_size() * +4 },
+            { grid.cell_size() * -4, grid.cell_size() * -4 },
+        } };
+
+        // clang-format off
+        const std::vector<Vec2s64> expected {
+            { -4, -4 },
+            {  0, -4 },
+            { +4, -4 },
+            { +4,  0 },
+            { +4, +4 },
+            {  0, +4 },
+            { -4, +4 },
+            { -4,  0 },
+            { -4, -4 },
+        };
+        // clang-format on
+
+        collector.add_tile_snapped_polyline(grid, geometry);
+        const auto & hot_pixels = collector.build_index();
+
+        std::vector<Vec2s64> result;
+        snap_round(grid, hot_pixels, geometry, std::back_inserter(result));
+
+        EXPECT_THAT(result, ElementsAreArray(expected));
+    }
+}
+
 TEST(SnapRoundingTest, half_integer_perfect_square)
 {
     const auto grid = make_grid<GridRounding::Cell>(1, 8);
