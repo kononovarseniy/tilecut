@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include <iterator>
+
 #include <ka/common/fixed.hpp>
 #include <ka/geometry_types/Segment2.hpp>
 #include <ka/geometry_types/Vec2.hpp>
@@ -214,4 +216,23 @@ TEST(TileGridTest, intersected_boundaries_ranges_nagative_values)
     EXPECT_EQ(min_y, -2000);
     EXPECT_EQ(max_y, 10000);
 }
+
+TEST(TileGridTest, tile_local_boundaries)
+{
+    const TileGrid tile_grid { g_tile_size };
+
+    std::vector<Segment2u16> result;
+    result.reserve(4);
+    tile_grid.tile_local_boundaries(std::back_inserter(result));
+
+    std::vector<Segment2u16> expected {
+        { { 0, 0 }, { g_tile_size, 0 } },
+        { { g_tile_size, 0 }, { g_tile_size, g_tile_size } },
+        { { g_tile_size, g_tile_size }, { 0, g_tile_size } },
+        { { 0, g_tile_size }, { 0, 0 } },
+    };
+
+    EXPECT_EQ(result, expected);
+}
+
 } // namespace ka

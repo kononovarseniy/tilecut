@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <iterator>
 #include <utility>
 
 #include <ka/common/fixed.hpp>
@@ -127,6 +128,23 @@ public:
             div_round_up(begin_cell, tile_size_) * tile_size_,
             div_round_down(end_cell, tile_size_) * tile_size_,
         };
+    }
+
+    /// @brief Writes counterclockwise tile boundary segments in local coordinates to the specified range.
+    template <std::output_iterator<Segment2u16> Out>
+    Out tile_local_boundaries(Out out) const noexcept
+    {
+        const std::array<Vec2u16, 4> corners { {
+            { 0, 0 },
+            { tile_size_, 0 },
+            { tile_size_, tile_size_ },
+            { 0, tile_size_ },
+        } };
+        for (size_t i = 0; i < corners.size(); ++i)
+        {
+            *out++ = { corners[i], corners[(i + 1) % corners.size()] };
+        }
+        return out;
     }
 
 private:

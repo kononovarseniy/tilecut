@@ -9,6 +9,7 @@
 #include <ka/common/fixed.hpp>
 #include <ka/geometry_types/Segment2.hpp>
 #include <ka/geometry_types/Vec2.hpp>
+#include <ka/tilecut/TileGrid.hpp>
 #include <ka/tilecut/find_cuts.hpp>
 
 #include "debug_output.hpp"
@@ -36,12 +37,10 @@ constexpr u16 g_tile_size = 100;
 
 [[nodiscard]] std::vector<Segment2u16> all_cuts(const u16 tile_size)
 {
-    return {
-        { { 0, 0 }, { tile_size, 0 } },
-        { { tile_size, 0 }, { tile_size, tile_size } },
-        { { tile_size, tile_size }, { 0, tile_size } },
-        { { 0, tile_size }, { 0, 0 } },
-    };
+    std::vector<Segment2u16> res;
+    res.reserve(4);
+    TileGrid { tile_size }.tile_local_boundaries(std::back_inserter(res));
+    return res;
 }
 
 TEST(FindCutsTest, empty_input)
