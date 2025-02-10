@@ -175,6 +175,34 @@ TEST(TileGridTest, tile_of_segment_on_boundary_short_inside)
     }
 }
 
+TEST(TileGridTest, strictly_outside)
+{
+    const auto tile_size = g_tile_size;
+    const TileGrid tile_grid { tile_size };
+
+    EXPECT_EQ(tile_grid.strictly_outside({ 3, 5 }, { 3 * tile_size + 30, 5 * tile_size + 3 }), false);
+
+    EXPECT_EQ(tile_grid.strictly_outside({ 3, 5 }, { 3 * tile_size, 5 * tile_size + 3 }), false);
+    EXPECT_EQ(tile_grid.strictly_outside({ 3, 5 }, { 3 * tile_size - 1, 5 * tile_size + 3 }), true);
+    EXPECT_EQ(tile_grid.strictly_outside({ 3, 5 }, { 3 * tile_size + tile_size, 5 * tile_size + 3 }), false);
+    EXPECT_EQ(tile_grid.strictly_outside({ 3, 5 }, { 3 * tile_size + tile_size + 1, 5 * tile_size + 3 }), true);
+    EXPECT_EQ(tile_grid.strictly_outside({ 3, 5 }, { 3 * tile_size + 50, 5 * tile_size }), false);
+    EXPECT_EQ(tile_grid.strictly_outside({ 3, 5 }, { 3 * tile_size + 50, 5 * tile_size - 1 }), true);
+    EXPECT_EQ(tile_grid.strictly_outside({ 3, 5 }, { 3 * tile_size + 50, 5 * tile_size + tile_size }), false);
+    EXPECT_EQ(tile_grid.strictly_outside({ 3, 5 }, { 3 * tile_size + 50, 5 * tile_size + tile_size + 1 }), true);
+
+    EXPECT_EQ(tile_grid.strictly_outside({ -3, -5 }, { -3 * tile_size + 30, -5 * tile_size + 3 }), false);
+
+    EXPECT_EQ(tile_grid.strictly_outside({ -3, -5 }, { -3 * tile_size, -5 * tile_size + 3 }), false);
+    EXPECT_EQ(tile_grid.strictly_outside({ -3, -5 }, { -3 * tile_size - 1, -5 * tile_size + 3 }), true);
+    EXPECT_EQ(tile_grid.strictly_outside({ -3, -5 }, { -3 * tile_size + tile_size, -5 * tile_size + 3 }), false);
+    EXPECT_EQ(tile_grid.strictly_outside({ -3, -5 }, { -3 * tile_size + tile_size + 1, -5 * tile_size + 3 }), true);
+    EXPECT_EQ(tile_grid.strictly_outside({ -3, -5 }, { -3 * tile_size + 50, -5 * tile_size }), false);
+    EXPECT_EQ(tile_grid.strictly_outside({ -3, -5 }, { -3 * tile_size + 50, -5 * tile_size - 1 }), true);
+    EXPECT_EQ(tile_grid.strictly_outside({ -3, -5 }, { -3 * tile_size + 50, -5 * tile_size + tile_size }), false);
+    EXPECT_EQ(tile_grid.strictly_outside({ -3, -5 }, { -3 * tile_size + 50, -5 * tile_size + tile_size + 1 }), true);
+}
+
 TEST(TileGridTest, intersected_boundaries_ranges)
 {
     const TileGrid tile_grid { g_tile_size };

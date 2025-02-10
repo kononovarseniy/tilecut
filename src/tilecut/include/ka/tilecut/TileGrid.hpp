@@ -98,6 +98,16 @@ public:
         return is_inside_single_tile(segment.a.x, segment.b.x) && is_inside_single_tile(segment.a.y, segment.b.y);
     }
 
+    /// @brief Checks that the cell does not belong to the tile closure.
+    [[nodiscard]] bool strictly_outside(const Vec2s64 & tile, const Vec2s64 & cell) const noexcept
+    {
+        const auto left = tile.x * tile_size_;
+        const auto right = left + tile_size_;
+        const auto bottom = tile.y * tile_size_;
+        const auto top = bottom + tile_size_;
+        return cell.x < left || cell.x > right || cell.y < bottom || cell.y > top;
+    }
+
     struct BoundariesRanges final
     {
         s64 min_x;
