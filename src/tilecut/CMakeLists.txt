@@ -9,6 +9,7 @@ target_sources(ka_${module_name}
     BASE_DIRS include
     FILES
         include/ka/tilecut/collect_tiles.hpp
+        include/ka/tilecut/cut_polyline.hpp
         include/ka/tilecut/filter_segments.hpp
         include/ka/tilecut/find_cuts.hpp
         include/ka/tilecut/hot_pixel_less.hpp
@@ -53,6 +54,7 @@ if(BUILD_TESTS)
     add_executable(ka_${module_name}_test
         test/debug_output.hpp
         test/mock_grid_parameters.hpp
+        test/test_cut_polyline.cpp
         test/test_find_cuts.cpp
         test/test_lerp_along_segment.cpp
         test/test_line_snapper.cpp
