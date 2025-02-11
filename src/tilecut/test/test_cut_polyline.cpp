@@ -33,6 +33,27 @@ TEST(CutPolylineTest, empty)
         });
 }
 
+TEST(CutPolylineTest, single_point)
+{
+    const TileGrid tile_grid { g_tile_size };
+
+    std::vector<Vec2s64> line { { 5343, -9 } };
+
+    size_t i = 0;
+    cut_polyline(
+        tile_grid,
+        line,
+        {},
+        [&](const auto & tile, auto start, auto stop)
+        {
+            EXPECT_EQ(i++, 0);
+            EXPECT_EQ(tile, Vec2s64(53, -1));
+            EXPECT_EQ(start, line.begin());
+            EXPECT_EQ(stop, line.end());
+        });
+    EXPECT_EQ(i, 1);
+}
+
 TEST(CutPolylineTest, all_same_xy)
 {
     const TileGrid tile_grid { g_tile_size };

@@ -21,7 +21,7 @@ concept VertexProject =
 /// @param line polyline represented as a range.
 /// @param proj invocable converting polyline vertices to their Vec2s64 xy coordinates.
 /// @param visitor invocable that will be called for each polyline part with Vec2s64 tile_coordinates and two iterators
-/// to the first and last vertices of the part,
+/// to the first and last vertices of the part.
 template <
     std::ranges::bidirectional_range Line,
     VertexProject<std::ranges::range_value_t<Line>> Proj = std::identity,
@@ -36,7 +36,7 @@ void cut_polyline(const TileGrid & tile_grid, Line && line, Proj proj, Visitor v
     }
 
     auto start = first;
-    while (std::next(start) != last)
+    do
     {
         const auto segment_start_xy = std::invoke(proj, *start);
         const auto segment_stop = std::ranges::find_if(
@@ -74,7 +74,7 @@ void cut_polyline(const TileGrid & tile_grid, Line && line, Proj proj, Visitor v
         std::invoke(visitor, current_tile, start, stop);
 
         start = std::prev(stop);
-    }
+    } while (std::next(start) != last);
 }
 
 } // namespace ka
