@@ -56,7 +56,7 @@ public:
         {
             for (auto x = min_x; x <= max_x; x += tiles().tile_size())
             {
-                if (border_between_coordinates(grid_.cell_size, segment_cells.a.x, segment_cells.b.x, x))
+                if (border_between_coordinates(grid_.cell_size, segment.a.x, segment.b.x, x))
                 {
                     // clang-format off
                     const auto y = column_border_intersection<rounding>(
@@ -75,7 +75,7 @@ public:
         {
             for (auto y = min_y; y <= max_y; y += tiles().tile_size())
             {
-                if (border_between_coordinates(grid_.cell_size, segment_cells.a.y, segment_cells.b.y, y))
+                if (border_between_coordinates(grid_.cell_size, segment.a.y, segment.b.y, y))
                 {
                     // clang-format off
                     const auto x = row_border_intersection<rounding>(

@@ -58,4 +58,42 @@ TEST(TileCellGridTest, tile_boundary_intersection_cells)
     EXPECT_EQ(result, expected);
 }
 
+TEST(TileCellGridTest, tile_boundary_intersection_cells_non_trivial_cell)
+{
+    const auto grid = make_grid<GridRounding::NearestNode>(5.0, g_tile_size);
+    const Segment2f64 segment {
+        { 550, 503 },
+        { 555, 497 },
+    };
+    const Segment2s64 segment_cells { grid.cell_of(segment.a), grid.cell_of(segment.b) };
+    const Segment2s64 expected_segment_cells { { 110, 101 }, { 111, 99 } };
+    EXPECT_EQ(segment_cells, expected_segment_cells);
+
+    std::vector<Vec2s64> result;
+    grid.tile_boundary_intersection_cells(segment, segment_cells, std::back_inserter(result));
+
+    const std::vector<Vec2s64> expected { { 111, 100 } };
+    std::ranges::sort(result);
+    EXPECT_EQ(result, expected);
+}
+
+TEST(TileCellGridTest, tile_boundary_intersection_cells_same_cell)
+{
+    const auto grid = make_grid<GridRounding::NearestNode>(5.0, g_tile_size);
+    const Segment2f64 segment {
+        { 550, 501 },
+        { 551, 499 },
+    };
+    const Segment2s64 segment_cells { grid.cell_of(segment.a), grid.cell_of(segment.b) };
+    const Segment2s64 expected_segment_cells { { 110, 100 }, { 110, 100 } };
+    EXPECT_EQ(segment_cells, expected_segment_cells);
+
+    std::vector<Vec2s64> result;
+    grid.tile_boundary_intersection_cells(segment, segment_cells, std::back_inserter(result));
+
+    const std::vector<Vec2s64> expected { { 110, 100 } };
+    std::ranges::sort(result);
+    EXPECT_EQ(result, expected);
+}
+
 } // namespace ka
