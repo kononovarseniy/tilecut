@@ -70,12 +70,18 @@ public:
     }
 
     /// @brief Converts cell coordinates to the local coordinates of the given tile.
-    [[nodiscard]] Vec2u16 local_coordinates(const Vec2s64 & tile, const Vec2s64 & cell) const noexcept
+    [[nodiscard]] Vec2s64 extended_local_coordinates(const Vec2s64 & tile, const Vec2s64 & cell) const noexcept
     {
-        const Vec2s64 local {
+        return {
             .x = cell.x - tile.x * tile_size_,
             .y = cell.y - tile.y * tile_size_,
         };
+    }
+
+    /// @brief Converts cell coordinates to the local coordinates of the given tile.
+    [[nodiscard]] Vec2u16 local_coordinates(const Vec2s64 & tile, const Vec2s64 & cell) const noexcept
+    {
+        const auto local = extended_local_coordinates(tile, cell);
         AR_PRE(local.x >= 0);
         AR_PRE(local.x <= tile_size_);
         AR_PRE(local.y >= 0);
