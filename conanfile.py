@@ -43,7 +43,6 @@ class TilecutRecipe(ConanFile):
     def requirements(self):
         self.requires("fmt/9.1.0")
 
-    def build_requirements(self):
         if self.options.build_tests:
             self.test_requires("gtest/1.15.0")
         if self.options.build_generate_grid:
