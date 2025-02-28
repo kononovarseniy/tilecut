@@ -80,7 +80,7 @@ struct Constants final
     mpfr_mul_d(reliable_fractional_part, reliable_fractional_part, unit_roundoff, MPFR_RNDU);
     mpfr_div(reliable_fractional_part, reliable_fractional_part, min_grid_step, MPFR_RNDU);
     const auto min_reliable = to_hex(reliable_fractional_part);
-    mpfr_ui_sub(reliable_fractional_part, 1.0, reliable_fractional_part, MPFR_RNDD);
+    mpfr_ui_sub(reliable_fractional_part, 1, reliable_fractional_part, MPFR_RNDD);
     const auto max_reliable = to_hex(reliable_fractional_part);
 
     return {
