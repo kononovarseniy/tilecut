@@ -16,13 +16,6 @@ if(BUILD_TESTS)
     enable_testing()
 endif()
 
-function(target_enable_warnings TARGET_NAME)
-    target_compile_options(${TARGET_NAME} PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
-    )
-endfunction()
-
 add_subdirectory(kononovarseniy/common)
 add_subdirectory(src/exact)
 if(BUILD_GENERATE_GRID)
