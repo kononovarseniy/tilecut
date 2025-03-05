@@ -27,7 +27,7 @@ constexpr u16 g_tile_size = 100;
     std::vector<Segment2u16> result;
     result.reserve(points.size());
     auto prev = points.front();
-    for (const auto curr : points | std::views::drop(1))
+    for (const auto curr : std::ranges::drop_view(points, 1))
     {
         result.push_back({ prev, curr });
         prev = curr;
