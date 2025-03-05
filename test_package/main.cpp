@@ -3,19 +3,21 @@
 
 #include <ka/common/assert.hpp>
 #include <ka/exact/GridRounding.hpp>
-#include <ka/exact/HotPixelCollector.hpp>
-#include <ka/exact/snap_round.hpp>
 #include <ka/geometry_types/Segment2.hpp>
+#include <ka/tilecut/HotPixelCollector.hpp>
+#include <ka/tilecut/TileCellGrid.hpp>
 #include <ka/tilecut/collect_tiles.hpp>
 #include <ka/tilecut/filter_segments.hpp>
 #include <ka/tilecut/find_cuts.hpp>
+#include <ka/tilecut/snap_round.hpp>
 #include <ka_test/grid.hpp>
 
 int main(int argc, char * argv[])
 {
-    auto grid = ka::g_embedded_grid;
-    grid.cell_size = 1.0;
-    const auto tile_size = 10000;
+    auto grid_params = ka::g_embedded_grid;
+    grid_params.cell_size = 1.0;
+    const ka::u16 tile_size = 10000;
+    ka::TileCellGrid<ka::GridRounding::NearestNode> grid(grid_params, tile_size);
 
     // Input geometry.
     std::vector<std::vector<ka::Vec2f64>> contours = {
@@ -25,15 +27,11 @@ int main(int argc, char * argv[])
 
     // Collect all relevant hot pixels.
     ka::HotPixelCollector hot_pixel_collector;
-    hot_pixel_collector.init(grid, tile_size);
+    hot_pixel_collector.reset();
 
     for (const auto & contour : contours)
     {
-        hot_pixel_collector.new_contour();
-        for (const auto & point : contour)
-        {
-            hot_pixel_collector.add_vertex_and_tile_cuts<ka::GridRounding::NearestNode>(point);
-        }
+        hot_pixel_collector.add_tile_snapped_polyline(grid, contour);
     }
 
     // Snap rounding.
@@ -43,7 +41,7 @@ int main(int argc, char * argv[])
     for (const auto & contour : contours)
     {
         coarse_points.clear();
-        snap_round<ka::GridRounding::NearestNode>(hot_pixels, contour, std::back_inserter(coarse_points));
+        snap_round(grid, hot_pixels, contour, std::back_inserter(coarse_points));
         auto prev = coarse_points.front();
         for (auto it = std::next(coarse_points.begin()); it != coarse_points.end(); prev = *it++)
         {
@@ -57,14 +55,14 @@ int main(int argc, char * argv[])
     // Group segments by tiles.
     std::vector<ka::Segment2u16> tile_segments_storage;
     std::vector<ka::Tile> tiles;
-    collect_tiles(segments, tile_segments_storage, tiles, tile_size);
+    collect_tiles(grid.tiles(), segments, tile_segments_storage, tiles);
 
     // Find cut segents.
     std::vector<ka::Segment2u16> cut_segments;
     for (const auto & tile : tiles)
     {
         cut_segments.clear();
-        find_cuts(tile.segments, cut_segments, tile_size);
+        find_cuts(grid.tiles(), tile.segments, cut_segments);
 
         if (!cut_segments.empty())
         {
