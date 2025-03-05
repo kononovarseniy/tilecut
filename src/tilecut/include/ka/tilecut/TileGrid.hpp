@@ -1,9 +1,11 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <iterator>
 #include <utility>
 
+#include <ka/common/assert.hpp>
 #include <ka/common/fixed.hpp>
 #include <ka/geometry_types/Segment2.hpp>
 #include <ka/geometry_types/Vec2.hpp>
