@@ -1,0 +1,48 @@
+name: Build with conan on multiple platforms
+
+on:
+    push:
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+
+        - name: Cache conan packages
+          id: cache-conan
+          uses: actions/cache@v4
+          env:
+            cache-name: conan-cache
+          with:
+            path: ~/.conan2/p
+            key: ${{ runner.os }}-build-${{ env.cache-name }}
+
+        - name: Install conan 2
+          run: pip install "conan~=2.0"
+        
+        - name: Create conan profiles dir
+          run: mkdir -p ~/.conan2/profiles
+
+        - name: Create conan profile
+          run: |
+            echo '
+            [settings]
+            arch=x86_64
+            build_type=Release
+            compiler=clang
+            compiler.cppstd=20
+            compiler.libcxx=libstdc++11
+            compiler.version=18
+            os=Linux
+
+            [conf]
+            tools.build:compiler_executables={"c": "clang-18", "cpp": "clang++-18"}
+            ' > ~/.conan2/profiles/default
+        
+        - name: Install dependencies
+          run: conan install . --build missing
+            
+        - name: Run conan create
+          run: conan create .
