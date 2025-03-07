@@ -130,7 +130,6 @@ TEST(SnapRoundingTest, reusable_collector)
         };
         // clang-format on
 
-        HotPixelCollector collector;
         collector.add_tile_snapped_polyline(grid, geometry);
         const auto & hot_pixels = collector.build_index();
 
