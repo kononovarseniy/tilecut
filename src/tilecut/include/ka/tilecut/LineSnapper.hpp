@@ -35,8 +35,8 @@ public:
     void snap_line(const TileCellGrid<rounding> & grid, const Handler & handler, In && line, Out out)
     {
         bool first = true;
-        Vec2f64 prev_vertex;
-        Vec2s64 prev_pixel;
+        Vec2f64 prev_vertex {};
+        Vec2s64 prev_pixel {};
         typename Handler::InputVertex prev_input;
         typename Handler::OutputVertex prev_output;
 

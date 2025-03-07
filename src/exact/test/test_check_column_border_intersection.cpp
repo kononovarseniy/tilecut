@@ -12,7 +12,7 @@ TEST(CheckColumnBorderIntersectionTest, horizontal_line_zero_y)
     const f64 size = 0.3;
     const f64 a_x = -10, a_y = 0.0;
     const f64 b_x = 10, b_y = a_y;
-    const f64 c_x = 14, c_y = 0;
+    const s64 c_x = 14, c_y = 0;
     EXPECT_TRUE(check_column_border_intersecion(a_x, a_y, b_x, b_y, size, c_x, c_y));
     EXPECT_TRUE(check_column_border_intersecion(b_x, b_y, a_x, a_y, size, c_x, c_y));
 }
@@ -22,7 +22,7 @@ TEST(CheckColumnBorderIntersectionTest, horizontal_line_positive_y)
     const f64 size = 0.3;
     const f64 a_x = -10, a_y = 0.1;
     const f64 b_x = 10, b_y = a_y;
-    const f64 c_x = 14, c_y = 0;
+    const s64 c_x = 14, c_y = 0;
     EXPECT_TRUE(check_column_border_intersecion(a_x, a_y, b_x, b_y, size, c_x, c_y));
     EXPECT_TRUE(check_column_border_intersecion(b_x, b_y, a_x, a_y, size, c_x, c_y));
 }
@@ -32,7 +32,7 @@ TEST(CheckColumnBorderIntersectionTest, horizontal_line_bigger_positive_y)
     const f64 size = 0.3;
     const f64 a_x = -10, a_y = 0.3;
     const f64 b_x = 10, b_y = a_y;
-    const f64 c_x = 14, c_y = 1;
+    const s64 c_x = 14, c_y = 1;
     EXPECT_TRUE(check_column_border_intersecion(a_x, a_y, b_x, b_y, size, c_x, c_y));
     EXPECT_TRUE(check_column_border_intersecion(b_x, b_y, a_x, a_y, size, c_x, c_y));
 }
@@ -42,7 +42,7 @@ TEST(CheckColumnBorderIntersectionTest, horizontal_line_even_bigger_positive_y)
     const f64 size = 0.3;
     const f64 a_x = -10, a_y = 0.30001;
     const f64 b_x = 10, b_y = a_y;
-    const f64 c_x = 14, c_y = 1;
+    const s64 c_x = 14, c_y = 1;
     EXPECT_TRUE(check_column_border_intersecion(a_x, a_y, b_x, b_y, size, c_x, c_y));
     EXPECT_TRUE(check_column_border_intersecion(b_x, b_y, a_x, a_y, size, c_x, c_y));
 }
@@ -52,7 +52,7 @@ TEST(CheckColumnBorderIntersectionTest, horizontal_line_negative_y)
     const f64 size = 0.3;
     const f64 a_x = -10, a_y = -0.1;
     const f64 b_x = 10, b_y = a_y;
-    const f64 c_x = 14, c_y = -1;
+    const s64 c_x = 14, c_y = -1;
     EXPECT_TRUE(check_column_border_intersecion(a_x, a_y, b_x, b_y, size, c_x, c_y));
     EXPECT_TRUE(check_column_border_intersecion(b_x, b_y, a_x, a_y, size, c_x, c_y));
 }
