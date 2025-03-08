@@ -2,6 +2,8 @@
 
 #include <mpfr.h>
 
+#include <ka/common/cast.hpp>
+
 #include "check_column_border_intersection.hpp"
 
 namespace ka
@@ -22,6 +24,11 @@ bool check_column_border_intersecion(
 
     constexpr auto precision = 1024;
 
+    // On windows long is not long, so we can not use mpfr*si* functions.
+    mpfr_t mpfr_c_x;
+    mpfr_init2(mpfr_c_x, precision);
+    EXPECT_EQ(0, mpfr_set_sj(mpfr_c_x, c_x, MPFR_RNDN));
+
     /// abs(size * (b_x - a_x)).
     mpfr_t abs_denom;
     mpfr_init2(abs_denom, precision);
@@ -33,13 +40,13 @@ bool check_column_border_intersecion(
     /// c_y * abs(denom).
     mpfr_t lower_bound;
     mpfr_init2(lower_bound, precision);
-    EXPECT_EQ(0, mpfr_set_si(lower_bound, c_y, MPFR_RNDN));
+    EXPECT_EQ(0, mpfr_set_sj(lower_bound, c_y, MPFR_RNDN));
     EXPECT_EQ(0, mpfr_mul(lower_bound, lower_bound, abs_denom, MPFR_RNDN));
 
     /// (c_y + 1) * abs(denom).
     mpfr_t upper_bound;
     mpfr_init2(upper_bound, precision);
-    EXPECT_EQ(0, mpfr_set_si(upper_bound, c_y, MPFR_RNDN));
+    EXPECT_EQ(0, mpfr_set_sj(upper_bound, c_y, MPFR_RNDN));
     EXPECT_EQ(0, mpfr_add_ui(upper_bound, upper_bound, 1, MPFR_RNDN));
     EXPECT_EQ(0, mpfr_mul(upper_bound, upper_bound, abs_denom, MPFR_RNDN));
 
@@ -58,7 +65,7 @@ bool check_column_border_intersecion(
     EXPECT_EQ(0, mpfr_set_d(tmp, b_y, MPFR_RNDN));
     EXPECT_EQ(0, mpfr_sub_d(tmp, tmp, a_y, MPFR_RNDN));
     EXPECT_EQ(0, mpfr_mul_d(tmp, tmp, size, MPFR_RNDN));
-    EXPECT_EQ(0, mpfr_mul_si(tmp, tmp, c_x, MPFR_RNDN));
+    EXPECT_EQ(0, mpfr_mul(tmp, tmp, mpfr_c_x, MPFR_RNDN));
 
     EXPECT_EQ(0, mpfr_add(num, num, tmp, MPFR_RNDN));
     const auto negative_denom = b_x < a_x;
@@ -69,7 +76,7 @@ bool check_column_border_intersecion(
 
     const auto result = mpfr_lessequal_p(lower_bound, num) && mpfr_less_p(num, upper_bound);
 
-    mpfr_clears(abs_denom, lower_bound, upper_bound, tmp, num, nullptr);
+    mpfr_clears(mpfr_c_x, abs_denom, lower_bound, upper_bound, tmp, num, nullptr);
 
     return result;
 }
