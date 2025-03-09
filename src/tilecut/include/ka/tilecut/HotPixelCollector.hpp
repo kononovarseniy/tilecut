@@ -29,8 +29,8 @@ public:
         requires std::same_as<std::ranges::range_value_t<In>, Vec2f64>
     void add_tile_snapped_polyline(const TileCellGrid<rounding> & grid, In && polyline) noexcept
     {
-        Vec2f64 prev_vertex;
-        Vec2s64 prev_pixel;
+        Vec2f64 prev_vertex {};
+        Vec2s64 prev_pixel {};
         bool first = true;
 
         for (const auto & vertex : polyline)
