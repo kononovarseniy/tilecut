@@ -16,7 +16,7 @@ def _make_target_name(name):
 
 class TilecutRecipe(ConanFile):
     name = "ka_tilecut"
-    version = "0.2.0"
+    version = "0.2.1"
 
     license = "MIT"
     author = "kononovarseniy@gmail.com"
