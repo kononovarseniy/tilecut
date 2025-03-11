@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <cstdio>
 #include <iostream>
 #include <source_location>
 #include <span>
@@ -61,7 +62,8 @@ struct Constants final
 [[nodiscard]] std::string to_hex(const long double value)
 {
     std::array<char, 32> data;
-    mpfr_sprintf(data.data(), "%La", value);
+    // mpfr_sprintf fails with assert inside gmp on msvc.
+    std::snprintf(data.data(), data.size(), "%La", value);
     return data.data();
 }
 
