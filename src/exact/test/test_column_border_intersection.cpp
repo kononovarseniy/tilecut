@@ -25,7 +25,7 @@ TEST(ColumnBorderIntersectionTest, combinations_of_dangerous_values)
     {
         EXPECT_EQ(0, mpfr_set_d(value, x, rnd));
         mpfr_div_d(value, value, size, rnd);
-        return mpfr_get_si(value, rnd);
+        return mpfr_get_sj(value, rnd);
     };
 
     const std::array coordinates {
