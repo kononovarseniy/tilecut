@@ -82,7 +82,7 @@ class TilecutRecipe(ConanFile):
         cmake.configure()
         cmake.build()
         if self.options.build_tests:
-            cmake.test()
+            cmake.ctest(cli_args=["--output-on-failure"])
 
     def package(self):
         cmake = CMake(self)
