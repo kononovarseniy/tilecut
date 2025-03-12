@@ -32,7 +32,7 @@ using ::testing::ElementsAreArray;
 
 TEST(SnapRoundingTest, distorted_square)
 {
-    const auto grid = make_grid<GridRounding::Cell>(1.1, 8);
+    const auto grid = make_grid<GridRounding::Cell>(1.1, {}, 8);
 
     const std::array<Vec2f64, 5> geometry { {
         { prev_float(grid.cell_size() * -4), grid.cell_size() * -4 },
@@ -68,7 +68,7 @@ TEST(SnapRoundingTest, distorted_square)
 
 TEST(SnapRoundingTest, perfect_square)
 {
-    const auto grid = make_grid<GridRounding::Cell>(1.1, 8);
+    const auto grid = make_grid<GridRounding::Cell>(1.1, {}, 8);
 
     const std::array<Vec2f64, 5> geometry { {
         { grid.cell_size() * -4, grid.cell_size() * -4 },
@@ -105,7 +105,7 @@ TEST(SnapRoundingTest, perfect_square)
 TEST(SnapRoundingTest, reusable_collector)
 {
     HotPixelCollector collector;
-    const auto grid = make_grid<GridRounding::Cell>(1.1, 8);
+    const auto grid = make_grid<GridRounding::Cell>(1.1, {}, 8);
 
     {
         const std::array<Vec2f64, 5> geometry { {
@@ -176,7 +176,7 @@ TEST(SnapRoundingTest, reusable_collector)
 
 TEST(SnapRoundingTest, half_integer_perfect_square)
 {
-    const auto grid = make_grid<GridRounding::Cell>(1, 8);
+    const auto grid = make_grid<GridRounding::Cell>(1, {}, 8);
 
     // clang-format off
     const std::array<Vec2f64, 5> geometry { {

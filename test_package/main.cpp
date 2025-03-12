@@ -17,7 +17,7 @@ int main(int argc, char * argv[])
     auto grid_params = ka::g_embedded_grid;
     grid_params.cell_size = 1.0;
     const ka::u16 tile_size = 10000;
-    ka::TileCellGrid<ka::GridRounding::NearestNode> grid(grid_params, tile_size);
+    ka::TileCellGrid<ka::GridRounding::NearestNode> grid(grid_params, {}, tile_size);
 
     // Input geometry.
     std::vector<std::vector<ka::Vec2f64>> contours = {

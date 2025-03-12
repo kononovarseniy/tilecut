@@ -19,7 +19,7 @@ constexpr u16 g_tile_size = 100;
 
 TEST(CutPolylineTest, empty)
 {
-    const TileGrid tile_grid { g_tile_size };
+    const TileGrid tile_grid { {}, g_tile_size };
 
     std::vector<Vec2s64> line;
 
@@ -35,7 +35,7 @@ TEST(CutPolylineTest, empty)
 
 TEST(CutPolylineTest, single_point)
 {
-    const TileGrid tile_grid { g_tile_size };
+    const TileGrid tile_grid { {}, g_tile_size };
 
     std::vector<Vec2s64> line { { 5343, -9 } };
 
@@ -56,7 +56,7 @@ TEST(CutPolylineTest, single_point)
 
 TEST(CutPolylineTest, all_same_xy)
 {
-    const TileGrid tile_grid { g_tile_size };
+    const TileGrid tile_grid { {}, g_tile_size };
 
     std::vector<Vec2s64> line;
     line.assign(100, { -1000 + 34, -2000 + 5 });
@@ -84,7 +84,7 @@ TEST(CutPolylineTest, all_same_xy_projected)
         f64 z;
     };
 
-    const TileGrid tile_grid { g_tile_size };
+    const TileGrid tile_grid { {}, g_tile_size };
 
     std::vector<Vertex> line;
     for (size_t i = 0; i < 100; ++i)
@@ -109,7 +109,7 @@ TEST(CutPolylineTest, all_same_xy_projected)
 
 TEST(CutPolylineTest, two_parts)
 {
-    const TileGrid tile_grid { g_tile_size };
+    const TileGrid tile_grid { {}, g_tile_size };
 
     // clang-format off
     std::vector<Vec2s64> line {
@@ -149,7 +149,7 @@ TEST(CutPolylineTest, two_parts)
 
 TEST(CutPolylineTest, intermediate_segment_almost_in_other_tile)
 {
-    const TileGrid tile_grid { g_tile_size };
+    const TileGrid tile_grid { {}, g_tile_size };
 
     // clang-format off
     std::vector<Vec2s64> line {
@@ -177,7 +177,7 @@ TEST(CutPolylineTest, intermediate_segment_almost_in_other_tile)
 
 TEST(CutPolylineTest, degenerate_first_segments)
 {
-    const TileGrid tile_grid { g_tile_size };
+    const TileGrid tile_grid { {}, g_tile_size };
 
     // clang-format off
     std::vector<Vec2s64> line {

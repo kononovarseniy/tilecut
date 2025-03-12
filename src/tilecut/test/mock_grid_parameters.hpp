@@ -2,6 +2,7 @@
 
 #include <ka/exact/GridParameters.hpp>
 #include <ka/exact/GridRounding.hpp>
+#include <ka/geometry_types/Vec2.hpp>
 
 namespace ka
 {
@@ -19,11 +20,11 @@ constexpr GridParameters g_embedded_grid = {
 };
 
 template <GridRounding rounding>
-[[nodiscard]] TileCellGrid<rounding> make_grid(const f64 cell_size, const u16 tile_step)
+[[nodiscard]] TileCellGrid<rounding> make_grid(const f64 cell_size, const Vec2s64 & tiles_origin, const u16 tile_step)
 {
     auto grid = g_embedded_grid;
     grid.cell_size = cell_size;
-    return { grid, tile_step };
+    return { grid, tiles_origin, tile_step };
 }
 
 } // namespace ka

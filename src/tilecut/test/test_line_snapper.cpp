@@ -106,7 +106,7 @@ static_assert(LineSnapperCoordinateHandler<TestCoordinateHandler>);
 
 TEST(LineSnapperTest, interface_test)
 {
-    const auto grid = make_grid<GridRounding::NearestNode>(1.0, 10);
+    const auto grid = make_grid<GridRounding::NearestNode>(1.0, {}, 10);
 
     std::vector<TestCoordinateHandler::InputVertex> vertices {
         { { -20.3, 5.0 }, -100.23 },
@@ -134,7 +134,7 @@ TEST(LineSnapperTest, interface_test)
 
 TEST(LineSnapperTest, interface_2d_test)
 {
-    const auto grid = make_grid<GridRounding::NearestNode>(1.0, 10);
+    const auto grid = make_grid<GridRounding::NearestNode>(1.0, {}, 10);
 
     std::vector<Vec2f64> vertices {
         { -20.3, 5.0 },
@@ -160,7 +160,7 @@ TEST(LineSnapperTest, interface_2d_test)
 
 TEST(LineSnapperTest, empty_2d_test)
 {
-    const auto grid = make_grid<GridRounding::NearestNode>(1.0, 10);
+    const auto grid = make_grid<GridRounding::NearestNode>(1.0, {}, 10);
 
     std::vector<Vec2f64> vertices;
     std::vector<Vec2s64> expected;

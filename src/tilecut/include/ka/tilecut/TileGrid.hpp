@@ -17,8 +17,9 @@ namespace ka
 class TileGrid final
 {
 public:
-    explicit TileGrid(const u16 tile_size) noexcept
-        : tile_size_ { tile_size }
+    explicit TileGrid(const Vec2s64 & origin, const u16 tile_size) noexcept
+        : origin_ { origin }
+        , tile_size_ { tile_size }
     {
         AR_PRE(tile_size > 0);
     }
@@ -34,8 +35,8 @@ public:
     [[nodiscard]] Vec2s64 tile_of(const Vec2s64 & cell) const noexcept
     {
         return {
-            .x = div_round_down(cell.x, tile_size_),
-            .y = div_round_down(cell.y, tile_size_),
+            .x = div_round_down(cell.x - origin_.x, tile_size_),
+            .y = div_round_down(cell.y - origin_.y, tile_size_),
         };
     }
 
@@ -54,14 +55,15 @@ public:
         const auto tile_x = std::min(start_tile.x, stop_tile.x);
         const auto tile_y = std::min(start_tile.y, stop_tile.y);
 
-        if (segment.a.x == segment.b.x && segment.a.x == tile_x * tile_size_)
+        const auto corner = tile_origin({ tile_x, tile_y });
+        if (segment.a.x == segment.b.x && segment.a.x == corner.x)
         {
             return {
                 segment.a.y < segment.b.y ? tile_x - 1 : tile_x,
                 tile_y,
             };
         }
-        if (segment.a.y == segment.b.y && segment.a.y == tile_y * tile_size_)
+        if (segment.a.y == segment.b.y && segment.a.y == corner.y)
         {
             return {
                 tile_x,
@@ -71,12 +73,22 @@ public:
         return { tile_x, tile_y };
     }
 
+    /// @brief Returns cell of the tile corner with minimal x and y.
+    [[nodiscard]] Vec2s64 tile_origin(const Vec2s64 & tile) const noexcept
+    {
+        return {
+            tile_origin(origin_.x, tile.x),
+            tile_origin(origin_.y, tile.y),
+        };
+    }
+
     /// @brief Converts cell coordinates to the local coordinates of the given tile.
     [[nodiscard]] Vec2s64 extended_local_coordinates(const Vec2s64 & tile, const Vec2s64 & cell) const noexcept
     {
+        const auto corner = tile_origin(tile);
         return {
-            .x = cell.x - tile.x * tile_size_,
-            .y = cell.y - tile.y * tile_size_,
+            .x = cell.x - corner.x,
+            .y = cell.y - corner.y,
         };
     }
 
@@ -103,15 +115,17 @@ public:
     /// @brief Checks that a segment is entirely contained within a single tile.
     [[nodiscard]] bool is_inside_single_tile(const Segment2s64 & segment) const noexcept
     {
-        return is_inside_single_tile(segment.a.x, segment.b.x) && is_inside_single_tile(segment.a.y, segment.b.y);
+        return is_inside_single_tile(origin_.x, segment.a.x, segment.b.x) &&
+               is_inside_single_tile(origin_.y, segment.a.y, segment.b.y);
     }
 
     /// @brief Checks that the cell does not belong to the tile closure.
     [[nodiscard]] bool strictly_outside(const Vec2s64 & tile, const Vec2s64 & cell) const noexcept
     {
-        const auto left = tile.x * tile_size_;
+        const auto corner = tile_origin(tile);
+        const auto left = corner.x;
         const auto right = left + tile_size_;
-        const auto bottom = tile.y * tile_size_;
+        const auto bottom = corner.y;
         const auto top = bottom + tile_size_;
         return cell.x < left || cell.x > right || cell.y < bottom || cell.y > top;
     }
@@ -127,8 +141,8 @@ public:
     /// @brief Returns the coordinate ranges of the tile boundaries intersected by the given segment.
     [[nodiscard]] BoundariesRanges intersected_boundaries_ranges(const Segment2s64 & segment) const noexcept
     {
-        const auto [min_x, max_x] = intersected_boundaries_range(segment.a.x, segment.b.x);
-        const auto [min_y, max_y] = intersected_boundaries_range(segment.a.y, segment.b.y);
+        const auto [min_x, max_x] = intersected_boundaries_range(origin_.x, segment.a.x, segment.b.x);
+        const auto [min_y, max_y] = intersected_boundaries_range(origin_.y, segment.a.y, segment.b.y);
         return { min_x, max_x, min_y, max_y };
     }
 
@@ -136,15 +150,16 @@ public:
     /// (inclusive, unordered).
     /// @return A pair of minimum and maximum boundary coordinates.
     /// If the first value of a pair is greater than the second, then there is no boundary intersections.
-    [[nodiscard]] std::pair<s64, s64> intersected_boundaries_range(s64 begin_cell, s64 end_cell) const noexcept
+    [[nodiscard]] std::pair<s64, s64> intersected_boundaries_range(const s64 origin, s64 begin_cell, s64 end_cell)
+        const noexcept
     {
         if (begin_cell > end_cell)
         {
             std::swap(begin_cell, end_cell);
         }
         return {
-            div_round_up(begin_cell, tile_size_) * tile_size_,
-            div_round_down(end_cell, tile_size_) * tile_size_,
+            tile_origin(origin, div_round_up(begin_cell - origin, tile_size_)),
+            tile_origin(origin, div_round_down(end_cell - origin, tile_size_)),
         };
     }
 
@@ -166,15 +181,20 @@ public:
     }
 
 private:
-    [[nodiscard]] bool is_inside_single_tile(s64 a, s64 b) const noexcept
+    [[nodiscard]] s64 tile_origin(const s64 origin, const s64 tile) const noexcept
+    {
+        return tile * tile_size_ + origin;
+    }
+
+    [[nodiscard]] bool is_inside_single_tile(const s64 origin, s64 a, s64 b) const noexcept
     {
         if (a > b)
         {
             std::swap(a, b);
         }
-        const auto min_tile = div_round_down(a, tile_size_);
-        const auto max_tile = div_round_down(b, tile_size_);
-        return min_tile == max_tile || b == (min_tile + 1) * tile_size_;
+        const auto min_tile = div_round_down(a - origin, tile_size_);
+        const auto max_tile = div_round_down(b - origin, tile_size_);
+        return min_tile == max_tile || b == tile_origin(origin, min_tile + 1);
     }
 
     [[nodiscard]] static constexpr s64 div_round_up(const s64 a, const u16 b) noexcept
@@ -198,6 +218,7 @@ private:
     }
 
 private:
+    Vec2s64 origin_;
     u16 tile_size_;
 };
 

@@ -21,9 +21,9 @@ public:
     constexpr static auto rounding = rounding_;
 
 public:
-    TileCellGrid(const GridParameters & grid, const u16 tile_size) noexcept
+    TileCellGrid(const GridParameters & grid, const Vec2s64 & tiles_origin, const u16 tile_size) noexcept
         : grid_ { grid }
-        , tile_grid_ { tile_size }
+        , tile_grid_ { tiles_origin, tile_size }
     {
         AR_PRE(grid.desired_cell_size > 0.0);
         AR_PRE(grid.cell_size >= grid.desired_cell_size);

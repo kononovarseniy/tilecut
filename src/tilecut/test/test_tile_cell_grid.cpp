@@ -32,7 +32,7 @@ static_assert(TileCellGrid<GridRounding::NearestNode>::rounding == GridRounding:
 
 TEST(TileCellGridTest, cell_of)
 {
-    const auto grid = make_grid<GridRounding::NearestNode>(g_cell_size, g_tile_size);
+    const auto grid = make_grid<GridRounding::NearestNode>(g_cell_size, {}, g_tile_size);
     const Vec2f64 point { 3456.3546, 28.0 };
     const Vec2s64 expected { 3456, 28 };
 
@@ -41,7 +41,7 @@ TEST(TileCellGridTest, cell_of)
 
 TEST(TileCellGridTest, tile_boundary_intersection_cells)
 {
-    const auto grid = make_grid<GridRounding::NearestNode>(g_cell_size, g_tile_size);
+    const auto grid = make_grid<GridRounding::NearestNode>(g_cell_size, {}, g_tile_size);
     const Segment2f64 segment {
         { -0.49, 1 },
         { 2.49, 196 },
@@ -58,9 +58,50 @@ TEST(TileCellGridTest, tile_boundary_intersection_cells)
     EXPECT_EQ(result, expected);
 }
 
+TEST(TileCellGridTest, tile_boundary_intersection_cells_x_centered_tile)
+{
+    const Vec2s64 origin { -g_tile_size / 2, 0 };
+    const auto grid = make_grid<GridRounding::NearestNode>(g_cell_size, origin, g_tile_size);
+    const Segment2f64 segment {
+        { -51, -51 },
+        { 51, 51 },
+    };
+    const Segment2s64 segment_cells { grid.cell_of(segment.a), grid.cell_of(segment.b) };
+    const Segment2s64 expected_segment_cells { { -51, -51 }, { 51, 51 } };
+    EXPECT_EQ(segment_cells, expected_segment_cells);
+
+    std::vector<Vec2s64> result;
+    grid.tile_boundary_intersection_cells(segment, segment_cells, std::back_inserter(result));
+
+    const std::vector<Vec2s64> expected { { -50, -50 }, { 0, 0 }, { 50, 50 } };
+    std::ranges::sort(result);
+    EXPECT_EQ(result, expected);
+}
+
+TEST(TileCellGridTest, tile_boundary_intersection_cells_centered_tile)
+{
+    const Vec2s64 origin { -g_tile_size / 2, -g_tile_size / 2 };
+    const auto grid = make_grid<GridRounding::NearestNode>(g_cell_size, origin, g_tile_size);
+    const Segment2f64 segment {
+        { -51, -51 },
+        { 51, 51 },
+    };
+    const Segment2s64 segment_cells { grid.cell_of(segment.a), grid.cell_of(segment.b) };
+    const Segment2s64 expected_segment_cells { { -51, -51 }, { 51, 51 } };
+    EXPECT_EQ(segment_cells, expected_segment_cells);
+
+    std::vector<Vec2s64> result;
+    grid.tile_boundary_intersection_cells(segment, segment_cells, std::back_inserter(result));
+
+    // Duplicate cells are normal for the above method.
+    const std::vector<Vec2s64> expected { { -50, -50 }, { -50, -50 }, { 50, 50 }, { 50, 50 } };
+    std::ranges::sort(result);
+    EXPECT_EQ(result, expected);
+}
+
 TEST(TileCellGridTest, tile_boundary_intersection_cells_non_trivial_cell)
 {
-    const auto grid = make_grid<GridRounding::NearestNode>(5.0, g_tile_size);
+    const auto grid = make_grid<GridRounding::NearestNode>(5.0, {}, g_tile_size);
     const Segment2f64 segment {
         { 550, 503 },
         { 555, 497 },
@@ -79,7 +120,7 @@ TEST(TileCellGridTest, tile_boundary_intersection_cells_non_trivial_cell)
 
 TEST(TileCellGridTest, tile_boundary_intersection_cells_same_cell)
 {
-    const auto grid = make_grid<GridRounding::NearestNode>(5.0, g_tile_size);
+    const auto grid = make_grid<GridRounding::NearestNode>(5.0, {}, g_tile_size);
     const Segment2f64 segment {
         { 550, 501 },
         { 551, 499 },

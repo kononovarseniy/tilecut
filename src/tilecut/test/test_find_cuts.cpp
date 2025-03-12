@@ -45,7 +45,7 @@ constexpr u16 g_tile_size = 100;
 
 TEST(FindCutsTest, empty_input)
 {
-    TileGrid tile_grid { g_tile_size };
+    TileGrid tile_grid { {}, g_tile_size };
 
     const std::vector<Segment2u16> segments;
     const std::vector<Segment2u16> expected;
@@ -57,7 +57,7 @@ TEST(FindCutsTest, empty_input)
 
 TEST(FindCutsTest, full_tile_no_cuts)
 {
-    TileGrid tile_grid { g_max_tile_size };
+    TileGrid tile_grid { {}, g_max_tile_size };
     const auto segments = all_cuts(tile_grid);
     const std::vector<Segment2u16> expected;
 
@@ -68,7 +68,7 @@ TEST(FindCutsTest, full_tile_no_cuts)
 
 TEST(FindCutsTest, square_no_cuts)
 {
-    TileGrid tile_grid { g_tile_size };
+    TileGrid tile_grid { {}, g_tile_size };
 
     // Shuffled square.
     const std::vector<Segment2u16> segments {
@@ -86,7 +86,7 @@ TEST(FindCutsTest, square_no_cuts)
 
 TEST(FindCutsTest, square_all_cuts)
 {
-    TileGrid tile_grid { g_tile_size };
+    TileGrid tile_grid { {}, g_tile_size };
 
     // Shuffled inverted square.
     const std::vector<Segment2u16> segments {
@@ -104,7 +104,7 @@ TEST(FindCutsTest, square_all_cuts)
 
 TEST(FindCutsTest, difficult_no_cuts)
 {
-    TileGrid tile_grid { g_tile_size };
+    TileGrid tile_grid { {}, g_tile_size };
 
     const std::vector<Segment2u16> segments = make_line({
         { 50, 50 },
@@ -124,7 +124,7 @@ TEST(FindCutsTest, difficult_no_cuts)
 
 TEST(FindCutsTest, difficult_all_cuts)
 {
-    TileGrid tile_grid { g_tile_size };
+    TileGrid tile_grid { {}, g_tile_size };
 
     const std::vector<Segment2u16> segments = make_line({
         { 50, 50 },
@@ -145,7 +145,7 @@ TEST(FindCutsTest, difficult_all_cuts)
 TEST(FindCutsTest, left_half)
 {
     const auto tile_size = g_max_tile_size;
-    TileGrid tile_grid { tile_size };
+    TileGrid tile_grid { {}, tile_size };
 
     const std::vector<Segment2u16> segments {
         { { tile_size / 2, 0 }, { tile_size / 2, tile_size } },
@@ -165,7 +165,7 @@ TEST(FindCutsTest, left_half)
 TEST(FindCutsTest, small_corner)
 {
     const auto tile_size = g_max_tile_size;
-    TileGrid tile_grid { tile_size };
+    TileGrid tile_grid { {}, tile_size };
 
     const std::vector<Segment2u16> segments {
         { { 1, 0 }, { 0, 1 } },
@@ -184,7 +184,7 @@ TEST(FindCutsTest, small_corner)
 TEST(FindCutsTest, except_small_corner)
 {
     const auto tile_size = g_max_tile_size;
-    TileGrid tile_grid { tile_size };
+    TileGrid tile_grid { {}, tile_size };
 
     const std::vector<Segment2u16> segments {
         { { 0, 1 }, { 1, 0 } },
@@ -205,7 +205,7 @@ TEST(FindCutsTest, except_small_corner)
 TEST(FindCutsTest, two_cuts_on_with_segment_on_boundary)
 {
     const auto tile_size = g_max_tile_size;
-    TileGrid tile_grid { tile_size };
+    TileGrid tile_grid { {}, tile_size };
 
     std::vector<Segment2u16> segments {
         { { tile_size, 50 }, { tile_size, 55 } },
@@ -230,7 +230,7 @@ TEST(FindCutsTest, two_cuts_on_with_segment_on_boundary)
 TEST(FindCutsTest, triangle_vertex_on_the_right_all_cuts)
 {
     const auto tile_size = g_max_tile_size;
-    TileGrid tile_grid { tile_size };
+    TileGrid tile_grid { {}, tile_size };
 
     const auto segments = make_line({
         { tile_size, 50 },
@@ -248,7 +248,7 @@ TEST(FindCutsTest, triangle_vertex_on_the_right_all_cuts)
 TEST(FindCutsTest, inverted_triangle_vertex_on_the_right_all_cuts)
 {
     const auto tile_size = g_max_tile_size;
-    TileGrid tile_grid { tile_size };
+    TileGrid tile_grid { {}, tile_size };
 
     const auto segments = make_line({
         { tile_size, 50 },
@@ -273,7 +273,7 @@ TEST(FindCutsTest, inverted_triangle_vertex_on_the_right_all_cuts)
 TEST(FindCutsTest, star_vertex_on_the_right_all_cuts)
 {
     const auto tile_size = g_max_tile_size;
-    TileGrid tile_grid { tile_size };
+    TileGrid tile_grid { {}, tile_size };
 
     const auto segments = make_line({
         { tile_size, 50 },
@@ -297,7 +297,7 @@ TEST(FindCutsTest, star_vertex_on_the_right_all_cuts)
 TEST(FindCutsTest, inverted_star_vertex_on_the_right_all_cuts)
 {
     const auto tile_size = g_max_tile_size;
-    TileGrid tile_grid { tile_size };
+    TileGrid tile_grid { {}, tile_size };
 
     const auto segments = make_line({
         { tile_size, 50 },
@@ -328,7 +328,7 @@ TEST(FindCutsTest, inverted_star_vertex_on_the_right_all_cuts)
 TEST(FindCutsTest, collinear_simple)
 {
     const auto tile_size = g_max_tile_size;
-    TileGrid tile_grid { tile_size };
+    TileGrid tile_grid { {}, tile_size };
 
     {
         const auto segments = make_line({
@@ -369,7 +369,7 @@ TEST(FindCutsTest, collinear_simple)
 TEST(FindCutsTest, collinear_zero_bottom)
 {
     const auto tile_size = g_max_tile_size;
-    TileGrid tile_grid { tile_size };
+    TileGrid tile_grid { {}, tile_size };
 
     {
         const auto segments = make_line({
@@ -409,7 +409,7 @@ TEST(FindCutsTest, collinear_zero_bottom)
 TEST(FindCutsTest, collinear_zero_left)
 {
     const auto tile_size = g_max_tile_size;
-    TileGrid tile_grid { tile_size };
+    TileGrid tile_grid { {}, tile_size };
 
     {
         const auto segments = make_line({
