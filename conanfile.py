@@ -48,7 +48,7 @@ class TilecutRecipe(ConanFile):
         if self.options.build_generate_grid:
             self.requires("boost/1.86.0")
         if self.options.build_tests or self.options.build_generate_grid:
-            self.requires("mpfr/4.2.1")
+            self.requires("mpfr/4.2.1", visible=False)
 
     def validate(self):
         check_min_cppstd(self, "20")
