@@ -114,11 +114,10 @@ TEST(LineSnapperTest, interface_test)
     };
     // clang-format off
     std::vector<TestCoordinateHandler::OutputVertex> expected {
-        { { -21, 5 }, -100 },
-        { { -20, 5 }, -95 },
-        { { -10, 5 }, -46 },
-        { { 0, 5 }, 2 },
-        { { 10, 5 }, 51 },
+        { { -20, 5 }, -100 },
+        { { -10, 5 }, -50 },
+        { { 0, 5 }, 0 },
+        { { 10, 5 }, 50 },
         { { 20, 5 }, 100 },
     };
     // clang-format on

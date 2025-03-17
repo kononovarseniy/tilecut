@@ -109,4 +109,21 @@ TEST(ColumnBorderIntersectionTest, combinations_of_dangerous_values)
     mpfr_clear(value);
 }
 
+TEST(ColumnBorderIntersectionTest, row_border_intersection_nearest)
+{
+    auto grid = g_embedded_grid;
+    grid.cell_size = 100;
+
+    EXPECT_EQ(-1, row_border_intersection<GridRounding::NearestNode>(grid, -125, -1, -125, 1, 0));
+}
+
+TEST(ColumnBorderIntersectionTest, column_border_intersection_nearest)
+{
+    auto grid = g_embedded_grid;
+    grid.cell_size = 100;
+
+    EXPECT_EQ(0, column_border_intersection<GridRounding::NearestNode>(grid, -100, 100 - 1, 100, -100 - 1, 0));
+    EXPECT_EQ(-1, column_border_intersection<GridRounding::Cell>(grid, -100, 100 - 1, 100, -100 - 1, 0));
+}
+
 } // namespace ka
