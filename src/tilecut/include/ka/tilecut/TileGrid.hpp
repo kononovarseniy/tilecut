@@ -25,6 +25,11 @@ public:
     }
 
 public:
+    [[nodiscard]] const Vec2s64 & origin() const noexcept
+    {
+        return origin_;
+    }
+
     [[nodiscard]] u16 tile_size() const noexcept
     {
         return tile_size_;
