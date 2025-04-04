@@ -8,7 +8,7 @@
 #include <ka/exact/grid.hpp>
 
 #include "../expansion.hpp"
-#include "common.hpp"
+#include "../common.hpp"
 
 namespace ka
 {

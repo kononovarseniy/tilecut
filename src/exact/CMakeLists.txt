@@ -16,10 +16,11 @@ target_sources(ka_${module_name}
         src/grid/border_between_coordinates.cpp
         src/grid/border_intersection.cpp
         src/grid/cell_containg_position.cpp
-        src/grid/common.hpp
         src/grid/line_intersects_cell.cpp
 
+        src/common.hpp
         src/expansion.hpp
+        src/orientation.cpp
 )
 
 target_enable_warnings(ka_${module_name})
@@ -47,6 +48,7 @@ if(BUILD_TESTS)
         test/mock_grid_parameters.hpp
         test/test_check_column_border_intersection.cpp
         test/test_column_border_intersection.cpp
+        test/test_orientation.cpp
     )
     target_enable_warnings(ka_${module_name}_test)
     target_link_libraries(ka_${module_name}_test
