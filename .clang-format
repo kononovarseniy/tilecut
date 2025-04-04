@@ -89,7 +89,7 @@ IncludeCategories:
 # Arguments and parameters
 AlignAfterOpenBracket: AlwaysBreak
 BinPackArguments: False
-BinPackParameters: False
+BinPackParameters: OnePerLine
 AllowAllArgumentsOnNextLine: False
 AllowAllParametersOfDeclarationOnNextLine: False
 
@@ -125,7 +125,7 @@ ShortNamespaceLines: 0
 PointerAlignment: Middle
 SpaceAroundPointerQualifiers: Both
 
-ReflowComments: True
+ReflowComments: Always
 
 ---
 Language: Proto
