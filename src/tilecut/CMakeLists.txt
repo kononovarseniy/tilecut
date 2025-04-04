@@ -19,6 +19,7 @@ target_sources(ka_${module_name}
         include/ka/tilecut/lerp_along_segment.hpp
         include/ka/tilecut/LineSnapper.hpp
         include/ka/tilecut/LineSnapperCoordinateHandler.hpp
+        include/ka/tilecut/orient.hpp
         include/ka/tilecut/snap_round.hpp
         include/ka/tilecut/sort_hot_pixels_along_segment.hpp
         include/ka/tilecut/TileCellGrid.hpp
@@ -28,7 +29,6 @@ target_sources(ka_${module_name}
         src/collect_tiles.cpp
         src/filter_segments.cpp
         src/find_cuts.cpp
-        src/orient.hpp
 )
 
 target_enable_warnings(ka_${module_name})
