@@ -85,10 +85,8 @@ template <std::ranges::forward_range R>
     requires IsSegment2<std::ranges::range_value_t<R>>
 [[nodiscard]] PolygonOrientation polygon_orientation(const R & segments)
 {
-    using SegmentType = std::ranges::range_value_t<R>;
-
     AR_PRE(std::ranges::size(segments) >= 3);
-    AR_PRE(std::ranges::none_of(segments, &SegmentType::degenerate));
+    AR_PRE(std::ranges::none_of(segments, &std::ranges::range_value_t<R>::degenerate));
 
     const auto max_vertex = std::ranges::max(
         segments |
@@ -145,8 +143,8 @@ public:
 private:
     Vec2<T> max_vertex_;
     bool is_first_;
-    Segment2<T> max_segment_;
-    Segment2<T> max_undirected_;
+    Segment2<T> max_segment_ {};
+    Segment2<T> max_undirected_ {};
 };
 
 } // namespace detail
