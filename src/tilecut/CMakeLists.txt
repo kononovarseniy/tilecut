@@ -20,6 +20,7 @@ target_sources(ka_${module_name}
         include/ka/tilecut/LineSnapper.hpp
         include/ka/tilecut/LineSnapperCoordinateHandler.hpp
         include/ka/tilecut/orient.hpp
+        include/ka/tilecut/polygon_orientation.hpp
         include/ka/tilecut/snap_round.hpp
         include/ka/tilecut/sort_hot_pixels_along_segment.hpp
         include/ka/tilecut/TileCellGrid.hpp
@@ -60,6 +61,7 @@ if(BUILD_TESTS)
         test/test_line_snapper.cpp
         test/test_snap_rounding.cpp
         test/test_orient.cpp
+        test/test_polygon_orientation.cpp
         test/test_sort_hot_pixels_along_segment.cpp
         test/test_tile_cell_grid.cpp
         test/test_tile_grid.cpp
