@@ -11,6 +11,7 @@ target_sources(ka_${module_name}
         include/ka/exact/grid.hpp
         include/ka/exact/GridParameters.hpp
         include/ka/exact/GridRounding.hpp
+        include/ka/exact/orientation.hpp
 
     PRIVATE
         src/grid/border_between_coordinates.cpp
