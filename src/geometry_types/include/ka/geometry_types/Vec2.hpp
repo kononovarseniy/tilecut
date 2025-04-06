@@ -12,6 +12,8 @@ namespace ka
 template <typename T>
 struct Vec2 final
 {
+    using CoordinateType = T;
+
     T x;
     T y;
 
@@ -34,9 +36,18 @@ struct Vec2 final
     }
 };
 
-using Vec2f64 = Vec2<f64>;
-using Vec2s64 = Vec2<s64>;
-using Vec2s32 = Vec2<s32>;
+template <typename T>
+concept IsVec2 = std::same_as<T, Vec2<typename T::CoordinateType>>;
+
+using Vec2u8 = Vec2<u8>;
 using Vec2u16 = Vec2<u16>;
+using Vec2u32 = Vec2<u32>;
+using Vec2u64 = Vec2<u64>;
+using Vec2s8 = Vec2<s8>;
+using Vec2s16 = Vec2<s16>;
+using Vec2s32 = Vec2<s32>;
+using Vec2s64 = Vec2<s64>;
+using Vec2f32 = Vec2<f32>;
+using Vec2f64 = Vec2<f64>;
 
 } // namespace ka
