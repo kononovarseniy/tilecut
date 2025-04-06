@@ -15,6 +15,13 @@ TEST(OrientationTest, simple_collinear)
     EXPECT_EQ(orientation(s16 { 1 }, s16 { 2 }, s16 { 6 }, s16 { 10 }, s16 { 11 }, s16 { 18 }), s64 { 0 });
 }
 
+TEST(OrientationTest, simple_negative)
+{
+    EXPECT_GT(orientation(f32 { 1 }, f32 { -98 }, f32 { 1 }, f32 { -90 }, f32 { -100 }, f32 { -10 }), f32 { 0 });
+    EXPECT_GT(orientation(f64 { 1 }, f64 { -98 }, f64 { 1 }, f64 { -90 }, f64 { -100 }, f64 { -10 }), f64 { 0 });
+    EXPECT_GT(orientation(s16 { 1 }, s16 { -98 }, s16 { 1 }, s16 { -90 }, s16 { -100 }, s16 { -10 }), s64 { 0 });
+}
+
 TEST(OrientationTest, simple_right_turn)
 {
     EXPECT_LT(orientation(f32 { 1 }, f32 { 2 }, f32 { 6 }, f32 { 10 }, f32 { 11 + 1 }, f32 { 18 }), f32 { 0 });

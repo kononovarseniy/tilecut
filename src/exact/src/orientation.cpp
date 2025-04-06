@@ -24,8 +24,8 @@ template <ieee_float F>
     //
     // = (b_x - a_x) * c_y - (b_x - a_x) * a_y - (b_y - a_y) * c_x + (b_y - a_y) * a_x
 
-    const auto dx = fast_two_diff(b_x, a_x);
-    const auto dy = fast_two_diff(b_y, a_y);
+    const auto dx = two_diff(b_x, a_x);
+    const auto dy = two_diff(b_y, a_y);
 
     std::array<F, 4> t1;
     scale_expansion(const_span(dx), c_y, span(t1));
