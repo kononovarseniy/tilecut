@@ -107,6 +107,6 @@ class TilecutRecipe(ConanFile):
         component_info("common", kind="lib")
         component_info("geometry_types", kind="header", requires=["common"])
         component_info("exact", kind="lib", requires=["common", "geometry_types"])
-        component_info("tilecut", kind="lib", requires=["common", "geometry_types"])
+        component_info("tilecut", kind="lib", requires=["common", "exact", "geometry_types"])
         if self.options.build_generate_grid:
             component_info("generate_grid", kind="bin")
