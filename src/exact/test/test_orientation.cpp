@@ -9,17 +9,26 @@ namespace ka
 
 TEST(OrientationTest, simple_collinear)
 {
-    EXPECT_EQ(orientation(1.0, 2.0, 6.0, 10.0, 11.0, 18.0), 0.0);
+    EXPECT_EQ(orientation(f32 { 1 }, f32 { 2 }, f32 { 6 }, f32 { 10 }, f32 { 11 }, f32 { 18 }), f32 { 0 });
+    EXPECT_EQ(orientation(f64 { 1 }, f64 { 2 }, f64 { 6 }, f64 { 10 }, f64 { 11 }, f64 { 18 }), f64 { 0 });
+    EXPECT_EQ(orientation(u16 { 1 }, u16 { 2 }, u16 { 6 }, u16 { 10 }, u16 { 11 }, u16 { 18 }), s64 { 0 });
+    EXPECT_EQ(orientation(s16 { 1 }, s16 { 2 }, s16 { 6 }, s16 { 10 }, s16 { 11 }, s16 { 18 }), s64 { 0 });
 }
 
 TEST(OrientationTest, simple_right_turn)
 {
-    EXPECT_LT(orientation(1.0, 2.0, 6.0, 10.0, 11.0 + 1.0, 18.0), 0.0);
+    EXPECT_LT(orientation(f32 { 1 }, f32 { 2 }, f32 { 6 }, f32 { 10 }, f32 { 11 + 1 }, f32 { 18 }), f32 { 0 });
+    EXPECT_LT(orientation(f64 { 1 }, f64 { 2 }, f64 { 6 }, f64 { 10 }, f64 { 11 + 1 }, f64 { 18 }), f64 { 0 });
+    EXPECT_LT(orientation(u16 { 1 }, u16 { 2 }, u16 { 6 }, u16 { 10 }, u16 { 11 + 1 }, u16 { 18 }), s64 { 0 });
+    EXPECT_LT(orientation(s16 { 1 }, s16 { 2 }, s16 { 6 }, s16 { 10 }, s16 { 11 + 1 }, s16 { 18 }), s64 { 0 });
 }
 
 TEST(OrientationTest, simple_left_turn)
 {
-    EXPECT_GT(orientation(1.0, 2.0, 6.0, 10.0, 11.0 - 1.0, 18.0), 0.0);
+    EXPECT_GT(orientation(f32 { 1 }, f32 { 2 }, f32 { 6 }, f32 { 10 }, f32 { 11 - 1 }, f32 { 18 }), f32 { 0 });
+    EXPECT_GT(orientation(f64 { 1 }, f64 { 2 }, f64 { 6 }, f64 { 10 }, f64 { 11 - 1 }, f64 { 18 }), f64 { 0 });
+    EXPECT_GT(orientation(u16 { 1 }, u16 { 2 }, u16 { 6 }, u16 { 10 }, u16 { 11 - 1 }, u16 { 18 }), s64 { 0 });
+    EXPECT_GT(orientation(s16 { 1 }, s16 { 2 }, s16 { 6 }, s16 { 10 }, s16 { 11 - 1 }, s16 { 18 }), s64 { 0 });
 }
 
 TEST(OrientationTest, hard_collinear)
