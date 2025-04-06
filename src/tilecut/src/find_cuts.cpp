@@ -105,7 +105,7 @@ void add_cut(
         {
             if (lhs.b == rhs.b)
             {
-                return PointOrder { lhs.b, lhs.a, rhs.a }.cw();
+                return point_order(lhs.b, lhs.a, rhs.a).is_cw();
             }
             return lhs.b > rhs.b;
         },
@@ -220,10 +220,10 @@ void find_cuts(
                 }
                 AR_ASSERT(lhs.touching_point == rhs.touching_point);
                 AR_ASSERT(lhs.opposite_point != rhs.opposite_point);
-                const PointOrder order { lhs.touching_point, lhs.opposite_point, rhs.opposite_point };
+                const auto order = point_order(lhs.touching_point, lhs.opposite_point, rhs.opposite_point);
                 // If both points lie on the same side of the tile boundary, the orientation check is insufficient.
                 // The most counter-clockwise segment is the segment with the smaller parameter of the opposite point
-                if (order.collinear())
+                if (order.is_collinear())
                 {
                     const auto lhs_param = make_parameter(tile_grid.tile_size(), lhs.opposite_point);
                     const auto rhs_param = make_parameter(tile_grid.tile_size(), rhs.opposite_point);
@@ -244,7 +244,7 @@ void find_cuts(
                     }
                     return lhs_param < rhs_param;
                 }
-                return order.cw();
+                return order.is_cw();
             });
 
         std::optional<u32> prev_point;

@@ -59,6 +59,7 @@ if(BUILD_TESTS)
         test/test_lerp_along_segment.cpp
         test/test_line_snapper.cpp
         test/test_snap_rounding.cpp
+        test/test_orient.cpp
         test/test_sort_hot_pixels_along_segment.cpp
         test/test_tile_cell_grid.cpp
         test/test_tile_grid.cpp
