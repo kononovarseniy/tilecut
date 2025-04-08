@@ -7,7 +7,7 @@ from concurrent.futures import ProcessPoolExecutor
 
 # Configuration
 BLOB_SIZE = 1024
-TOTAL_BLOBS = 1000000  # 10x original size
+TOTAL_BLOBS = 10000000  # 10x original size
 NUM_THREADS = 10
 NUM_PROCESSES = 10
 DB_DIR = Path("dbs")
