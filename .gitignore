@@ -14,5 +14,6 @@
 .venv/
 
 dbs/
+bin/
 multi_threaded
 single_threaded

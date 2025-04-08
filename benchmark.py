@@ -7,40 +7,60 @@ from concurrent.futures import ProcessPoolExecutor
 
 # Configuration
 BLOB_SIZE = 1024
-TOTAL_BLOBS = 100000  # 10x original size
+TOTAL_BLOBS = 1000000  # 10x original size
 NUM_THREADS = 10
 NUM_PROCESSES = 10
 DB_DIR = Path("dbs")
-BINARIES_DIR = Path(".")
+BINARIES_DIR = Path("bin")
+SRC_DIR = Path(".")
 
 # Path setup
-DB_DIR.mkdir(exist_ok=True)
-SINGLE_BIN = BINARIES_DIR/"single_threaded"
-MULTI_BIN = BINARIES_DIR/"multi_threaded"
+DB_DIR.mkdir(exist_ok=True, parents=True)
+BINARIES_DIR.mkdir(exist_ok=True, parents=True)
+
+SINGLE_BIN = BINARIES_DIR / "single_threaded"
+MULTI_BIN = BINARIES_DIR / "multi_threaded"
 
 def compile_programs():
-    """Compile C++ programs with aggressive optimizations"""
+    """Compile C++ programs with proper path handling"""
     try:
+        # Compile single-threaded
         subprocess.run([
-            "g++", "-std=c++17", "-O3", "-flto", "-march=native",
-            "single_threaded.cpp", "-o", str(SINGLE_BIN), "-lsqlite3"
+            "g++", "-std=c++17", "-O3", 
+            str(SRC_DIR / "single_threaded.cpp"),
+            "-o", str(SINGLE_BIN),
+            "-lsqlite3"
         ], check=True)
         
+        # Compile multi-threaded
         subprocess.run([
-            "g++", "-std=c++17", "-O3", "-flto", "-march=native",
-            "multi_threaded.cpp", "-o", str(MULTI_BIN), 
+            "g++", "-std=c++17", "-O3",
+            str(SRC_DIR / "multi_threaded.cpp"),
+            "-o", str(MULTI_BIN),
             "-pthread", "-lsqlite3"
         ], check=True)
+        
+        # Verify binaries exist
+        if not SINGLE_BIN.exists():
+            raise FileNotFoundError(f"Failed to create {SINGLE_BIN}")
+        if not MULTI_BIN.exists():
+            raise FileNotFoundError(f"Failed to create {MULTI_BIN}")
+
     except subprocess.CalledProcessError as e:
-        logging.error("Compilation failed: %s", e)
+        logging.error("Compilation failed. Ensure you have:")
+        logging.error("1. g++ installed")
+        logging.error("2. SQLite development libraries (libsqlite3-dev)")
+        raise
+    except FileNotFoundError as e:
+        logging.error("Binary verification failed: %s", e)
         raise
 
 def initialize_databases():
-    """Create and configure databases with optimized settings"""
+    """Create and configure databases with absolute paths"""
     dbs = [
-        DB_DIR/"single.db",
-        *[DB_DIR/f"multi_{i}.sqlite" for i in range(NUM_THREADS)],
-        *[DB_DIR/f"process_{i}.sqlite" for i in range(NUM_PROCESSES)]
+        DB_DIR / "single.db",
+        *[DB_DIR / f"multi_{i}.sqlite" for i in range(NUM_THREADS)],
+        *[DB_DIR / f"process_{i}.sqlite" for i in range(NUM_PROCESSES)]
     ]
 
     for db_path in dbs:
@@ -113,6 +133,10 @@ def main():
         logging.info("Compiling programs...")
         compile_programs()
         
+        logging.info("Binary locations:")
+        logging.info("Single-threaded: %s", SINGLE_BIN.resolve())
+        logging.info("Multi-threaded: %s", MULTI_BIN.resolve())
+
         logging.info("Initializing databases...")
         initialize_databases()
 
