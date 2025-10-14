@@ -1,9 +1,6 @@
-set(module_name exact)
+ka_target(current_target LIBRARY)
 
-add_library(ka_${module_name})
-add_library(ka::${module_name} ALIAS ka_${module_name})
-
-target_sources(ka_${module_name}
+target_sources(${current_target}
     PUBLIC
     FILE_SET HEADERS
     BASE_DIRS include
@@ -24,43 +21,34 @@ target_sources(ka_${module_name}
         src/orientation.cpp
 )
 
-target_enable_warnings(ka_${module_name})
+find_package(ka_common CONFIG REQUIRED)
 
-target_link_libraries(ka_${module_name}
+target_link_libraries(${current_target}
     PUBLIC
         ka::common
         ka::geometry_types
 )
 
-install(TARGETS ka_${module_name}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-    FILE_SET HEADERS DESTINATION include
-)
+if(BUILD_TESTING)
+    ka_gtest_target(${current_target}_test
+        SOURCES
+            test/check_column_border_intersection.cpp
+            test/check_column_border_intersection.hpp
+            test/mock_grid_parameters.hpp
+            test/test_check_column_border_intersection.cpp
+            test/test_column_border_intersection.cpp
+            test/test_orientation.cpp
+    )
 
-if(BUILD_TESTS)
     find_package(fmt REQUIRED)
     find_package(mpfr REQUIRED)
 
-    add_executable(ka_${module_name}_test
-        test/check_column_border_intersection.cpp
-        test/check_column_border_intersection.hpp
-        test/mock_grid_parameters.hpp
-        test/test_check_column_border_intersection.cpp
-        test/test_column_border_intersection.cpp
-        test/test_orientation.cpp
-    )
-    target_enable_warnings(ka_${module_name}_test)
-    target_link_libraries(ka_${module_name}_test
+    target_link_libraries(${current_target}_test
         PRIVATE
+            fmt::fmt
+            mpfr::mpfr
             ka::common
             ka::exact
             ka::geometry_types
-            fmt::fmt
-            gtest::gtest
-            mpfr::mpfr
     )
-
-    gtest_discover_tests(ka_${module_name}_test)
 endif()

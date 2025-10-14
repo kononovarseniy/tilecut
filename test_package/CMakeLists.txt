@@ -5,7 +5,7 @@ project(example)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(ka_tilecut REQUIRED
+find_package(ka_tilecut CONFIG REQUIRED
     COMPONENTS
         exact
         generate_grid

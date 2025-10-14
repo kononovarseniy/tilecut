@@ -1,31 +1,20 @@
-set(module_name generate_grid)
+ka_target(current_target EXECUTABLE)
 
-find_package(fmt REQUIRED)
-find_package(Boost REQUIRED)
-find_package(mpfr REQUIRED)
-
-add_executable(ka_${module_name})
-add_executable(ka::${module_name} ALIAS ka_${module_name})
-
-target_sources(ka_${module_name}
+target_sources(${current_target}
     PRIVATE
         src/main.cpp
         src/MPFRDouble.hpp
 )
 
-target_enable_warnings(ka_${module_name})
+find_package(fmt REQUIRED)
+find_package(Boost REQUIRED)
+find_package(mpfr REQUIRED)
+find_package(ka_common CONFIG REQUIRED)
 
-target_link_libraries(ka_${module_name}
+target_link_libraries(${current_target}
     PRIVATE
-        ka::common
         fmt::fmt
         Boost::program_options
         mpfr::mpfr
-)
-
-install(TARGETS ka_${module_name}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-    FILE_SET HEADERS DESTINATION include
+        ka::common
 )

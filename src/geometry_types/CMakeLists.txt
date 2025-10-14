@@ -1,10 +1,7 @@
-set(module_name geometry_types)
+ka_target(current_target INTERFACE_LIBRARY)
 
-add_library(ka_${module_name} INTERFACE)
-add_library(ka::${module_name} ALIAS ka_${module_name})
-
-target_sources(ka_${module_name}
-    INTERFACE
+target_sources(${current_target}
+    PUBLIC
     FILE_SET HEADERS
     BASE_DIRS include
     FILES
@@ -12,14 +9,9 @@ target_sources(ka_${module_name}
         include/ka/geometry_types/Vec2.hpp
 )
 
-target_link_libraries(ka_${module_name}
+find_package(ka_common CONFIG REQUIRED)
+
+target_link_libraries(${current_target}
     INTERFACE
         ka::common
-)
-
-install(TARGETS ka_${module_name}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-    FILE_SET HEADERS DESTINATION include
 )

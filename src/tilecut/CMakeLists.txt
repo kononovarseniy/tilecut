@@ -1,9 +1,6 @@
-set(module_name tilecut)
+ka_target(current_target LIBRARY)
 
-add_library(ka_${module_name})
-add_library(ka::${module_name} ALIAS ka_${module_name})
-
-target_sources(ka_${module_name}
+target_sources(${current_target}
     PUBLIC
     FILE_SET HEADERS
     BASE_DIRS include
@@ -32,49 +29,39 @@ target_sources(ka_${module_name}
         src/find_cuts.cpp
 )
 
-target_enable_warnings(ka_${module_name})
+find_package(ka_common CONFIG REQUIRED)
 
-target_link_libraries(ka_${module_name}
+target_link_libraries(${current_target}
     PUBLIC
         ka::common
         ka::exact
         ka::geometry_types
 )
 
-install(TARGETS ka_${module_name}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-    FILE_SET HEADERS DESTINATION include
-)
-
-if(BUILD_TESTS)
-    find_package(fmt REQUIRED)
-    find_package(mpfr REQUIRED)
-
-    add_executable(ka_${module_name}_test
-        test/debug_output.hpp
-        test/mock_grid_parameters.hpp
-        test/test_cut_polyline.cpp
-        test/test_find_cuts.cpp
-        test/test_lerp_along_segment.cpp
-        test/test_line_snapper.cpp
-        test/test_snap_rounding.cpp
-        test/test_orient.cpp
-        test/test_polygon_orientation.cpp
-        test/test_sort_hot_pixels_along_segment.cpp
-        test/test_tile_cell_grid.cpp
-        test/test_tile_grid.cpp
+if(BUILD_TESTING)
+    ka_gtest_target(${current_target}_test
+        SOURCES
+            test/debug_output.hpp
+            test/mock_grid_parameters.hpp
+            test/test_cut_polyline.cpp
+            test/test_find_cuts.cpp
+            test/test_lerp_along_segment.cpp
+            test/test_line_snapper.cpp
+            test/test_snap_rounding.cpp
+            test/test_orient.cpp
+            test/test_polygon_orientation.cpp
+            test/test_sort_hot_pixels_along_segment.cpp
+            test/test_tile_cell_grid.cpp
+            test/test_tile_grid.cpp
     )
-    target_enable_warnings(ka_${module_name}_test)
-    target_link_libraries(ka_${module_name}_test
+
+    find_package(fmt CONFIG REQUIRED)
+
+    target_link_libraries(${current_target}_test
         PRIVATE
+            fmt::fmt
             ka::common
             ka::geometry_types
             ka::tilecut
-            fmt::fmt
-            gtest::gtest
     )
-
-    gtest_discover_tests(ka_${module_name}_test)
 endif()

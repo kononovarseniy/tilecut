@@ -1,7 +1,6 @@
 #include <cstdlib>
 #include <vector>
 
-#include <ka/common/assert.hpp>
 #include <ka/exact/GridRounding.hpp>
 #include <ka/geometry_types/Segment2.hpp>
 #include <ka/tilecut/HotPixelCollector.hpp>
