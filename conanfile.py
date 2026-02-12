@@ -6,7 +6,7 @@ from conan.tools.files import copy
 
 class KaTilecutRecipe(ConanFile):
     name = "ka_tilecut"
-    version = "0.3.1"
+    version = "0.3.2"
     package_type = "library"
 
     license = "MIT"
