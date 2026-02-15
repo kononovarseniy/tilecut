@@ -28,58 +28,66 @@ public:
     /// @param out beginning of the destination points container.
     template <
         GridRounding rounding,
-        LineSnapperCoordinateHandler Handler,
+        LineSnapperCoordinateHandler H,
         std::ranges::input_range In,
-        std::output_iterator<typename Handler::OutputVertex> Out>
-        requires std::same_as<typename Handler::InputVertex, std::ranges::range_value_t<In>>
-    void snap_line(const TileCellGrid<rounding> & grid, const Handler & handler, In && line, Out out)
+        std::output_iterator<typename H::OutputVertex> Out>
+        requires std::same_as<typename H::InputVertex, std::ranges::range_value_t<In>>
+    void snap_line(const TileCellGrid<rounding> & grid, const H & handler, In && line, Out out)
     {
-        bool first = true;
-        Vec2f64 prev_vertex {};
-        Vec2s64 prev_pixel {};
-        typename Handler::InputVertex prev_input;
-        typename Handler::OutputVertex prev_output;
+        static_assert(
+            std::assignable_from<typename H::InputVertex &, std::ranges::range_reference_t<In>> &&
+                std::constructible_from<typename H::InputVertex, std::ranges::range_reference_t<In>>,
+            "InputVertex must be assignable and constructible from the range reference type. "
+            "Consider making InputVertex copy assignable or using rvalue range");
 
-        for (const auto & curr_input : line)
+        auto it = std::ranges::begin(line);
+        const auto last = std::ranges::end(line);
+
+        if (it == last)
         {
-            const auto curr_vertex = handler.project(curr_input);
-            const auto curr_pixel = grid.cell_of(curr_vertex);
-            const auto curr_output = handler.transform(curr_input, curr_pixel);
+            return;
+        }
+        auto prev_input = *it++;
+        auto prev_proj = handler.project(prev_input);
+        auto prev_pixel = grid.cell_of(prev_proj);
+        auto prev_output = handler.transform(prev_input, prev_pixel);
 
-            if (first)
-            {
-                first = false;
-            }
-            else
-            {
-                interior_pixels_.clear();
+        *out++ = prev_output;
 
-                grid.tile_boundary_intersection_cells(
-                    { prev_vertex, curr_vertex },
-                    { prev_pixel, curr_pixel },
-                    std::back_inserter(interior_pixels_));
+        for (; it != last; ++it)
+        {
+            auto && curr_input = *it;
+            auto curr_proj = handler.project(curr_input);
+            auto curr_pixel = grid.cell_of(curr_proj);
+            auto curr_output = handler.transform(curr_input, curr_pixel);
 
-                sort_hot_pixels_along_segment(interior_pixels_, prev_pixel, curr_pixel);
+            interior_pixels_.clear();
 
-                const auto unique_end = std::ranges::unique(interior_pixels_);
-                interior_pixels_.erase(unique_end.begin(), unique_end.end());
+            grid.tile_boundary_intersection_cells(
+                { prev_proj, curr_proj },
+                { prev_pixel, curr_pixel },
+                std::back_inserter(interior_pixels_));
 
-                const auto transform_result = std::ranges::transform(
-                    strictly_interior_pixels(prev_pixel, curr_pixel, interior_pixels_),
-                    out,
-                    [&](const auto & curr_pixel)
-                    {
-                        return handler.interpolate(prev_input, prev_output, curr_input, curr_output, curr_pixel);
-                    });
-                out = transform_result.out;
-            }
+            sort_hot_pixels_along_segment(interior_pixels_, prev_pixel, curr_pixel);
+
+            const auto unique_end = std::ranges::unique(interior_pixels_);
+            interior_pixels_.erase(unique_end.begin(), unique_end.end());
+
+            const auto transform_result = std::ranges::transform(
+                strictly_interior_pixels(prev_pixel, curr_pixel, interior_pixels_),
+                out,
+                [&](const auto & curr_pixel)
+                {
+                    return handler.interpolate(prev_input, prev_output, curr_input, curr_output, curr_pixel);
+                });
+            out = transform_result.out;
 
             *out++ = curr_output;
 
-            prev_vertex = curr_vertex;
-            prev_pixel = curr_pixel;
-            prev_input = curr_input;
-            prev_output = curr_output;
+            prev_proj = std::move(curr_proj);
+            prev_pixel = std::move(curr_pixel);
+            prev_input = std::forward<decltype(curr_input)>(curr_input);
+            prev_output = std::move(curr_output);
         }
     }
 

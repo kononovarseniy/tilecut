@@ -23,6 +23,36 @@ public:
     {
         Vec2f64 xy;
         f64 z;
+        bool moved;
+
+        InputVertex(const Vec2f64 & xy, f64 z)
+            : xy { xy }
+            , z { z }
+            , moved { false }
+        {
+        }
+
+        InputVertex(const InputVertex & other) noexcept = default;
+        InputVertex & operator=(const InputVertex & other) noexcept = default;
+
+        InputVertex(InputVertex && other) noexcept
+            : xy { std::exchange(other.xy, {}) }
+            , z { std::exchange(other.z, {}) }
+            , moved { std::exchange(other.moved, true) }
+        {
+        }
+
+        InputVertex & operator=(InputVertex && other) noexcept
+        {
+            if (this != &other)
+            {
+                other.moved = true;
+                xy = std::exchange(other.xy, {});
+                z = std::exchange(other.z, {});
+                moved = std::exchange(other.moved, true);
+            }
+            return *this;
+        }
     };
 
     struct OutputVertex final
@@ -108,12 +138,13 @@ TEST(LineSnapperTest, interface_test)
 {
     const auto grid = make_grid<GridRounding::NearestNode>(1.0, {}, 10);
 
+    // Mutable to check that snap_line is not modifying elements.
     std::vector<TestCoordinateHandler::InputVertex> vertices {
         { { -20.3, 5.0 }, -100.23 },
         { { 20.3, 5.0 }, 100.23 },
     };
     // clang-format off
-    std::vector<TestCoordinateHandler::OutputVertex> expected {
+    const std::vector<TestCoordinateHandler::OutputVertex> expected {
         { { -20, 5 }, -100 },
         { { -10, 5 }, -50 },
         { { 0, 5 }, 0 },
@@ -129,18 +160,21 @@ TEST(LineSnapperTest, interface_test)
     snapper.snap_line(grid, handler, vertices, std::back_inserter(result));
 
     EXPECT_EQ(result, expected);
+
+    EXPECT_FALSE(vertices[0].moved);
+    EXPECT_FALSE(vertices[1].moved);
 }
 
 TEST(LineSnapperTest, interface_2d_test)
 {
     const auto grid = make_grid<GridRounding::NearestNode>(1.0, {}, 10);
 
-    std::vector<Vec2f64> vertices {
+    const std::vector<Vec2f64> vertices {
         { -20.3, 5.0 },
         { 20.3, 5.0 },
     };
     // clang-format off
-    std::vector<Vec2s64> expected {
+    const std::vector<Vec2s64> expected {
         { -21, 5 },
         { -20, 5 },
         { -10, 5 },
@@ -161,8 +195,8 @@ TEST(LineSnapperTest, empty_2d_test)
 {
     const auto grid = make_grid<GridRounding::NearestNode>(1.0, {}, 10);
 
-    std::vector<Vec2f64> vertices;
-    std::vector<Vec2s64> expected;
+    const std::vector<Vec2f64> vertices;
+    const std::vector<Vec2s64> expected;
     std::vector<Vec2s64> result;
 
     Test2DCoordinateHandler handler;

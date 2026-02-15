@@ -8,22 +8,20 @@
 namespace ka
 {
 
-template <typename Handler>
-concept LineSnapperCoordinateHandler = requires() {
-    typename Handler::InputVertex;
-    typename Handler::OutputVertex;
+template <typename H>
+concept LineSnapperCoordinateHandler = requires(
+    const H & handler,
+    const typename H::InputVertex & vertex_in,
+    const typename H::OutputVertex & vertex_out,
+    const Vec2s64 & position) {
+    requires std::movable<typename H::InputVertex>;
+    requires std::movable<typename H::OutputVertex>;
 
-    requires requires(
-        const Handler & handler,
-        const typename Handler::InputVertex & vertex_in,
-        const typename Handler::OutputVertex & vertex_out,
-        const Vec2s64 & position) {
-        { handler.project(vertex_in) } -> std::same_as<Vec2f64>;
-        { handler.transform(vertex_in, position) } -> std::same_as<typename Handler::OutputVertex>;
-        {
-            handler.interpolate(vertex_in, vertex_out, vertex_in, vertex_out, position)
-        } -> std::same_as<typename Handler::OutputVertex>;
-    };
+    { handler.project(vertex_in) } -> std::convertible_to<Vec2f64>;
+    { handler.transform(vertex_in, position) } -> std::convertible_to<typename H::OutputVertex>;
+    {
+        handler.interpolate(vertex_in, vertex_out, vertex_in, vertex_out, position)
+    } -> std::convertible_to<typename H::OutputVertex>;
 };
 
 } // namespace ka
