@@ -84,6 +84,10 @@ public:
     }
 
 private:
+    /// @brief Pixels that do not include segment endpoints.
+    /// @param start pixel containing first segment endpoint.
+    /// @param stop pixel containing second segment endpoint.
+    /// @param pixels pixels on the segment ordered by distance from first segment endpoint.
     [[nodiscard]] static constexpr std::span<Vec2s64> strictly_interior_pixels(
         const Vec2s64 start,
         const Vec2s64 stop,
